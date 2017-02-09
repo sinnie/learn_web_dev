@@ -25,14 +25,6 @@ A __promise__ is an object used for asynchronous computations and represents a v
   * The executor starts an asynchronous operation.
 * `resolve` and `reject` are callable functions that take an argument which represents the events details. Calling either `resolve` or `reject` will mark the promise as resolved and cause any handlers to be run.
 
-
-### Basic Promise
-
-
-____________ -------> Success: `.then(content)`
-| Promise  |
-____________ --------> Failure: `.catch(err)`
-
 ***
 
 ## A Promise's Possible States:
