@@ -10,12 +10,12 @@ A Node server is created with one callback. For each HTTP request that arrives, 
 * The goal of the callback is to correctly fill in the res obj based on the information in req object
 
 ```javascript
-const http = require('http’);
+const http = require('http');
 const port = process.env.PORT || 8000;
 
 const server = http.createServer((req, res) => { //<— on every request/response interaction with the server will so something
-  res.setHeader('Content-Type', 'text/plain’); // <— defines how we are sending data to the client
-  res.end('Hello world’); // <— end fn ends the implements the stream; grab the buffer data and send data
+  res.setHeader('Content-Type', 'text/plain'); // <— defines how we are sending data to the client
+  res.end('Hello world'); // <— end fn ends the implements the stream; grab the buffer data and send data
 });
 
 server.listen(port, () => {
@@ -149,7 +149,7 @@ A Node.js HTTP server is created with one callback.
 'use strict';
 
 const fs = require('fs');
-const path = require('path’);
+const path = require('path');
 const guestsPath = path.join(__dirname, 'guests.json');
 
 const http = require('http');
