@@ -289,25 +289,3 @@ server.listen(port, () => {
 [The Stream Handbook](https://github.com/substack/stream-handbook#introduction)
 
 [Understanding the Node.js Event Loop](https://nodesource.com/blog/understanding-the-nodejs-event-loop/)
-
-
-JS
-single-threaded
-non-blocking
-asynchronous
-concurrent Languages
-
-JS has:
-Call stack <-- a data structure that tracks the execution context
-* one thread == one call stack == one thing at a time
-* returning things pops them off of the stack
-
-
-event loop
-callback queue
-other APIs
-and stuff
-
-v8 has
-callstack
-heap - where memory allocation happens
