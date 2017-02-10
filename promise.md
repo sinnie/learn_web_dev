@@ -1,5 +1,7 @@
 # Promises
 
+[I highly recommend that you play with this](https://github.com/bevacqua/promisees)
+
 ## Definition
 
 A __promise__ is an object used for asynchronous computations. It represents a value that may be available now, in the future, or never. Essentially, a promise is an object that stores information about whether asynchronous events have happened yet or what their outcome is.
