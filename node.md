@@ -15,7 +15,7 @@ JavaScript outside of the browser is concerned with operating system tasks, and,
 * server.listen()
 ```
 ## Modules
-Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of ones program.
+Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of one's program.
 
 When `require()` is called, Node has to resolve the given string to an actual file to load. Therefore, local modules must begin with a relative or absolute path. In contrast, built-in modules or libraries installed in a `node_modules` library can be referre to by module name. For example, `const fs = require('fs')`, will give you Node's file sstem module. Whereas `const johnnyFive = require(./path/to/module/'my-module')` will include a local module. In either case, it is safe to omit the file extension.   
 
@@ -23,6 +23,7 @@ When `require()` is called, Node has to resolve the given string to an actual fi
 
 ### Path Module:
 * A collection of utilities that don’t perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid.
+
 #### process.argv
 * property that returns an array containing the command line arguments passed when the Node.js process was launched.
     * first element = process.execPath
