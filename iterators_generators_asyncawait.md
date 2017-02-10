@@ -5,8 +5,9 @@
 * Use an iterator to:
   1. Implement a utility that produces a new unique identifier each time it's requested
   2. Produce an infinite series of values that rotate through a fixed list
-  3. Attack an iterator to a database query result to pull new rows one at a time.
+  3. Attach an iterator to a database query result to pull new rows one at a time.
 * With iterators, you can control behavior one step at a time.
+
 ### Examples:
 
 ```javascript
@@ -46,11 +47,11 @@ it.next();      // { value: "e", done: false }
 
 ## Generators & yield
 * JavaScript Generators are a part of the ES6 Specification.
-* Generators allow you to postpone the execution of a function, complete other computations, and then return to complete the execution. In other words, a generator is a function that can pause and resume execution.
+* Generators allow you to postpone the execution of a function, complete other computations and then return to complete the execution. In other words, a generator is a function that can pause and resume execution.
 * The best use case for generators are:
   * Implementing iterables
   * Blocking on asynchronous function calls
-* Each pause/resume cycle in mid-execution allows for two-way message passing. The generator can return a value, and the controlling code that resumes it can send a value back in.
+* Each pause/resume cycle in mid-execution allows for two-way message-passing. The generator can return a value, and the controlling code that resumes it can send a value back in.
 * Generator objects conform to both the _iterable_ protocol and the _iterator_ protocol.
 
 #### Syntax
@@ -62,8 +63,11 @@ function *gen() {
   yield 3;
 }
 
-var g = gen(); // "Generator { }"
+const g = gen(); // "Generator { }"
+
+g.next(); // { value: 1, done: false }
 ```
+
 * Uses a _generator_ function that, when called, returns an _iterator object_.
   * When a generator function is called, it doesn't run. You must iterate through it manually.
   * With the iterator object, one can iterate through the function.
@@ -71,21 +75,22 @@ var g = gen(); // "Generator { }"
     * This object has a `value` and a `done` property.
     * The `value` property is the current iteration value, which can be anything. The `done` property is a boolean, which indicates that the generator is finished running.
   * If you specify a `return` value in a generator, it will be returned in the last _iterator object_.
-  * Every iteration through the generator _function_ __yields__ a value where paused.
-  * One can pause a generator functioon with the `yield` keyword.
+  * Every iteration through the generator function __yields__ a value where paused.
+  * One can pause a generator function with the `yield` keyword.
 
-#### Yield
+### Yield
 Generators have a new keyword that signals the pause point: `yield`
 
 ##### Syntax
 ```javascript
 yield[[expression]]
 ```
-* Calling `next()` starts the generator, and it runs until it hits a `yield`. It returns the object with `value` and `done`, where `value` has the __expression__ value.
+* Calling `next()` starts the generator, and it runs until it hits a `yield`. When it encounters a `yield`, it returns the object with `value` and `done`, where `value` has the __expression__ value.
 * The yielded value will be returned in the generator and it continues. It's also possible to receive a value from the iterator object in a generator (next(val)), then this will be returned in the generator when it continues.
-* `yield` is meant for lazy sequences and iterators not specifically for asynchronous programming.
+* `yield` is meant for lazy sequences (one thing at a time) and iterators not specifically for asynchronous programming.
 * Furthermore, `yield` is not just a pause point, but an expression that returns a value when pausing the generator.
 * Context is preserved across suspensions and resumptions.
+
     ```javascript
     function *foo() {
       while (true) {
@@ -93,6 +98,7 @@ yield[[expression]]
       }
     }
     ```
+
 * Whenever `.next()` is called on a generator, four events will suspend execution in the generator, returning an `IteratorResult` to the caller of `.next()`
   * `yield` <-- expression evaluates and returns _next_ value in sequence
   * `return` <-- returning to the last value in the sequence
@@ -103,7 +109,7 @@ yield[[expression]]
 ## Async / await
 * ES7 introduces Async functions, which are currently only available with a transpiler like babel.
 * Use the `async` keyword before the function declaration, which will allow the use of the `await` keyword inside of your newly created async function.
-* It is similar to generators in that it suspends execution in the context until the promise resolves. It the awaited expression is not a promise, it is casted into a promise. Again, it always returns a promise.
+* It is similar to generators in that it suspends execution in the context until the promise resolves. If the awaited expression is not a promise, it is cast into a promise. Again, it always returns a promise.
 
 ```javascript
 async function save(Something) {  
