@@ -167,8 +167,17 @@ p3.then(function(v) {
 
 ## Promise.reject(value)
 * The `Promise.reject(reason)` method returns a `Promise` Object that is rejected with the given reason. It's useful to make `reason` an instance of `Error`.
+* The return value is a `Promise` that is rejected with the given reason.
 * Useful when you want to process error objects in a `catch` handler, but don't want to return a _successful_ promise afterward.
 
+### Examples:
+```javascript
+Promise.reject(new Error('fail')).then(function(error) {
+  // not called
+}, function(error) {
+  console.log(error); // Stacktrace
+});
+```
 ***
 
 
