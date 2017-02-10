@@ -6,30 +6,30 @@
 
 
 ##Express Server Middleware:
-* cookie-parser (npm install --save cookie-parser) <— Parse Cookie header and populate req.cookies with an object keyed by the cookie names
-* bcrypt-as-promised (npm install --save bcrypt-as-promised)- Hashes, salts, and compares passwords/inputs
-* jwt - jsonwebtoken (npm install --save jsonwebtoken) <— the token conforms to JWT standard (pronounced jot). A JWT is a method of communication the authentication state through an open standard.
-* dotenv (npm install —save-dev dotenv) <— zero-dependency module that loads environment variables from a .env file into process.env.
+* __cookie-parser__ (npm install --save cookie-parser) <— Parse Cookie header and populate req.cookies with an object keyed by the cookie names
+* __bcrypt-as-promised__ (npm install --save bcrypt-as-promised)- Hashes, salts, and compares passwords/inputs
+* __jwt__ - jsonwebtoken (npm install --save jsonwebtoken) <— the token conforms to JWT standard (pronounced jot). A JWT is a method of communication the authentication state through an open standard.
+* __dotenv__ (npm install —save-dev dotenv) <— zero-dependency module that loads environment variables from a .env file into process.env.
 ```javascript
 'use strict';
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 ```
-* Express (npm install —save express)- server side framework - makes creating HTTP servers easier
-* Body-parser (`npm install —save body-parser`) <— parses things: JSON
-* Morgan (`npm install —save morgan`) <— logs things to the terminal - the time requests take for the server to complete
-* humps (`npm install —save humps`)  <-- (camelize/decamelize)
-* Boom (`npm install —save boom`) - atomizes error messaging; Boom formats the error object for you
-* knex - Knex facilitates: Object-relational mapping (converting data between incompatible type systems; sql & js)
+* __Express__ (npm install —save express)- server side framework - makes creating HTTP servers easier
+* __Body-parser__ (`npm install —save body-parser`) <— parses things: JSON
+* __Morgan__ (`npm install —save morgan`) <— logs things to the terminal - the time requests take for the server to complete
+* __Humps__ (`npm install —save humps`)  <-- (camelize/decamelize)
+* __Boom__ (`npm install —save boom`) - atomizes error messaging; Boom formats the error object for you
+* __Knex__ - Knex facilitates: Object-relational mapping (converting data between incompatible type systems; sql & js)
   * `‘pg'` <— PostgreSQL
   * `npm install --save pg`
   * `npm install--save knex`
-* Foreman - (`npm install --save-dev foreman` ) foreman is a manager for procfile-based apps that aims to abstract away the details of the procfile format and allow developers to run an app directly or export it to some other process management format
-* Joi - ( `npm install --save express-validation joi` ) Joi allows you to create blueprints or schemas for JavaScript objects (an object that stores information) to ensure validation of key information.
-* ESLint - ( `npm install -D eslint eslint-config-ryansobol` ) ESLint is an open source JavaScript linting utility. Code linting is a type of static analysis that is frequently used to find problematic patterns or code that doesn’t adhere to certain style guidelines.
-* Request - ( `npm install --save request` )  is designed to be the simplest way possible to make http calls. It supports HTTPS and follows redirects by default.
-* [Passport](http://passportjs.org/docs/overview) - authentication middleware for node.js that is designed for a singular purpose: to authenticate requests.
+* __Foreman__ - (`npm install --save-dev foreman` ) foreman is a manager for procfile-based apps that aims to abstract away the details of the procfile format and allow developers to run an app directly or export it to some other process management format
+* __Joi__ - ( `npm install --save express-validation joi` ) Joi allows you to create blueprints or schemas for JavaScript objects (an object that stores information) to ensure validation of key information.
+* __ESLint__ - ( `npm install -D eslint eslint-config-ryansobol` ) ESLint is an open source JavaScript linting utility. Code linting is a type of static analysis that is frequently used to find problematic patterns or code that doesn’t adhere to certain style guidelines.
+* __Request__ - ( `npm install --save request` )  is designed to be the simplest way possible to make http calls. It supports HTTPS and follows redirects by default.
+* __ [Passport](http://passportjs.org/docs/overview) __ - authentication middleware for node.js that is designed for a singular purpose: to authenticate requests.
 Authentication mechanisms, known as strategies, are packaged as individual modules. Applications can choose which strategies to employ, without creating unnecessary dependencies.
 
 
