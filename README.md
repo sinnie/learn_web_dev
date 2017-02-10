@@ -32,7 +32,6 @@ Authentication mechanisms, known as strategies, are packaged as individual modul
 ### Ryan’s Config:
 
 #### ESLint Setup:
-```javascript
 1. touch .eslintrc.js
 2. Add language configuration and environment configuration to the .eslintrc.js file:
 
