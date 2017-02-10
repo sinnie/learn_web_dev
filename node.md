@@ -3,7 +3,7 @@
 [Node Docs](https://nodejs.org/en/)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system.
+Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is not good for CPU intensive applications.
 
 From a developer's point of view, Node.js is single-threaded, but under the hood, __libuv__ handles __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
 
@@ -19,8 +19,26 @@ JavaScript outside of the browser is concerned with operating system tasks, and,
 
 Tp specify verison use: `nvm use 4` or `nvm use 5`.
 
-### callbacks
-Callbacks are at the core of asynchronous JavaScript and Node.js.
+### Asynchronous Node
+All API's of Node.js are asynchronous or non-blocking. This means that callbacks are at the core of asynchronous JavaScript and Node.js. A simple definition of a callback is one functions passed as an argument to other functions.
+
+Error-first callbacks are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/).
+
+##### Note
+* error-handling: instead of a `try-catch` block you have to check for
+errors in the callback
+* no return value: async functions don’t return values, but values will
+be passed to the callbacks
+
+Async actions are completed through callbacks and __The Event Loop__.
+
+### Event Driven Programming
+Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code under the hood. Once this hiding thread (form _libuv_) receives the value, it awaits for or throws an error, the provided callback will be called with the necessary parameters.
+
+To understand how this works, you must understand the event loop and the task queue.
+
+### The Event Loop
+The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events such as user actions (mouse clicks, key presses), sensor outputs, or messages from other programs/threads. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and calls a callback function once an event has been detected (i.e. state has changed).
 
 ## Modules
 Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of one's program.
@@ -269,3 +287,27 @@ server.listen(port, () => {
 [Professional Node.js: Building JavaScript Based Scalable Software](https://www.amazon.com/Professional-Node-js-Building-Javascript-Scalable/dp/1118185463/ref=sr_1_1?ie=UTF8&qid=1486686418&sr=8-1&keywords=%5BProfessional+Node.js%3A+Building+JavaScript+Based+Scalable+Software%5D%28%29)
 
 [The Stream Handbook](https://github.com/substack/stream-handbook#introduction)
+
+[Understanding the Node.js Event Loop](https://nodesource.com/blog/understanding-the-nodejs-event-loop/)
+
+
+JS
+single-threaded
+non-blocking
+asynchronous
+concurrent Languages
+
+JS has:
+Call stack <-- a data structure that tracks the execution context
+* one thread == one call stack == one thing at a time
+* returning things pops them off of the stack
+
+
+event loop
+callback queue
+other APIs
+and stuff
+
+v8 has
+callstack
+heap - where memory allocation happens
