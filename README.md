@@ -1,7 +1,8 @@
-# Web Dev Cheet Sheet
+# Web Dev Cheat Sheet
 
-[Promises](/blob/master/promise.md)
-[Node](./blob/master/node.md)
+[Promises](./promise.md)
+
+[Node](./node.md)
 
 
 ##Express Server Middleware:
