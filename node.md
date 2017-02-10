@@ -3,15 +3,17 @@
 [Node Docs](https://nodejs.org/en/)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a diverse variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. Node.js is commonly used to create HTTP servers.
+Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. Node.js is commonly used to create HTTP servers.
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
-* `fs.readFile()`
-* `fs.writeFile()`
-* `path.join()`
-* `http.createServer()`
-* `server.listen()`
 
+```javascript
+* fs.readFile()
+* fs.writeFile()
+* path.join()
+* http.createServer()
+* server.listen()
+```
 ## Modules
 Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of ones program.
 
