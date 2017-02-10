@@ -1,8 +1,8 @@
 # Web Dev Cheet Sheet
 
-## [Promises]('./promise.md')
+[Promises]('./promise.md')
 
-## [Node]('./node.md')
+[Node]('./node.md')
 
 
 ##Express Server Middleware:
