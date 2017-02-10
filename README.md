@@ -54,7 +54,7 @@ module.exports = {
 ```
 
 3. Run `eslint` locally and fix any linting errors: ./node_modules/.bin/eslint .
-Additionally, add a script to the `package.json` file:
+4. Additionally, add a script to the `package.json` file:
 
 ```javascript
 {
@@ -64,24 +64,22 @@ Additionally, add a script to the `package.json` file:
 }
 ```
 
-Then run the npm script and fix any linting errors: `npm run lint`
+5. Then run the npm script and fix any linting errors: `npm run lint`
 
 ## Knex:
 
 ### Knex Setup:
 
-```
-mkdir <dir_name>
-cd <dir_name>
-npm init -y - initialize it in npm which will create a package.json file that saves dependencies and scripts
-npm install --save pg - PostgreSQL - So knex can talk to it
-npm install --save knex - ORM
-touch knexfile.js  (or knex init)
-touch index.js
-```
+1. `mkdir <dir_name>`
+2. `cd <dir_name>`
+3. `npm init -y` - initialize it in npm which will create a package.json file that saves dependencies and scripts
+4. `npm install --save pg` - PostgreSQL - So knex can talk to it
+5. `npm install --save knex` - ORM
+6. `touch knexfile.js ` (or knex init)
+7. `touch index.js`
 
-In the knexfile.js file, write and save the following code (environment configuration).
-This code exports the development env to have a client of PostgreSQL
+8. In the knexfile.js file, write and save the following code (environment configuration).
+  * This code exports the development env to have a client of PostgreSQL
 
 ```javascript
 'use strict';
@@ -104,8 +102,8 @@ module.exports = {
 };
 ```
 
-In the knex.js file, write and save the following code.
-* Knex must output a function and the configuration is required as an argument. The knex module is itself a function which takes a configuration object for Knex, accepting a few parameters. The client parameter is required and determines which client adapter will be used with the library.
+9. In the knex.js file, write and save the following code.
+  * Knex must output a function and the configuration is required as an argument. The knex module is itself a function which takes a configuration object for Knex, accepting a few parameters. The client parameter is required and determines which client adapter will be used with the library.
 
 ```javascript
 'use strict';
@@ -116,11 +114,11 @@ const knex = require('knex')(config);
 
 Module.exports = knex;
 ```
+* __ _Troubleshooting tip:_ sqlite3 is the default knex db__
 
-## Troubleshooting tip: sqlite3 is the default knex db
-Knex Migrate Flow:
-npm run knex migrate:currentVersion : to run script commands listed in package.json
-npm run knex migrate:make <file_name> : This creates a migration folder in the root directory of your project (unless it already existed) and adds a tracks migration file into the folder.npm
+### Knex Migrate Flow:
+* `npm run knex migrate:currentVersion `: to run script commands listed in package.json
+* `npm run knex migrate:make <file_name>` : This creates a migration folder in the root directory of your project (unless it already existed) and adds a tracks migration file into the folder.npm
 Do this in root as general good practice; But it doesn’t really matter
 npm run knex migrate:latest: The migrate:latest command is used to run the migration file on the database.
  npm run knex migrate:rollback: The migrate:rollback command migrates the database backward by running the down function exported by your migration file.
