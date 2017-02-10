@@ -2,6 +2,18 @@
 
 [Node Docs](https://nodejs.org/en/)
 
+## Introduction to Node
+Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a diverse variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system and is commonly used to create HTTP servers.
+
+JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
+* `fs.readFile()`
+* `fs.writeFile()`
+* `path.join()`
+* `http.createServer()`
+* `server.listen()`
+
+## Modules
+Node.js is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function.
 
 ## Initializing a server:
 A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two args - res, req
@@ -209,3 +221,14 @@ server.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 ```
+
+
+## Resources
+
+[Eloquent JavaScript](http://eloquentjavascript.net/20_node.html)
+
+[The Art of Node](https://github.com/maxogden/art-of-node)
+
+[Nodejs.org](https://nodejs.org/en/)
+
+[Professional Node.js: Building JavaScript Based Scalable Software](https://www.amazon.com/Professional-Node-js-Building-Javascript-Scalable/dp/1118185463/ref=sr_1_1?ie=UTF8&qid=1486686418&sr=8-1&keywords=%5BProfessional+Node.js%3A+Building+JavaScript+Based+Scalable+Software%5D%28%29)
