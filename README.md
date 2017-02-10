@@ -119,20 +119,21 @@ Module.exports = knex;
 ### Knex Migrate Flow:
 * `npm run knex migrate:currentVersion `: to run script commands listed in package.json
 * `npm run knex migrate:make <file_name>` : This creates a migration folder in the root directory of your project (unless it already existed) and adds a tracks migration file into the folder.npm
-Do this in root as general good practice; But it doesn’t really matter
+  * Do this in root as general good practice; But it doesn’t really matter
 npm run knex migrate:latest: The migrate:latest command is used to run the migration file on the database.
- npm run knex migrate:rollback: The migrate:rollback command migrates the database backward by running the down function exported by your migration file.
-Knex Seed Flow:
-npm run knex seed:make <file_name>- command to create a new seed file. Files are created in the dir specified in the knexfile.js
-npm run knex seed:run <file_name> - command to run the seed script and seed the db
-npm run knex seed:run - runs all seed scripts; seed files are run in alphabetical order
+* `npm run knex migrate:rollback`: The migrate:rollback command migrates the database backward by running the down function exported by your migration file.
+
+### Knex Seed Flow:
+* `npm run knex seed:make <file_name>` - command to create a new seed file. Files are created in the dir specified in the knexfile.js
+* `npm run knex seed:run <file_name>` - command to run the seed script and seed the db
+* `npm run knex seed:run` - runs all seed scripts; seed files are run in alphabetical order
 
 
 ## Heroku:
-Heroku Deployment:
-Create production environment on heroku - heroku apps:create <project_name> (Where username is your github username)
-Inspect the properties of the production database - heroku apps:info
- Specify the exact version of Node.js on the production environment: In package.json:
+### Heroku Deployment:
+1. Create production environment on heroku - `heroku apps:create <project_name>` (Where username is your github username)
+2. Inspect the properties of the production database - `heroku apps:info`
+3. Specify the exact version of Node.js on the production environment: In package.json:
  ```javascript
 
      "engines": {
@@ -140,27 +141,33 @@ Inspect the properties of the production database - heroku apps:info
      }
 
 ```
-heroku addons:create heroku-postgresql -  Create a PostgreSQL database for the production environment
-heroku pg:info - Inspect the properties of the production database
-Specify the connection URL to the production database server by adding the following property to the knexfile.js file:
-                              production: {
-                                       client: ‘pg’,
-                                        connection: process.env.DATABASE_URL
-                                }
-Automatically migrate the production database after on deployment by adding the following property to the package.json file:
-                              “scripts”: {
-                                   “knex”:”knex"
-                                   “heroku-postbuild”: “knex migrate:latest”,
-                               }
-Install foreman - `npm install —save-dev foreman  `
-Create a Procfile - start the server on the production env - echo ‘web: node server.js’ > Procfile (A Procfile is a mechanism for declaring what commands are run by your application's dynos on the Heroku platform. It follows the process model. You can use a Procfile to declare various process types, such as multiple types of workers, a singleton process like a clock, or a consumer of the Twitter streaming API.) ← if you do not have a space between the : and node it will break everything
-Easily test foreman from the dev env by adding an nf script to package.json <--not needed with brunch
-                              “scripts”: {
-                                   “knex”:”knex"
-                                   “heroku-postbuild”: “knex migrate:latest”,
-                                   “nf”: “nf start”,
-                                   “nodemon”: “nodemon server.js"
-                               }
+4. `heroku addons:create heroku-postgresql` -  Create a PostgreSQL database for the production environment
+5. `heroku pg:info `- Inspect the properties of the production database
+6. Specify the connection URL to the production database server by adding the following property to the knexfile.js file:
+```javascript
+    production: {
+     client: ‘pg’,
+      connection: process.env.DATABASE_URL
+    }
+```
+7. Automatically migrate the production database after on deployment by adding the following property to the package.json file:
+```javascript
+    "scripts": {
+       "knex”:”knex"
+       "heroku-postbuild": "knex migrate:latest"
+     }
+```
+8. Install foreman - `npm install —save-dev foreman  `
+9. Create a Procfile - start the server on the production env - `echo ‘web: node server.js’ > Procfile` (A Procfile is a mechanism for declaring what commands are run by your application's dynos on the Heroku platform. It follows the process model. You can use a Procfile to declare various process types, such as multiple types of workers, a singleton process like a clock, or a consumer of the Twitter streaming API.) ← if you do not have a space between the : and node it will break everything
+10. Easily test foreman from the dev env by adding an nf script to package.json <--not needed with brunch
+```javascript
+  "scripts": {
+       "knex”:”knex"
+       "heroku-postbuild”: “knex migrate:latest",
+       "nf”: “nf start",
+       "nodemon”: “nodemon server.js"
+   }
+```
 Generate secret key to be used to sign session information on the prod. env.
                bash -c ‘heroku config:set JWT_SECRET=$(openssl rand -hex 64)'
 Deploy to Heroku: git push heroku master
