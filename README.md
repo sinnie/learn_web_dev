@@ -1,7 +1,7 @@
 # Web Dev Cheet Sheet
 
-[Promises](promise.md)
-[Node](node.md)
+[Promises](/blob/master/promise.md)
+[Node](./blob/master/node.md)
 
 
 ##Express Server Middleware:
