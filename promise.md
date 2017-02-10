@@ -174,3 +174,5 @@ async function save(Something) {
 [Promises/A+ specification](https://promisesaplus.com/)
 
 [The Evolution of Asynchronous JavaScript](https://blog.risingstack.com/asynchronous-javascript/)
+
+[Understanding JavaScript's async await](https://ponyfoo.com/articles/understanding-javascript-async-await)

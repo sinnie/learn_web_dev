@@ -1,16 +1,11 @@
 # Learn Web Development
 
-## Subjects
-[Promises](./promise.md)
+## Table of Contents
+[Promises, Generators, async / await](./promise.md)
 
 [Node](./node.md)
 
-
-
 # Web Dev Cheat Sheet
-
-
-
 
 ##Express Server Middleware:
 * __Cookie-parser__ (npm install --save cookie-parser) <— Parse Cookie header and populate req.cookies with an object keyed by the cookie names
