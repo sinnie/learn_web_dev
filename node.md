@@ -29,6 +29,7 @@ When `require()` is called, Node has to resolve the given string to an actual fi
     * first element = process.execPath
     * second element = path to the JS file being executed
     * remaining elements = any additional command line arguments
+
 #### File I/0
 File I/O is provided by simple wrappers around standard POSIX functions.
 * `require(‘fs’);`
