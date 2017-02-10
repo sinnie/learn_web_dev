@@ -3,7 +3,9 @@
 [Node Docs](https://nodejs.org/en/)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. Node.js is commonly used to create HTTP servers.
+Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system.
+
+From a developer's point of view, Node.js is single-threaded, but under the hood, __libuv__ handles __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
 
@@ -14,12 +16,35 @@ JavaScript outside of the browser is concerned with operating system tasks, and,
 * http.createServer()
 * server.listen()
 ```
+
+Tp specify verison use: `nvm use 4` or `nvm use 5`.
+
+### callbacks
+Callbacks are at the core of asynchronous JavaScript and Node.js.
+
 ## Modules
 Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of one's program.
 
-When `require()` is called, Node has to resolve the given string to an actual file to load. Therefore, local modules must begin with a relative or absolute path. In contrast, built-in modules or libraries installed in a `node_modules` library can be referre to by module name. For example, `const fs = require('fs')`, will give you Node's file sstem module. Whereas `const johnnyFive = require(./path/to/module/'my-module')` will include a local module. In either case, it is safe to omit the file extension.   
+When `require()` is called, Node has to resolve the given string to an actual file to load. Therefore, local modules must begin with a relative or absolute path. In contrast, built-in modules or libraries installed in a `node_modules` library can be referred to by module name. For example, `const fs = require('fs')`, will give you Node's file system module. Whereas `const johnnyFive = require(./path/to/module/'my-module')` will include a local module. In either case, it is safe to omit the file extension.
 
-### fs Module
+* use `require` to include modules and `exports` to make them available elsewhere.
+
+### Patterns for exporting modules
+1. Export an anonymous Function
+2. Export a named Function
+3. Export an anonymous Object
+4. Export a named Object
+5. Export an anonymous Prototype
+6. Export a named Prototype
+
+#### Pros and cons
+* Named Exports - one module, many exported things
+* Anonymous Exports - Simplified client interface
+
+### Core Modules
+Node has a small group of modules that are presented as the public API. These core modules enable the creation of programs that can quickly communicate with filesystems or networks.
+
+#### fs Module
 
 ### Path Module:
 * A collection of utilities that don’t perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid.
