@@ -1,8 +1,15 @@
-# Web Dev Cheat Sheet
+# Learn Web Development
 
+## Subjects
 [Promises](./promise.md)
 
 [Node](./node.md)
+
+
+
+# Web Dev Cheat Sheet
+
+
 
 
 ##Express Server Middleware:
@@ -228,5 +235,4 @@ Also, ensure that `$http` is included in every service
   * `angular.module('todoApp', []);`
 
 ### Ryan’s React Config
-* `brunch new <project_name> --skeleton ryansobol/with-react`
--s flag short for skeleton
+* `brunch new <project_name> --skeleton ryansobol/with-react` ()-s flag short for skeleton)
