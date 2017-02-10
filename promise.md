@@ -2,7 +2,7 @@
 
 ## Definition
 
-A __promise__ is an object used for asynchronous computations and represents a value that may be available now, in the future, or never. Essentially, a promise is an object that stores information about whether asynchronous events have happened yet or what their outcome is.
+A __promise__ is an object used for asynchronous computations. It represents a value that may be available now, in the future, or never. Essentially, a promise is an object that stores information about whether asynchronous events have happened yet or what their outcome is.
 
 ## Advantages of a Promise
 
@@ -23,7 +23,7 @@ A __promise__ is an object used for asynchronous computations and represents a v
 * executor
   * A function with the arguments __resolve__ and __reject__. This function is immediately invoked by the Promise implementation, passing __resolve__ and __reject__ functions.
   * The executor starts an asynchronous operation.
-* `resolve` and `reject` are callable functions that take an argument which represents the events details. Calling either `resolve` or `reject` will mark the promise as resolved and cause any handlers to be run.
+* `resolve` and `reject` are callable functions that take an argument which represents the event's details. Calling either `resolve` or `reject` will mark the promise as resolved and cause any handlers to be run.
 
 ***
 

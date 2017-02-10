@@ -1,5 +1,10 @@
 # Web Dev Cheet Sheet
 
+## [Promises]('./promise.md')
+
+## [Node]('./node.md')
+
+
 ##Express Server Middleware:
 * cookie-parser (npm install --save cookie-parser) <— Parse Cookie header and populate req.cookies with an object keyed by the cookie names
 * bcrypt-as-promised (npm install --save bcrypt-as-promised)- Hashes, salts, and compares passwords/inputs
@@ -114,7 +119,7 @@ const knex = require('knex')(config);
 
 Module.exports = knex;
 ```
-* __ _Troubleshooting tip:_ sqlite3 is the default knex db__
+* _Troubleshooting tip:_ sqlite3 is the default knex db
 
 ### Knex Migrate Flow:
 * `npm run knex migrate:currentVersion `: to run script commands listed in package.json
@@ -144,12 +149,14 @@ npm run knex migrate:latest: The migrate:latest command is used to run the migra
 4. `heroku addons:create heroku-postgresql` -  Create a PostgreSQL database for the production environment
 5. `heroku pg:info `- Inspect the properties of the production database
 6. Specify the connection URL to the production database server by adding the following property to the knexfile.js file:
+
 ```javascript
     production: {
      client: ‘pg’,
       connection: process.env.DATABASE_URL
     }
 ```
+
 7. Automatically migrate the production database after on deployment by adding the following property to the package.json file:
 
 ```javascript
@@ -199,7 +206,7 @@ Heroku Dev Center - Getting Started on Heroku with Node.js
 Heroku Dev Center - Heroku Postgres
 
 
-Git:
+## Git:
 git add .
 git commit -m ‘msg'
 git checkout -b <branch_name> - make a new branch
@@ -209,7 +216,7 @@ git branch -d <branch_name> - deletes the branch_name
 git st - git status; fish shortcut
  git checkout -b <branch_name> <commit sha> - revert to branch even if deleted
 
-Feature Branch Workflow Steps:
+### Feature Branch Workflow Steps:
 merge the commits from the local Feature branch into the local master branch.
 pushing your local master branch to the central origin/master branch, adding the feature commits into the official project history.
 Now that all three branches contain the same commits, you can safely delete the Feature branch.
@@ -231,26 +238,26 @@ git branch -d <branch_name>
 
 
 
-Angular 1.x w/ES6
+## Angular 1.x w/ES6
 uiRouter
 
 
 
 
-React
+## React
 React-router V4
 
 
 
-Brunch:
+## Brunch:
 Brunch - ultra-fast HTML5 build tool. Brunch is a builder. Not a generic task runner, but a specialized tool focusing on the production of a small number of deployment-ready files from a large number of heterogenous development files or trees.
-Ken’s Angular config:
-npm install -g brunch
-cd path/to/app
-brunch new  <project_name>  --skeleton kmcgrady/with-angular
-Build app/app.js file, which will initialize the application
+### Ken’s Angular config:
+1. `npm install -g brunch`
+2. `cd path/to/app`
+3. `brunch new  <project_name>  --skeleton kmcgrady/with-angular`
+4. Build app/app.js file, which will initialize the application
   import angular from 'angular'
   angular.module('todoApp', []);
-Ryan’s React Config
-  brunch new <project_name> --skeleton ryansobol/with-react
+### Ryan’s React Config
+* `brunch new <project_name>` --skeleton ryansobol/with-react
 -s flag short for skeleton
