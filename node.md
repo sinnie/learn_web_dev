@@ -3,7 +3,7 @@
 [Node Docs](https://nodejs.org/en/)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a diverse variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system and is commonly used to create HTTP servers.
+Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a diverse variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. Node.js is commonly used to create HTTP servers.
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
 * `fs.readFile()`
@@ -13,7 +13,50 @@ JavaScript outside of the browser is concerned with operating system tasks, and,
 * `server.listen()`
 
 ## Modules
-Node.js is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function.
+Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of ones program.
+
+When `require()` is called, Node has to resolve the given string to an actual file to load. Therefore, local modules must begin with a relative or absolute path. In contrast, built-in modules or libraries installed in a `node_modules` library can be referre to by module name. For example, `const fs = require('fs')`, will give you Node's file sstem module. Whereas `const johnnyFive = require(./path/to/module/'my-module')` will include a local module. In either case, it is safe to omit the file extension.   
+
+### fs Module
+
+### Path Module:
+* A collection of utilities that don’t perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid.
+#### process.argv
+* property that returns an array containing the command line arguments passed when the Node.js process was launched.
+    * first element = process.execPath
+    * second element = path to the JS file being executed
+    * remaining elements = any additional command line arguments
+#### File I/0
+File I/O is provided by simple wrappers around standard POSIX functions.
+* `require(‘fs’);`
+* Async form takes a completion callback as last arg. The arguments passed to the callback depend on the method, but the first argument is always reserved for an exception. If the operation was completed successfully, then the first argument will be null or undefined.
+
+```javascript
+fs.rename('/tmp/hello', '/tmp/world', (err) => {
+  if (err) throw err;
+  fs.stat('/tmp/world', (err, stats) => {
+    if (err) throw err;
+    console.log(`stats: ${JSON.stringify(stats)}`);
+  });
+});
+```
+* I/O can also perform with devices:
+    * files
+    * signals
+    * pipes
+    * sockets
+
+Three Ways to Export Objects:
+1. assign a new object to the module.exports property
+2. Because module.exports is an object by default, the second way is to assign a value directly to one of its properties
+3. Because exports as a shorthand for module.exports, the third way is to assign a value directly to one of its properties
+
+An HTTP request is composed of the following parts.
+1. A method (or verb)
+2. A path
+3. An HTTP version
+4. Key-value headers
+5. And an optional body
 
 ## Initializing a server:
 A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two args - res, req
@@ -70,44 +113,7 @@ console.log(1 + 2);
 * http.createServer()
 * server.listen()
 
-## Path Module:
-* A collection of utilities that don’t perform any I/O operations. ie it doesn’t consult the filesystem to see whether or not the path is valid.
-process.argv
-* property that returns an array containing the command line arguments passed when the Node.js process was launched.
-    * first element = process.execPath
-    * second element = path to the JS file being executed
-    * remaining elements = any additional command line arguments
-File I/0
-File I/O is provided by simple wrappers around standard POSIX functions.
-* require(‘fs’);
-* Async form takes a completion callback as last arg. The arguments passed to the callback depend on the method, but the first argument is always reserved for an exception. If the operation was completed successfully, then the first argument will be null or undefined.
 
-```javascript
-fs.rename('/tmp/hello', '/tmp/world', (err) => {
-  if (err) throw err;
-  fs.stat('/tmp/world', (err, stats) => {
-    if (err) throw err;
-    console.log(`stats: ${JSON.stringify(stats)}`);
-  });
-});
-```
-* I/O can also perform with devices:
-    * files
-    * signals
-    * pipes
-    * sockets
-
-Three Ways to Export Objects:
-1. assign a new object to the module.exports property
-2. Because module.exports is an object by default, the second way is to assign a value directly to one of its properties
-3. Because exports as a shorthand for module.exports, the third way is to assign a value directly to one of its properties
-
-An HTTP request is composed of the following parts.
-1. A method (or verb)
-2. A path
-3. An HTTP version
-4. Key-value headers
-5. And an optional body
 
 ### Here's an example of what an HTTP request looks like.
 
@@ -232,3 +238,5 @@ server.listen(port, () => {
 [Nodejs.org](https://nodejs.org/en/)
 
 [Professional Node.js: Building JavaScript Based Scalable Software](https://www.amazon.com/Professional-Node-js-Building-Javascript-Scalable/dp/1118185463/ref=sr_1_1?ie=UTF8&qid=1486686418&sr=8-1&keywords=%5BProfessional+Node.js%3A+Building+JavaScript+Based+Scalable+Software%5D%28%29)
+
+[The Stream Handbook](https://github.com/substack/stream-handbook#introduction)
