@@ -1,6 +1,6 @@
 # Promises
 
-[I highly recommend that you play with this](https://github.com/bevacqua/promisees)
+[I highly recommend that you start here](https://github.com/bevacqua/promisees)
 
 ## Definition
 

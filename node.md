@@ -3,9 +3,17 @@
 [Node Docs](https://nodejs.org/en/)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl. It is an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in data-intensive, real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is not good for CPU intensive applications.
+Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is _not_ good for CPU intensive applications.
 
-From a developer's point of view, Node.js is single-threaded, but under the hood, __libuv__ handles __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
+From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libev__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libev directly, but you should be aware of it.
+
+Node uses libeio and libev
+* __lebeio__ - Event-based fully async I/O library for C, modelled in a similar style as libev.
+  * It includes async read, write, open, close, stat, unlink, fdatasync, mknod, readdir, etc.  (basically the full POSIX API), sendfile (native on solaris, linux, hp-ux, freebsd, emulated everywehere else), readahead (emulated where not available).
+  * It is fully event-library agnostic and can easily be integrated into any event-library (or used standalone, even in polling mode). It is very portable and relies only on POSIX threads.
+* __lebev__ - A full-featured and high-performance (see benchmark) event loop that is loosely modelled after libevent, but without its limitations and bugs.
+  * Features include child/pid watchers, periodic timers based on wallclock (absolute) time (in addition to timers using relative timeouts), as well as epoll/kqueue/event ports/inotify/eventfd/signalfd support, fast timer management, time jump detection and correction, and ease-of-use.
+  * It can be used as a libevent replacement using its emulation API or directly embedded into your programs without the need for complex configuration support.
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
 
@@ -17,9 +25,7 @@ JavaScript outside of the browser is concerned with operating system tasks, and,
 * server.listen()
 ```
 
-Tasks like `readFile` and `writeFile` are blocking.
-
-Tp specify verison use: `nvm use 4` or `nvm use 5`.
+Tasks like `readFile` and `writeFile` are called blocking because they take time to complete. Indeed, they are much slower than operations that use a CPU. For example, during a hard disk operation that takes 10ms to perform, a 1 GHz CPU would have performed ten million instruction-processing cycles.
 
 ### Asynchronous Node
 All API's of Node.js are asynchronous or non-blocking. This means that callbacks and promises are at the core of asynchronous JavaScript and Node.js. A simple definition of a callback is one functions passed as an argument to other functions.
@@ -27,10 +33,9 @@ All API's of Node.js are asynchronous or non-blocking. This means that callbacks
 Error-first callbacks are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/).
 
 ##### Note
-* error-handling: instead of a `try-catch` block you have to check for
+* __error-handling__: instead of a `try-catch` block you have to check for
 errors in the callback
-* no return value: async functions don’t return values, but values will
-be passed to the callbacks
+* __no return value__: async functions do not return values; however, values will be passed to the callbacks
 
 Async actions are completed through callbacks and __The Event Loop__.
 
@@ -39,9 +44,9 @@ Although V8 is single-threaded, the underlying C++ API of Node is not, which mea
 
 To understand how this works, you must understand the event loop and the task queue.
 
-Because Node is a single-threaded, event-driven language, we can attach listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled. s
+Because Node is a single-threaded, event-driven language, we can attach listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
-Node.js only provides one thread and one call stack, so when another request is being serverd as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. Callbacks are called in an infinite loop whenever the main thread has finished its previous task.
+Node.js only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. Callbacks are called in an infinite loop whenever the main thread has finished its previous task.
 
 #### Microtasks and Macrotasks
 Node actually has more than one task queue. It has one for microtasks and one for macrotasks.
@@ -59,7 +64,15 @@ Macrotasks:
 ### The Event Loop
 An event loop is a construct that performs two functions in a continuous loop: event detection and event handler triggering. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events such as user actions (mouse clicks, key presses), sensor outputs, or messages from other programs/threads. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and calls a callback function once an event has been detected (i.e. state has changed).
 
-Remember:
+#### Event Loop Pseudocode
+```
+while there are still events to process:
+    e = get the next event
+    if there is a callback associated with e:
+        call the callback
+```
+
+##### Remember:
 * There is at most one event handler running at any given time.
 * Any event handler will run to completion without being interrupted.
 
