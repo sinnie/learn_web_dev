@@ -1,6 +1,6 @@
 # Promises
 
-[Visual learner? Take a look at this project by Nicolás Bevacqua.](https://github.com/bevacqua/promisees)
+[Are you a visual learner? Take a look at this project by Nicolás Bevacqua.](https://github.com/bevacqua/promisees)
 
 ## Definition
 
