@@ -1,20 +1,24 @@
-## Terms
+# CORS
+
+## Terms:
 * __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domain names (origin).
-* __JSONP__ - JSON with Padding. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
+* __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
 
 ## Same-Origin Policy security model
 
-All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from calling an external API. The browser would only consider resources to be of the same origin if they used the same protocol (http/https), the same port, and the same domain -- even different subdomains would be blocked.
+All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from calling an external API. The browser only considers resources to be of the same origin if they use the same protocol (http/https), the same port, and the same domain -- even different subdomains will be blocked.
 
-The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents collaborative and rich web applications.
+The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents non-malicious web applications from accessing resources to improve UX.
 
-To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) were implemented. With the adoption of CORS, web applications can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc.
+To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) can be  implemented. With the adoption of CORS, developers can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc to improve web applications.
 
 ### Getting Around the Same-Origin Policy
 
+The HTML `<script>` tag _is_ allowed to execute content retrieved from foreign origins. However, services replying with pure JSON data are not allowed to share data across domains, and any attempt to use this data from another domain will result in a JavaScript error. The browser downloads the `<script>` file, evaluate the contents, misinterprets the raw JSON data as a block, and then throws a syntax error. Even if the JSON were interpreted as a JavaScript object literal, it cannot be accessed by the JavaScript running in the browser because there is no variable assignment on the object literals.
+
 **JSON-P**
 
-You may have heard of JSON-P. What it does is wrap your JSON requested from the server into a callback function and then executes it with exec.
+JSONP wraps your JSON requested from the server into a callback function and then executes it with exec.
 
 This is a glorious hack that somehow works, but only for GET requests. This will not save you from POSTs, PUTs, DELETEs, or any other HTTP verb.
 
@@ -50,9 +54,11 @@ app.use(function(req, res, next) {
 
 Let's break that down line-by-line.
 
-`res.header("Access-Control-Allow-Origin", "*");`
+```javascript
+res.header("Access-Control-Allow-Origin", "*");
+```
 
-This informs the browser that any other domain can access your api. You may want to change this from a '*' to the fully qualified domain name.
+This informs the browser that any other domain can access your api. You may want to change this from a "*" to a fully qualified domain name.
 
 ```javascript
 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -63,22 +69,11 @@ This is telling the browser what headers are allowed to be sent. If you want to 
 If you need to whitelist multiple domains, then you will need to make the middleware dynamic so that it will automatically choose what headers to send to the client.
 
 
-To understand the need for the Same Origin Policy and consequently for CORS, take the time to review all of the following material. After you dig into and digest the following material, you should be able to answer the following questions in your own words:
-
-* Read: https://en.wikipedia.org/wiki/Same-origin_policy
-* Read the question and first answer: http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important
-
-
 What is the same origin policy? Why is it enforced?
 what is jsonp
 What is CORS? How is it useful?
 why is cors better than jsonp
 Why is CORS preferred over JSONP? What advantages does it give us over JSONP?
-
-* Watch: https://www.youtube.com/watch?v=rlnhiwN8AnU
-* Read: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-* Read: https://en.wikipedia.org/wiki/JSONP
- https://www.youtube.com/watch?v=OrIFaWJ9Glo&feature=youtu.be&t=915
 
 ## Configure CORS
 
@@ -100,4 +95,18 @@ Once this is installed, axios on the client will be able to communicate with the
 
 ## Resources
 
-[MDN Same-Origin Policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+[Same-Origin Policy: MDN](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+
+[Understanding CORS: Spring.io](https://spring.io/understanding/CORS)
+
+[Understanding and using CORS: Restlet Blog](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
+
+[Understanding Cross-Origin Resource Sharing (CORS): Adobe Developer Connection](https://www.adobe.com/devnet/archive/html5/articles/understanding-cross-origin-resource-sharing-cors.html)
+
+[Cross-Origin resource sharing: wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#How_CORS_works)
+
+[Same-Origin Policy: Wikipedia](https://en.wikipedia.org/wiki/Same-origin_policy)
+
+[JSONP: Wikipedia](https://en.wikipedia.org/wiki/JSONP)
+
+[Security StackExchange: Why is the same origin policy so important](http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important)
