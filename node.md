@@ -17,10 +17,12 @@ JavaScript outside of the browser is concerned with operating system tasks, and,
 * server.listen()
 ```
 
+Tasks like `readFile` and `writeFile` are blocking.
+
 Tp specify verison use: `nvm use 4` or `nvm use 5`.
 
 ### Asynchronous Node
-All API's of Node.js are asynchronous or non-blocking. This means that callbacks are at the core of asynchronous JavaScript and Node.js. A simple definition of a callback is one functions passed as an argument to other functions.
+All API's of Node.js are asynchronous or non-blocking. This means that callbacks and promises are at the core of asynchronous JavaScript and Node.js. A simple definition of a callback is one functions passed as an argument to other functions.
 
 Error-first callbacks are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/).
 
@@ -37,8 +39,29 @@ Although V8 is single-threaded, the underlying C++ API of Node is not, which mea
 
 To understand how this works, you must understand the event loop and the task queue.
 
+Because Node is a single-threaded, event-driven language, we can attach listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled. s
+
+Node.js only provides one thread and one call stack, so when another request is being serverd as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. Callbacks are called in an infinite loop whenever the main thread has finished its previous task.
+
+#### Microtasks and Macrotasks
+Node actually has more than one task queue. It has one for microtasks and one for macrotasks.
+
+Microtasks:
+* `process.nextTick`
+* `promises`
+* `Object.observe`
+Macrotasks:
+* `setTimeout`
+* `setInterval`
+* `setImmediate`
+* `I/O`
+
 ### The Event Loop
-The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events such as user actions (mouse clicks, key presses), sensor outputs, or messages from other programs/threads. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and calls a callback function once an event has been detected (i.e. state has changed).
+An event loop is a construct that performs two functions in a continuous loop: event detection and event handler triggering. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events such as user actions (mouse clicks, key presses), sensor outputs, or messages from other programs/threads. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and calls a callback function once an event has been detected (i.e. state has changed).
+
+Remember:
+* There is at most one event handler running at any given time.
+* Any event handler will run to completion without being interrupted.
 
 ## Modules
 Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows one to load built-in modules, dowloaded libraries, or files that are a part of one's program.
