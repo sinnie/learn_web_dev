@@ -1,30 +1,34 @@
 # CORS
 
-## Terms:
-* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domain names (origin).
-* __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
-
 ## Same-Origin Policy security model
 
 All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from calling an external API. The browser only considers resources to be of the same origin if they use the same protocol (http/https), the same port, and the same domain -- even different subdomains will be blocked.
 
-The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents non-malicious web applications from accessing resources to improve UX.
+The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents non-malicious web applications from accessing resources to improve UI/UX.
 
 To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) can be  implemented. With the adoption of CORS, developers can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc to improve web applications.
 
 ### Getting Around the Same-Origin Policy
 
-The HTML `<script>` tag _is_ allowed to execute content retrieved from foreign origins. However, services replying with pure JSON data are not allowed to share data across domains, and any attempt to use this data from another domain will result in a JavaScript error. The browser downloads the `<script>` file, evaluate the contents, misinterprets the raw JSON data as a block, and then throws a syntax error. Even if the JSON were interpreted as a JavaScript object literal, it cannot be accessed by the JavaScript running in the browser because there is no variable assignment on the object literals.
+The HTML `<script>` tag is able to execute content retrieved from foreign origins. However, services replying with pure JSON data are not allowed to share data across domains, and any attempt to use this data from another domain will result in a JavaScript error. The browser downloads the `<script>` file, evaluate the contents, misinterprets the raw JSON data as a block, and then throws a syntax error. Even if the JSON were interpreted as a JavaScript object literal, the JSON cannot be accessed by the JavaScript running in the browser because there is no variable assignment on the object literal.
 
-**JSON-P**
+#### JSON-P
 
-JSONP wraps your JSON requested from the server into a callback function and then executes it with exec.
+In the JSONP usage pattern, the URL request pointed to by the `src` attribute in the `<script>` tag returns JSON data, with JavaScript code (usually a function call) wrapped around it. This "wrapped payload" is then interpreted by the browser, and the function that is already defined in the JavaScript environment can manipulate the JSON data. The function invocation to `parseResponse()` is the "P" (the padding) around the JSON.
 
-This is a glorious hack that somehow works, but only for GET requests. This will not save you from POSTs, PUTs, DELETEs, or any other HTTP verb.
+For JSONP to work, a server must reply with a response that includes the JSONP function. The JSONP function invocation that gets sent back, and the payload that the function receives, must be agreed-upon by the client and server.
 
-JSON-P was introduced as one way to solve this problem, but it was an early solution and we have many more advanced options now. There are still APIs that use this (namely, Google Maps!) but it's being phased out by the industry.
+```HTML
+<script type="application/javascript"
+        src="http://server.example.com/Users/1234?callback=parseResponse">
+</script>
+```
 
-**CORS**
+JSONP works only for GET requests and is not effective for POSTs, PUTs, and DELETEs of a RESTful server.
+
+JSON-P is an early and limited solution to cross-origin sharing. Fortunately, we have better options now. There are still APIs that use JSON-P (namely, Google Maps!) but it's being phased out by the industry in favor of CORS.
+
+#### CORS
 
 CORS stands for Cross Origin Resource Sharing. It is a standard for allowing browsers to request resources from apis on other domains. This is perfect for us, as this is exactly what we are looking for.
 
@@ -92,6 +96,9 @@ Make sure that any Express middleware being used (such as CORS, in this case) is
 
 Once this is installed, axios on the client will be able to communicate with the API as needed. You'll know it's configured correctly when axios is able to get data from the API. If you jump back over to your project making the axios request, the error should be gone and the data should be logged to the console. Success!
 
+## Terms
+* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domains (origin).
+* __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
 
 ## Resources
 
