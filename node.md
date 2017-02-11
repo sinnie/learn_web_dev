@@ -6,6 +6,24 @@
 Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is _not_ good for CPU intensive applications.
 
 From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
+
+### Node Architecture
+```
++-------------------------------------------------------+
+|                                                       |
+|                       Node.js API                     |
+|                                                       |
++-----------------------------------+-------------------+
+|                                   |                   |
+|         Node.js Bindings          |   C/C++ Addons    |
+|                                   |                   |
++--------+--------+--------+--------++---------+--------+
+|        |        |        |   http  |  Open   |        |
+|  V8    | LibUv  | c-ares |  parser |  SSL    | zlib   |
+|        |        |        |         |         |        |
++--------+--------+--------+---------+---------+--------+
+```
+* V8 Google's opem source JavaScript engine built for Google Chrome. It's written in C++ and can run either standalone or embedded into any C++ application.
 * [libuv](http://nikhilm.github.io/uvbook/) is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll(4), kqueue(2), Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
   * It was originally an abstraction around libev or Microsoft IOCP, as libev doesn't support Windows. In node-v0.9.0's version of libuv, the dependency on libev was removed
   * __Features:__
@@ -21,22 +39,10 @@ From a developer's point of view, Node.js is single-threaded, but under the hood
     * Signal handling
     * High resolution clock
     * Threading and synchronization primitives
-
-### Node Architecture
-```
-+-------------------------------------------------------+
-|                       Node.js API                     |
-|                                                       |
-+-----------------------------------+-------------------+
-|                                   |                   |
-|         Node.js Bindings          |   C/C++ Addons    |
-|                                   |                   |
-+--------+--------+--------+--------++---------+--------+
-|        |        |        |   http  |  Open   |        |
-|  V8    | LibUv  | c-ares |  parser |  SSL    | zlib   |
-|        |        |        |         |         |        |
-+--------+--------+--------+---------+---------+--------+
-```
+* __c-ares__ - a C library for async DNS request, including name resolves. It is intended for applicaitons that need to preform DNS queries without blocking, or need to perform multiple DNS queries in parallel.
+* http_parser - This is a parser for HTTP messages written in C. It parses both requests and responses, and is designed to be used in performance HTTP applications. It does not make any syscalls nor allocations, it does not buffer data, it can be interrupted at anytime.
+* OpenSSL: Is an open source implementation of Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols as well as a full-strength general purpose cryptography library. It is based on SSLeay library and built using C. It provides all the necessary cryptography methods like hash, hmac, cipher, decipher, sign and verify methods.
+* Zlib: Is a general purpose data compression library written in C.
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
 
@@ -348,3 +354,5 @@ server.listen(port, () => {
 [The Stream Handbook](https://github.com/substack/stream-handbook#introduction)
 
 [Understanding the Node.js Event Loop](https://nodesource.com/blog/understanding-the-nodejs-event-loop/)
+
+[Introduction to Node.js by Abdel Raoof](http://abdelraoof.com/blog/2015/10/19/introduction-to-nodejs/)
