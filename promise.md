@@ -36,7 +36,7 @@ A __promise__ is an object used for asynchronous computations. It represents a v
   * __Pending__ - not fulfilled or rejected (unresolved)
   * __Fulfilled__ - the operation completed successfully (resolved)
   * __Rejected__ - the operation has failed (resolved)
-* A promise can only represent one event and it can only be in one state at a time. Each function (`reject(), resolve(), fulfill()`) permanently changes the state of the promise. Once a promise is resolved, it's state can not be reverted.
+* A promise can only represent one event and it can only be in one state at a time. Each function (`reject(), resolve(), fulfill()`) permanently changes the state of the promise. Once a promise is resolved, its state can not be reverted.
 * A new Promise is initially in a Pending state. It can either be _fulfilled_ with a value or _rejected_ with an error. When this happens, the associated handlers are queued up by a promise's `.then()` method.
   * __race conditions__ are avoided because handlers attached to a promise in a fulfilled or rejected state will also be called.
 
