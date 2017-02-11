@@ -23,20 +23,20 @@ From a developer's point of view, Node.js is single-threaded, but under the hood
     * Threading and synchronization primitives
 
 ### Node Architecture
+```
 +-------------------------------------------------------+
-|                                                       |
 |                       Node.js API                     |
 |                                                       |
 +-----------------------------------+-------------------+
 |                                   |                   |
-|              Node.js Bindings     |   C/C++ Addons    |
+|         Node.js Bindings          |   C/C++ Addons    |
 |                                   |                   |
 +--------+--------+--------+--------++---------+--------+
 |        |        |        |   http  |  Open   |        |
 |  V8    | LibUv  | c-ares |  parser |  SSL    | zlib   |
 |        |        |        |         |         |        |
 +--------+--------+--------+---------+---------+--------+
-
+```
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
 
