@@ -5,15 +5,24 @@
 ## Introduction to Node
 Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is _not_ good for CPU intensive applications.
 
-From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libev__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libev directly, but you should be aware of it.
+From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libev directly, but you should be aware of it.
 
-Node uses libeio and libev
-* __lebeio__ - Event-based fully async I/O library for C, modelled in a similar style as libev.
-  * It includes async read, write, open, close, stat, unlink, fdatasync, mknod, readdir, etc.  (basically the full POSIX API), sendfile (native on solaris, linux, hp-ux, freebsd, emulated everywehere else), readahead (emulated where not available).
-  * It is fully event-library agnostic and can easily be integrated into any event-library (or used standalone, even in polling mode). It is very portable and relies only on POSIX threads.
-* __lebev__ - A full-featured and high-performance (see benchmark) event loop that is loosely modelled after libevent, but without its limitations and bugs.
-  * Features include child/pid watchers, periodic timers based on wallclock (absolute) time (in addition to timers using relative timeouts), as well as epoll/kqueue/event ports/inotify/eventfd/signalfd support, fast timer management, time jump detection and correction, and ease-of-use.
-  * It can be used as a libevent replacement using its emulation API or directly embedded into your programs without the need for complex configuration support.
+Node uses libuv
+* __libuv__ is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll(4), kqueue(2), Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
+  * It was originally an abstraction around libev or Microsoft IOCP, as libev doesn't support Windows. In node-v0.9.0's version of libuv, the dependency on libev was removed
+  * __Features:__
+    * Full-featured event loop backed by epoll, kqueue, IOCP, event ports.
+    * Asynchronous TCP and UDP sockets
+    * Asynchronous DNS resolution
+    * Asynchronous file and file system operations
+    * File system events
+    * ANSI escape code controlled TTY
+    * IPC with socket sharing, using Unix domain sockets or named pipes (Windows)
+    * Child processes
+    * Thread pool
+    * Signal handling
+    * High resolution clock
+    * Threading and synchronization primitives
 
 JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
 
