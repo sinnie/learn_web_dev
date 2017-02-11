@@ -23,7 +23,7 @@ From a developer's point of view, Node.js is single-threaded, but under the hood
 |        |        |        |         |         |        |
 +--------+--------+--------+---------+---------+--------+
 ```
-* V8 Google's opem source JavaScript engine built for Google Chrome. It's written in C++ and can run either standalone or embedded into any C++ application.
+* V8 Google's open source JavaScript engine built for Google Chrome. It's written in C++ and can run either standalone or embedded into any C++ application.
 * [libuv](http://nikhilm.github.io/uvbook/) is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll(4), kqueue(2), Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
   * It was originally an abstraction around libev or Microsoft IOCP, as libev doesn't support Windows. In node-v0.9.0's version of libuv, the dependency on libev was removed
   * __Features:__
@@ -40,11 +40,12 @@ From a developer's point of view, Node.js is single-threaded, but under the hood
     * High resolution clock
     * Threading and synchronization primitives
 * __c-ares__ - a C library for async DNS request, including name resolves. It is intended for applicaitons that need to preform DNS queries without blocking, or need to perform multiple DNS queries in parallel.
-* http_parser - This is a parser for HTTP messages written in C. It parses both requests and responses, and is designed to be used in performance HTTP applications. It does not make any syscalls nor allocations, it does not buffer data, it can be interrupted at anytime.
-* OpenSSL: Is an open source implementation of Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols as well as a full-strength general purpose cryptography library. It is based on SSLeay library and built using C. It provides all the necessary cryptography methods like hash, hmac, cipher, decipher, sign and verify methods.
-* Zlib: Is a general purpose data compression library written in C.
+* __http_parser__ - This is a parser for HTTP messages written in C. It parses both requests and responses, and is designed to be used in performance HTTP applications. It does not make any syscalls nor allocations, it does not buffer data, it can be interrupted at anytime.
+* __OpenSSL__: Is an open source implementation of Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols as well as a full-strength general purpose cryptography library. It is based on SSLeay library and built using C. It provides all the necessary cryptography methods like hash, hmac, cipher, decipher, sign and verify methods.
+* __Zlib__: Is a general purpose data compression library written in C.
 
-JavaScript outside of the browser is concerned with operating system tasks, and, therefore, has access to the following functions:
+
+The Node.js API consists of about 27 core modules, which are concerned with operating system tasks, and, therefore, has access to the following functions:
 
 ```javascript
 * fs.readFile()
