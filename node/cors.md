@@ -1,14 +1,16 @@
 ## Terms
-* CORS
-* JSONP
+* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domain names (origin).
+* __JSONP__ - JSON with Padding. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
 
-## CORS security model
+## Same-Origin Policy security model
 
-All of the major web browsers have agreed to follow the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy).
+All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from calling an external API. The browser would only consider resources to be of the same origin if they used the same protocol (http/https), the same port, and the same domain -- even different subdomains would be blocked.
 
-What this means is that the browsers enforce the rules that the servers request. And if the browser doesn't set any rules, then the default behavior is to not allow scripts across different domains.
+The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents collaborative and rich web applications.
 
-### What are the options?
+To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) were implemented. With the adoption of CORS, web applications can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc.
+
+### Getting Around the Same-Origin Policy
 
 **JSON-P**
 
@@ -17,6 +19,11 @@ You may have heard of JSON-P. What it does is wrap your JSON requested from the 
 This is a glorious hack that somehow works, but only for GET requests. This will not save you from POSTs, PUTs, DELETEs, or any other HTTP verb.
 
 JSON-P was introduced as one way to solve this problem, but it was an early solution and we have many more advanced options now. There are still APIs that use this (namely, Google Maps!) but it's being phased out by the industry.
+
+## CORS Security Model
+
+What this means is that the browsers enforce the rules that the servers request. And if the browser doesn't set any rules, then the default behavior is to not allow scripts across different domains.
+
 
 **CORS**
 
@@ -91,97 +98,25 @@ To understand the need for the Same Origin Policy and consequently for CORS, tak
 * Read: https://en.wikipedia.org/wiki/Same-origin_policy
 * Read the question and first answer: http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important
 
-### !challenge
 
-* type: short-answer
-* title: same origin policy
-* id: 400
-
-##### !question
 What is the same origin policy? Why is it enforced?
-##### !end-question
 
-##### !placeholder
-Write your answer
-##### !end-placeholder
+what is jsonp
 
-##### !answer
-##### !end-answer
-
-##### !explanation
-##### !end-explanation
-
-### !end-challenge
-
-### !challenge
-
-* type: short-answer
-* title: what is jsonp
-* id: 401
-
-##### !question
-What is JSONP?
-##### !end-question
-
-##### !placeholder
-Write your answer
-##### !end-placeholder
-
-##### !answer
-##### !end-answer
-
-##### !explanation
-##### !end-explanation
-
-### !end-challenge
 
 * Watch: https://www.youtube.com/watch?v=rlnhiwN8AnU
 * Read: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 * Read: https://en.wikipedia.org/wiki/JSONP
 
-### !challenge
 
-* type: short-answer
-* title: what is cors
-* id: 402
-
-##### !question
 What is CORS? How is it useful?
-##### !end-question
 
-##### !placeholder
-Write your answer
-##### !end-placeholder
+why is cors better than jsonp
 
-##### !answer
-##### !end-answer
-
-##### !explanation
-##### !end-explanation
-
-### !end-challenge
-
-### !challenge
-
-* type: short-answer
-* title: why is cors better than jsonp
-* id: 403
 
 ##### !question
 Why is CORS preferred over JSONP? What advantages does it give us over JSONP?
-##### !end-question
 
-##### !placeholder
-Write your answer
-##### !end-placeholder
-
-##### !answer
-##### !end-answer
-
-##### !explanation
-##### !end-explanation
-
-### !end-challenge
 
 ## Rationalize
 
@@ -206,52 +141,7 @@ Make sure that any Express middleware being used (such as CORS, in this case) is
 
 Once this is installed, axios on the client will be able to communicate with the API as needed. You'll know it's configured correctly when axios is able to get data from the API. If you jump back over to your project making the axios request, the error should be gone and the data should be logged to the console. Success!
 
-## Reflect
 
-Setting that up was actually pretty simple with Express. It's just two lines of code, so we can assume it's doing a lot for us under the hood. Given what you know about CORS, consider the following:
+## Resources
 
-### !challenge
-
-* type: short-answer
-* title: what ACAO header
-* id: 404
-
-##### !question
-What `Access-Control-Allow-Origin:` header value must our application be using, given that we didn't specify any domain names?
-##### !end-question
-
-##### !placeholder
-Write your answer
-##### !end-placeholder
-
-##### !answer
-*
-##### !end-answer
-
-##### !explanation
-* means that the resource can be accessed by any domain in a cross-site manner.
-##### !end-explanation
-
-### !end-challenge
-
-### !challenge
-
-* type: short-answer
-* title: how to configure CORS specifically
-* id: 405
-
-##### !question
-Review the npm cors module documentation. How would you configure CORS to only work with the client applications that you've approved of?
-##### !end-question
-
-##### !placeholder
-Write your answer
-##### !end-placeholder
-
-##### !answer
-##### !end-answer
-
-##### !explanation
-##### !end-explanation
-
-### !end-challenge
+[MDN Same-Origin Policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
