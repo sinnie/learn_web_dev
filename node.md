@@ -89,11 +89,7 @@ __Event-driven programming__ is a programming paradigm in which the flow of the 
 
 Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code under the hood. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
-  > In Node.js, there are actually two separate kinds of events:
-
-    >> System events - libuv (lower-level close to the machine)
-
-    >> Custom events - JavaScript Core  - Event Emitter
+  > In Node.js, there are actually two separate kinds of events system events, lower level events handed by libuv, and custom events, which are handled by the JavaScript core (event Emitter)
 
 * JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though the system events and the custom events are the same thing. They are not.  
 
@@ -102,6 +98,18 @@ To understand how this works, you must understand the event loop and the task qu
 Node.js implements an event-driven approach by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
 Node.js only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. Callbacks are called in an infinite loop whenever the main thread has finished its previous task.
+
+### The Event Loop
+An event loop is a construct that performs two functions in a continuous loop: event detection and event handler triggering. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events such as user actions (mouse clicks, key presses), sensor outputs, or messages from other programs/threads. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and calls a callback function once an event has been detected (i.e. state has changed).
+
+#### Event Loop Pseudocode
+```
+while there are still events to process:
+    e = get the next event
+    if there is a callback associated with e:
+        call the callback
+```
+
 
 #### Microtasks and Macrotasks
 Node actually has more than one task queue. It has one for microtasks and one for macrotasks.
@@ -116,16 +124,6 @@ Macrotasks:
 * `setImmediate`
 * `I/O`
 
-### The Event Loop
-An event loop is a construct that performs two functions in a continuous loop: event detection and event handler triggering. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events such as user actions (mouse clicks, key presses), sensor outputs, or messages from other programs/threads. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and calls a callback function once an event has been detected (i.e. state has changed).
-
-#### Event Loop Pseudocode
-```
-while there are still events to process:
-    e = get the next event
-    if there is a callback associated with e:
-        call the callback
-```
 
 ##### Remember:
 * There is at most one event handler running at any given time.
