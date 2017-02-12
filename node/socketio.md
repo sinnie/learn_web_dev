@@ -164,35 +164,35 @@
 
 * socket.io-stream
 
-```javascript
-            var fs = require('fs’);
-            var io = require('socket.io')(3000);
-            require('socket.io-stream')(io);
-            io.on('connection', function(socket){
-                  io.emit(fs.createReadStream('file.jpg'));
-            });
-```
+  ```
+  var fs = require('fs’);
+  var io = require('socket.io')(3000);
+  require('socket.io-stream')(io);
+  io.on('connection', function(socket){
+        io.emit(fs.createReadStream('file.jpg'));
+  });
+  ```
     * The client side will receive a Stream object that emits data events
 
 ## With Express Framework
-```
-Server (app.js)
-var app = require('express').createServer();
-var io = require('socket.io')(app);
+  ```
+  Server (app.js)
+  var app = require('express').createServer();
+  var io = require('socket.io')(app);
 
-app.listen(80);
+  app.listen(80);
 
-app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
-
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+  app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/index.html');
   });
-});
-```
+
+  io.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+      console.log(data);
+    });
+  });
+  ```
 
 ## Sending Data to the Client
 * all data transactions in socket.io will be handled with callbacks
@@ -211,7 +211,7 @@ io.on('connection', function (socket) {
 * when the listener gets a call for the ‘connection’ action, we will perform the function that follows it.
 * When the ‘connection’ action is called, we trigger an emit action that will send a “message” action to the client.
 * The Message action will send the JSON object `{‘message’: ‘hello world’}`
-* the connection action is triggered when i`o.conection( )` is executed on `socket.html`
+* the connection action is triggered when `io.conection( )` is executed on `socket.html`
 
 ## Collecting Data from the Client
 
