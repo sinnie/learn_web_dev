@@ -10,16 +10,16 @@
 ### Server-Side
 [Node](./node.md)
 
-[Express]()
+Express
 
-[PostgreSQL]()
+PostgreSQL
 
-[Knex.js]
+Knex.js
 
 ### Client Side Frameworks
-[Angular 1.5]
+Angular 1.5
 
-[React.js]
+React.js
 
 ### Computer Science
 
