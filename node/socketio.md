@@ -1,7 +1,7 @@
 # Socket.io
 
 ## Problem:
-* HTTP and real-time apps do not go well together because HTTP protocol is stateless and based off a request-response cycle - an HTTP server only reacts upon requests from the client but doesn’t have a stateful continuous connection to the client
+* HTTP and real-time apps do not go well together because HTTP protocol is stateless and based off a request-response cycle - an HTTP server only reacts upon requests from the client but doesn’t have a stateful, continuous connection to the client
     * stateless - the server does not have to retain session information or status about each communications partner for the duration of multiple requests. HTTP is stateless because the connection between the browser and the server is lost once the transaction ends.
 * JS and HTML can talk from client events to the server, but communicating a change on the server to the client is only possible when the client asks the server for the current state.
 
@@ -268,3 +268,5 @@
 ## Resources
 
 [socket.io](https://github.com/socketio/socket.io)
+
+[Professional Node.js: Building JavaScript Based Scalable Software](https://www.amazon.com/Professional-Node-js-Building-Javascript-Scalable/dp/1118185463/ref=sr_1_1?ie=UTF8&qid=1486686418&sr=8-1&keywords=%5BProfessional+Node.js%3A+Building+JavaScript+Based+Scalable+Software%5D%28%29)
