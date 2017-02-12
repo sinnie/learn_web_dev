@@ -255,8 +255,9 @@ Once this is installed, axios on the client will be able to communicate with the
 
 ### The document.domain method
 
-Method type: iframe.
-Note that this is an iframe method that sets the value of document.domain to a suffix of the current domain. If it does so, the shorter domain is used for subsequent origin checks. For example, assume a script in the document at http://store.company.com/dir/other.html executes the following statement:
+* Method type: iframe.
+
+Note that this is an iframe method that sets the value of document.domain to a suffix of the current domain. If it does so, the shorter domain is used for subsequent origin checks. For example, assume a script in the document at `http://store.company.com/dir/other.html `executes the following statement:
 
 `document.domain = "company.com";
 `
