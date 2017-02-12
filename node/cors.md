@@ -26,30 +26,154 @@ For JSONP to work, a server must reply with a response that includes the JSONP f
 
 JSONP works only for GET requests and is not effective for POSTs, PUTs, and DELETEs of a RESTful server.
 
-JSON-P is an early and limited solution to cross-origin sharing. Fortunately, we have better options now. There are still APIs that use JSON-P (namely, Google Maps!) but it's being phased out by the industry in favor of CORS.
-
-#### CORS
-
-CORS stands for Cross Origin Resource Sharing. It is a standard for allowing browsers to request resources from apis on other domains. This is perfect for us, as this is exactly what we are looking for.
-
+JSON-P is an early and limited solution to cross-origin sharing. Fortunately, we have better options now. There are still APIs that use JSON-P, but it's being phased out by the industry in favor of __CORS__.
 
 ## CORS Security Model
+CORS is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin.
 
-What this means is that the browsers enforce the rules that the servers request. And if the browser doesn't set any rules, then the default behavior is to not allow scripts across different domains.
+* The CORS specification defines two distinct use cases:
+  * __Simple requests__ = This use case applies if we use `HTTP` `GET`, `HEAD` and `POST` methods. In the case of `POST` methods, only content types with the following values are supported: `text/plain`, `application/x-www-form-urlencoded`, and `multipart/form-data`.
+  * __Preflighted requests__ - When the ‘simple requests’ use case doesn’t apply, a first request (with the HTTP `OPTIONS` method) is made to check what can be done in the context of cross-domain requests.
+
+If you add authentication to that request using the `Authentication` header, simple requests automatically become preflighted ones.
+
+The client and server exchange headers to specify behavior regarding cross-domain requests. The following is a list of the specification on the header:
+* `Origin`: this header is used by the client to specify which domain the request is executed from. The server uses this hint to authorize, or not, the cross-domain request.
+* `Access-Control-Request-Method`: In the context of preflighted requests, the `OPTIONS` request sends this header to check if the target method is allowed in the context of cross-domain requests.
+* `Access-Control-Request-Headers`: within the context of preflighted requests, the `OPTIONS` request sends this header to check if headers are allowed for the target method in the context of cross-domain requests.
+* `Access-Control-Allow-Credentials`: this specifies if credentials are supported for cross-domain requests.
+* `Access-Control-Allow-Methods`: the server uses this header to tell which headers are authorized in the context of the request. This is typically used in the context of preflighted requests.
+* `Access-Control-Allow-Origin`: the server uses this header to tell which domains are authorized for the request.
+* `Access-Control-Allow-Headers`: the server uses this header to tell which headers are authorized in the context of the request. This is typically used in the context of preflighted requests.
+
+#### Simple request
+In a simple request, the request is executed against the other domain. If the remote resource supports cross domains, the response is accepted. Otherwise, an error occurs
+
+```
++--------------+                           +-------------+
+|              |       GET (for example)   |             |
+|    Client    +-------------------------> |    Server   |
+|              |       Origin header       |             |
+|              |                           |             |
+|  Different   |                           |             |
+|  domain from |                           |   Will      |
+|  the server  |                           |   support   |
+|              |                           |   CORS      |
+|              |                           |             |
+|              |       CORS headers        |             |
++--------------+ <-------------------------+-------------+
+                         Response
+```
+Example Request:
+```
+GET /someData/ HTTP/1.1
+Host: someDomain.org
+(...)
+Referer: http://mydomain.org/example.html
+Origin: http://mydomain.org
+```
+
+Example Response:
+```
+HTTP/1.1 200 OK
+(...)
+Access-Control-Allow-Origin: *
+Content-Type: application/json
+
+[JSON Data]
+```
 
 
-**CORS**
+#### Preflighted request
+In the case of preflighted requests, this is a negotiation between the caller and the Web application based on HTTP headers that consists of two phases:
+1. The browser executes an `OPTIONS` request with the same URL as the target request to check that it has the necessary permissions to execute the request.
+2. This `OPTIONS` request then returns headers that identify what is possible to do for the URL. If rights/permissions match, the browser executes the request.
 
-CORS stands for Cross Origin Resource Sharing. It is a standard for allowing browsers to request resources from apis on other domains. This is perfect for us, as this is exactly what we are looking for.
+```
++---------------------+                   +--------------------+
+|                     |   OPTIONS         |                    |
+|      Client         +-----------------> |      Server        |
+|                     |  Origin header    |                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|     Different       |  CORS headers     +    With support    |
+|    domain from      +----------------->        of  CORS      |
+|     the server      |    Response       +                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|                     | POST (for example)|                    |
+|                     +-----------------> |                    |
+|                     |  Origin header    |                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|                     |                   |                    |
+|                     |   CORS headers    |                    |
+|                     | <-----------------+                    |
+|                     |     Response      |                    |
+|                     |                   |                    |
++---------------------+                   +--------------------+
 
-But how do we tell the browser that we want it to be allowed to access that api?
+```
 
-The answer is counterintuitive. The server will tell the browser who is allowed, and the browser then enforces those rules. This means that you, the programmer, must write some code in order to allow other origins.
+#### Example exchange
+```
+OPTION /myresource/ HTTP/1.1
+Host: mydomain.org
+(...)
+Origin: http://test.org
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type,accept
+```
+
+The corresponding response:
+
+```
+HTTP/1.1 200 OK
+(...)
+Access-Control-Allow-Origin: http://test.org
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Headers: content-type,accept
+Access-Control-Max-Age: 1728000
+```
+
+Since the `OPTIONS` pre-request succeeds, the browser will then send the actual request:
+
+```
+POST /myresource/ HTTP/1.1
+Host: mydomain.org
+Content-type: application/json
+Accept: application/json
+(...)
+Referer: http://test.org/example.html
+Origin: http://test.org
+
+[JSON Data]
+```
+
+The corresponding response:
+
+```
+HTTP/1.1 200 OK
+(...)
+Access-Control-Allow-Origin: *
+Content-Type: application/json
+
+[JSON Data]
+
+```
+[#Templier 2015](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
+
+
+
+As you can see, to enable cross-origin sharing, permissions set on the server will tell the browser what is allowed, and the browser then enforces those rules.
 
 For Node, that code comes in the form of middleware before the api routes.
 
 ```javascript
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
