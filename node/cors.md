@@ -1,6 +1,6 @@
 # CORS
 
-[Learn Web Dev](./README.md)
+[Learn Web Dev](../README.md)
 
 [Node](../node.md)
 
@@ -365,7 +365,7 @@ One interesting feature of the this method is that the reverse proxy can easily 
 
 [Templier, Thierry. _Restlet Blog_. 'Understanding and using CORS' ](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
 
-[Adobe Developer Connection: 'Understanding Cross-Origin Resource Sharing (CORS)'](https://www.adobe.com/devnet/archive/html5/articles/understanding-cross-origin-resource-sharing-cors.html)
+[_Adobe Developer Connection_: 'Understanding Cross-Origin Resource Sharing (CORS)'](https://www.adobe.com/devnet/archive/html5/articles/understanding-cross-origin-resource-sharing-cors.html)
 
 [_Wikipedia_. 'Cross-Origin resource sharing'](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#How_CORS_works)
 
