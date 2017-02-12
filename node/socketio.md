@@ -1,5 +1,10 @@
 # Socket.io
 
+[Learn Web Dev](../README.md)
+
+[Node](../node.md)
+
+
 ## Problem:
 * HTTP and real-time apps do not go well together because HTTP protocol is stateless and based off a request-response cycle - an HTTP server only reacts upon requests from the client but doesn’t have a stateful, continuous connection to the client
     * stateless - the server does not have to retain session information or status about each communications partner for the duration of multiple requests. HTTP is stateless because the connection between the browser and the server is lost once the transaction ends.
@@ -253,15 +258,18 @@
     ```javascript
     var listener = io.listen(server);
     listener.sockets.on('connection', function(socket){
+
       //send data to client
       setInterval(function(){
         socket.emit('date', {'date': new Date()});
       }, 1000);
+
       // receive client data
       socket.on('client_data', function(data){ // <— listener for the client_data emit call
         process.stdout.write(data.letter); // <— writes a letter inside the JSON to the server console
-      });                                                            // writes to stdout without inserting new line chars
+      });                                                          
     });
+      // writes to stdout without inserting new line chars
     ```
 
 
