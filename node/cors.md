@@ -247,6 +247,8 @@ Make sure that any Express middleware being used (such as CORS, in this case) is
 
 Once this is installed, axios on the client will be able to communicate with the API as needed. You will know it is configured correctly when axios is able to get data from the API.
 
+---
+
 ## Other Ways Around the Same-Origin Policy
 
 ##### [Titarenco, David. _Stack Overflow_. "The Same Origin Policy"](http://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy)
