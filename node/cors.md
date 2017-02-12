@@ -4,30 +4,30 @@
 
 [Node](../node.md)
 
-## Key Terms
+## Definitions
 * __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having different domains (origin).
 * __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
 
-## Same-Origin Policy security model
+## Same-Origin Policy Security Model
 
-All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from calling an external API. The browser only considers resources to be of the same origin if they use the same protocol (http/https), the same port, and the same domain -- even different subdomains will be blocked.
+All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from obtaining resources form a different domain/origin. The browser only considers resources to be of the same origin if they use the same protocol (http/https), the same port, and the same domain -- even different subdomains will be blocked.
 
 The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents non-malicious web applications from accessing resources to improve UI/UX.
 
 To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) can be implemented. With the adoption of CORS, developers can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc to improve web applications.
 
-If you make a cross-origin request in Chrome, you will see:
+#### Example of Cross-Origin Request Error
 ```
 XMLHttpRequest cannot load http://localhost:3000. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access.
 ```
 
-### Getting Around the Same-Origin Policy
+### Circumventing the Same-Origin Policy
 
 The HTML `<script>` tag is able to execute content retrieved from foreign origins. However, services replying with pure JSON data are not allowed to share data across domains, and any attempt to use this data from another domain will result in a JavaScript error. The browser downloads the `<script>` file, evaluate the contents, misinterprets the raw JSON data as a block, and then throws a syntax error. Even if the JSON were interpreted as a JavaScript object literal, the JSON cannot be accessed by the JavaScript running in the browser because there is no variable assignment on the object literal.
 
 #### JSON-P
 
-In the JSONP usage pattern, the URL request pointed to by the `src` attribute in the `<script>` tag returns JSON data, with JavaScript code (usually a function call) wrapped around it. This "wrapped payload" is then interpreted by the browser, and the function that is already defined in the JavaScript environment can manipulate the JSON data. The function invocation to `parseResponse()` is the "P" (the padding) around the JSON.
+In the JSONP usage pattern, the URL request pointed to by the `src` attribute in the `<script>` tag returns JSON data, with JavaScript code (usually a function call) wrapped around it. This "wrapped payload" is then interpreted by the browser, and the function that is already defined in the JavaScript environment can manipulate the JSON data. The function invocation to `parseResponse()` is the "P" (the _padding_) around the JSON.
 
 For JSONP to work, a server must reply with a response that includes the JSONP function (many do not). The JSONP function invocation that gets sent back, as well as the payload that the function receives, must be agreed upon by both the client and server.
 
@@ -37,21 +37,21 @@ For JSONP to work, a server must reply with a response that includes the JSONP f
 </script>
 ```
 
-JSONP works only for GET requests and is not effective for POSTs, PUTs, and DELETEs of a RESTful server.
+JSONP works only for GET requests and is not an effective solution for POSTs, PUTs, and DELETEs of a RESTful server.
 
 JSON-P is an early and limited solution to cross-origin sharing. Fortunately, we have better options now. There are still APIs that use JSON-P, but it's being phased out by the industry in favor of __CORS__.
 
 ## CORS Security Model
-CORS is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin. And assuming, of course, that each side has allowed for the CORS specification.
+
+__CORS__ is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin. This assumes, of course, that each side (server and client) has allowed for the CORS specification.
 
 * The CORS specification defines two distinct use cases:
   * __Simple requests__ = This use case applies if we use `HTTP` `GET`, `HEAD` and `POST` methods. In the case of `POST` methods, only content types with the following values are supported: `text/plain`, `application/x-www-form-urlencoded`, and `multipart/form-data`.
-  * __Preflighted requests__ - When the ‘simple requests’ use case does not apply, a first request (with the HTTP `OPTIONS` method) is made to determine what can be done in the context of cross-domain requests.
-
-If you add authentication to that request using the `Authentication` header, simple requests automatically become preflighted ones.
+  * __Preflighted requests__ - When the ‘simple requests’ use case does not apply, a first request (with the HTTP `OPTIONS` method) is made to determine which HTTP request methods are allowed in the context of cross-domain requests.
+  * If you add authentication to that request using the `Authentication` header, simple requests automatically become preflighted ones.
 
 The client and server exchange headers to specify behavior regarding cross-domain requests. The following is a list of the specification on the header:
-* `Origin`: this header is used by the client to specify which domain the request is executed from. The server uses this hint to authorize, or not, the cross-domain request.
+* `Origin`: this header is used by the client to specify which domain the request is executed from. The server uses this to authorize, or not, the cross-domain request.
 * `Access-Control-Request-Method`: In the context of preflighted requests, the `OPTIONS` request sends this header to check if the target method is allowed in the context of cross-domain requests.
 * `Access-Control-Request-Headers`: within the context of preflighted requests, the `OPTIONS` request sends this header to check if headers are allowed for the target method in the context of cross-domain requests.
 * `Access-Control-Allow-Credentials`: this specifies if credentials are supported for cross-domain requests.
@@ -98,11 +98,13 @@ Content-Type: application/json
 
 
 #### Preflighted request
-If a request has implications on user data, a simple request is insufficient. Instead, a preflight CORS request is sent in advance of the actual request. In a preflighted request, access permissions are negotiated between the caller and the Web application based on HTTP headers in two phases:
-1. The browser executes an `OPTIONS` request with the same URL as the target request to check that it has the necessary permissions to execute the request.
-2. This `OPTIONS` request then returns headers that identify what is possible to do for the URL. If rights/permissions match, the browser executes the request.
+If a request is managing user generated data, a simple request is insufficient. Instead, a _preflight_ CORS request is sent in advance of the actual request. In a preflighted request, access permissions are negotiated between the caller and the Web application based on HTTP headers in two phases:
 
-* Essentially, the preflight request is "asking" the server if it will allow the HTTP request. If the server allows the original request, then it will respond to the preflight request with a 200 status.
+  1. The browser executes an `OPTIONS` request with the same URL as the target request to check that it has the necessary permissions to execute the request.
+
+  2. This `OPTIONS` request then returns headers that identify what is possible to do for the URL. If rights/permissions match, the browser executes the request.
+
+  * Essentially, the preflight request is "asking" the server if it will allow the HTTP request. If the server allows the original request, then it will respond to the preflight request with a 200 status.
 
 ```
 +---------------------+                   +--------------------+
@@ -112,7 +114,7 @@ If a request has implications on user data, a simple request is insufficient. In
 |                     |                   |                    |
 |                     |                   |                    |
 |     Different       |  CORS headers     +    With support    |
-|    domain from      +----------------->        of  CORS      |
+|    domain from      | <-----------------+       of  CORS      |
 |     the server      |    Response       +                    |
 |                     |                   |                    |
 |                     |                   |                    |
@@ -133,7 +135,7 @@ If a request has implications on user data, a simple request is insufficient. In
 
 ```
 
-#### Example exchange:
+#### Example Header Exchange:
 ```
 OPTION /myresource/ HTTP/1.1
 Host: mydomain.org
@@ -179,15 +181,19 @@ Content-Type: application/json
 [JSON Data]
 
 ```
-Headers and Diagrams from [#Templier, 2015](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
+** Headers and Diagrams from [#Templier, 2015](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
 
 ---
+
+## Handling CORS on your Express Server
 
 Although CORS tries to make cross-origin requests possible within the browser, server-side applications must set the right headers in the response.
 
 As you can see, to enable cross-origin sharing, permissions must set on the server. These permissions on the server will tell the browser what is allowed, and the browser then enforces those rules.
 
 For an Express server, that code comes in the form of middleware before the API routes.
+
+##### Express Middleware to Enable CORS:
 
 ```javascript
 app.use((req, res, next) => {
@@ -220,6 +226,8 @@ This informs the browser that any other domain can access your API. You will lik
 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 ```
 
+---
+
 This informs the browser which headers are allowed to be sent. If you want to add any additional headers, like a token header, you must add it here.
 
 If you need to whitelist multiple domains, then you will need to make the middleware dynamic so that it will automatically choose what headers to send to the client.
@@ -233,6 +241,8 @@ app.use(function(req, res, next) {
   res.json({data: [1,2,3,4]})
 });
 ```
+
+---
 
 ## Configure CORS with an npm Module
 
