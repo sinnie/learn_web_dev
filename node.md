@@ -9,8 +9,8 @@
 ## Introduction to Node
 Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is _not_ good for CPU intensive applications.
 
-##### Definition
-So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
+#### Definition
+__So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O? __
 * __Non-Blocking__ - non-blocking code refers to operations that do not block further execution until that operation finishes.
 * __Single-Threaded__ - A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). In a single-threaded system, this means that one command is processed at a time. In the case of Node.js, the JavaScript engine runs on a single thread; however, it uses a library called libuv to handle multiple threads that are concerned with operating system tasks in the background.
 * __I/O__ - I/O is short for input/output and describes any program operation or device that transfers data to or from a peripheral device. Inputs are the signals or data received by a system and outputs are the signals or data sent from it.  
