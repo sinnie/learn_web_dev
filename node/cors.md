@@ -251,7 +251,7 @@ Once this is installed, axios on the client will be able to communicate with the
 
 ## Other Ways Around the Same-Origin Policy
 
-##### [Titarenco, David. _Stack Overflow_. "The Same Origin Policy"](http://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy)
+##### Information obtained from [Titarenco, David. _Stack Overflow_. "The Same Origin Policy"](http://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy)
 
 ### The document.domain method
 
