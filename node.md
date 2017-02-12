@@ -90,8 +90,10 @@ __Event-driven programming__ is a programming paradigm in which the flow of the 
 Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code under the hood. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
   > In Node.js, there are actually two separate kinds of events:
-    * System events - libuv (lower-level close to the machine)
-    * Custom events - JavaScript Core  - Event Emitter
+
+    >> System events - libuv (lower-level close to the machine)
+
+    >> Custom events - JavaScript Core  - Event Emitter
 
 * JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though the system events and the custom events are the same thing. They are not.  
 
