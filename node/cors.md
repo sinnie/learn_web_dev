@@ -118,7 +118,7 @@ In the case of preflighted requests, this is a negotiation between the caller an
 
 ```
 
-#### Example exchange
+#### Example exchange:
 ```
 OPTION /myresource/ HTTP/1.1
 Host: mydomain.org
@@ -164,11 +164,11 @@ Content-Type: application/json
 [JSON Data]
 
 ```
-[#Templier 2015](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
+[(Templier, 2015)](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
 
+---
 
-
-As you can see, to enable cross-origin sharing, permissions set on the server will tell the browser what is allowed, and the browser then enforces those rules.
+As you can see, to enable cross-origin sharing, permissions set on the server. These permissions on the server will tell the browser what is allowed, and the browser then enforces those rules.
 
 For Node, that code comes in the form of middleware before the api routes.
 
@@ -226,18 +226,20 @@ Once this is installed, axios on the client will be able to communicate with the
 
 ## Resources
 
-[Same-Origin Policy: MDN](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+[MDN: 'Same-Origin Policy'](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
 
-[Understanding CORS: Spring.io](https://spring.io/understanding/CORS)
+[_Spring.io_ 'Understanding CORS'](https://spring.io/understanding/CORS)
 
-[Understanding and using CORS: Restlet Blog](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
+[Templier, Thierry. _Restlet Blog_. 'Understanding and using CORS' ](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
 
-[Understanding Cross-Origin Resource Sharing (CORS): Adobe Developer Connection](https://www.adobe.com/devnet/archive/html5/articles/understanding-cross-origin-resource-sharing-cors.html)
+[Adobe Developer Connection: 'Understanding Cross-Origin Resource Sharing (CORS)'](https://www.adobe.com/devnet/archive/html5/articles/understanding-cross-origin-resource-sharing-cors.html)
 
-[Cross-Origin resource sharing: wikipedia](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#How_CORS_works)
+[wikipedia: 'Cross-Origin resource sharing'](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#How_CORS_works)
 
-[Same-Origin Policy: Wikipedia](https://en.wikipedia.org/wiki/Same-origin_policy)
+[Wikipedia: 'Same-Origin Policy'](https://en.wikipedia.org/wiki/Same-origin_policy)
 
 [JSONP: Wikipedia](https://en.wikipedia.org/wiki/JSONP)
 
-[Security StackExchange: Why is the same origin policy so important](http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important)
+[Security StackExchange: 'Why is the same origin policy so important?'](http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important)
+
+[MDN: 'HTTP access control (CORS)'](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
