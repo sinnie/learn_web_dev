@@ -20,7 +20,7 @@ The HTML `<script>` tag is able to execute content retrieved from foreign origin
 
 In the JSONP usage pattern, the URL request pointed to by the `src` attribute in the `<script>` tag returns JSON data, with JavaScript code (usually a function call) wrapped around it. This "wrapped payload" is then interpreted by the browser, and the function that is already defined in the JavaScript environment can manipulate the JSON data. The function invocation to `parseResponse()` is the "P" (the padding) around the JSON.
 
-For JSONP to work, a server must reply with a response that includes the JSONP function. The JSONP function invocation that gets sent back, and the payload that the function receives, must be agreed-upon by the client and server.
+For JSONP to work, a server must reply with a response that includes the JSONP function (many do not). The JSONP function invocation that gets sent back, and the payload that the function receives, must be agreed-upon by the client and server.
 
 ```HTML
 <script type="application/javascript"
@@ -33,11 +33,11 @@ JSONP works only for GET requests and is not effective for POSTs, PUTs, and DELE
 JSON-P is an early and limited solution to cross-origin sharing. Fortunately, we have better options now. There are still APIs that use JSON-P, but it's being phased out by the industry in favor of __CORS__.
 
 ## CORS Security Model
-CORS is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin.
+CORS is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin. And assuming, of course that each side has allowed for the CORS specification.
 
 * The CORS specification defines two distinct use cases:
   * __Simple requests__ = This use case applies if we use `HTTP` `GET`, `HEAD` and `POST` methods. In the case of `POST` methods, only content types with the following values are supported: `text/plain`, `application/x-www-form-urlencoded`, and `multipart/form-data`.
-  * __Preflighted requests__ - When the ‘simple requests’ use case doesn’t apply, a first request (with the HTTP `OPTIONS` method) is made to check what can be done in the context of cross-domain requests.
+  * __Preflighted requests__ - When the ‘simple requests’ use case does not apply, a first request (with the HTTP `OPTIONS` method) is made to determine what can be done in the context of cross-domain requests.
 
 If you add authentication to that request using the `Authentication` header, simple requests automatically become preflighted ones.
 
@@ -89,9 +89,11 @@ Content-Type: application/json
 
 
 #### Preflighted request
-In the case of preflighted requests, this is a negotiation between the caller and the Web application based on HTTP headers that consists of two phases:
+If a request has implications on user data, a simple request is insufficient. Instead, a preflight CORS request is sent in advance of the actual request. In a preflighted request, access permissions are negotiated between the caller and the Web application based on HTTP headers in two phases:
 1. The browser executes an `OPTIONS` request with the same URL as the target request to check that it has the necessary permissions to execute the request.
 2. This `OPTIONS` request then returns headers that identify what is possible to do for the URL. If rights/permissions match, the browser executes the request.
+
+* Essentially, the preflight request is "asking" the server if it will allow the http request. If the server allows the original request, then it will respond to the preflight request with a 200 status.
 
 ```
 +---------------------+                   +--------------------+
@@ -168,13 +170,15 @@ Content-Type: application/json
 [JSON Data]
 
 ```
-[(Templier, 2015)](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
+Headers and Diagrams from [#Templier, 2015](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
 
 ---
 
-As you can see, to enable cross-origin sharing, permissions set on the server. These permissions on the server will tell the browser what is allowed, and the browser then enforces those rules.
+Although CORS tries to make cross-origin requests possible within the browser, server-side applications must set the right headers in the response.
 
-For Node, that code comes in the form of middleware before the api routes.
+As you can see, to enable cross-origin sharing, permissions must set on the server. These permissions on the server will tell the browser what is allowed, and the browser then enforces those rules.
+
+For an Express server, that code comes in the form of middleware before the api routes.
 
 ```javascript
 app.use((req, res, next) => {
@@ -182,47 +186,54 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.get('/', (req, res, next) => {
+  // Handle the get for this route
+});
+
+app.post('/', (req, res, next) => {
+ // Handle the post for this route
+});
 ```
 
 Let's break that down line-by-line.
 
 ```javascript
 res.header("Access-Control-Allow-Origin", "*");
+// "*" is considered an unsafe practice except in special cases
+// where an API is completely public and is expected to
+// be consumed by any client.
 ```
 
-This informs the browser that any other domain can access your api. You may want to change this from a "*" to a fully qualified domain name.
+This informs the browser that any other domain can access your api. You will likely want to change the "*" to a fully qualified domain name.
 
 ```javascript
 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 ```
 
-This is telling the browser what headers are allowed to be sent. If you want to add any additional headers, like a token header, you must add it here.
+This informs the browser which headers are allowed to be sent. If you want to add any additional headers, like a token header, you must add it here.
 
 If you need to whitelist multiple domains, then you will need to make the middleware dynamic so that it will automatically choose what headers to send to the client.
 
+## Configure CORS with an npm Module
 
-What is the same origin policy? Why is it enforced?
-what is jsonp
-What is CORS? How is it useful?
-why is cors better than jsonp
-Why is CORS preferred over JSONP? What advantages does it give us over JSONP?
+The good news is, the [cors](https://www.npmjs.com/package/cors) node module makes configuring  CORS extremely simple. Once installed, it's as simple as including the middleware in your application.
 
-## Configure CORS
-
-Alright, so CORS is needed to let us separate our client and server code.
-
-## Setup
-
-The good news is, the [cors](https://www.npmjs.com/package/cors) node module makes setting up CORS extremely simple. Once installed, it's as simple as including the middleware in your application.
-
-```
+```javascipt
 var cors = require('cors')
 app.use(cors())
 ```
 
 Make sure that any Express middleware being used (such as CORS, in this case) is configured before the routes are matched.
 
-Once this is installed, axios on the client will be able to communicate with the API as needed. You'll know it's configured correctly when axios is able to get data from the API. If you jump back over to your project making the axios request, the error should be gone and the data should be logged to the console. Success!
+Once this is installed, axios on the client will be able to communicate with the API as needed. You will know it is configured correctly when axios is able to get data from the API.
+
+## For Your Consideration:
+1. What is the same origin policy? Why is it enforced?
+2. what is jsonp
+3. What is CORS? How is it useful?
+4. why is cors better than jsonp
+5. Why is CORS preferred over JSONP? What advantages does it give us over JSONP?
 
 ## Resources
 
