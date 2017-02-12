@@ -1,7 +1,7 @@
 # CORS
 
 ## Key Terms
-* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domains (origin).
+* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having different domains (origin).
 * __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
 
 ## Same-Origin Policy security model
@@ -10,7 +10,7 @@ All of the major web browsers implement the Web Application Security Model outli
 
 The purpose of this policy is to protect against malicious scripting attacks. Unfortunately, it also prevents non-malicious web applications from accessing resources to improve UI/UX.
 
-To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) can be  implemented. With the adoption of CORS, developers can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc to improve web applications.
+To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) can be implemented. With the adoption of CORS, developers can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc to improve web applications.
 
 If you make a cross-origin request in Chrome, you will see:
 ```
@@ -25,7 +25,7 @@ The HTML `<script>` tag is able to execute content retrieved from foreign origin
 
 In the JSONP usage pattern, the URL request pointed to by the `src` attribute in the `<script>` tag returns JSON data, with JavaScript code (usually a function call) wrapped around it. This "wrapped payload" is then interpreted by the browser, and the function that is already defined in the JavaScript environment can manipulate the JSON data. The function invocation to `parseResponse()` is the "P" (the padding) around the JSON.
 
-For JSONP to work, a server must reply with a response that includes the JSONP function (many do not). The JSONP function invocation that gets sent back, and the payload that the function receives, must be agreed-upon by the client and server.
+For JSONP to work, a server must reply with a response that includes the JSONP function (many do not). The JSONP function invocation that gets sent back, as well as the payload that the function receives, must be agreed upon by both the client and server.
 
 ```HTML
 <script type="application/javascript"
@@ -38,7 +38,7 @@ JSONP works only for GET requests and is not effective for POSTs, PUTs, and DELE
 JSON-P is an early and limited solution to cross-origin sharing. Fortunately, we have better options now. There are still APIs that use JSON-P, but it's being phased out by the industry in favor of __CORS__.
 
 ## CORS Security Model
-CORS is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin. And assuming, of course that each side has allowed for the CORS specification.
+CORS is a technique for relaxing the same-origin policy, which allows Javascript on the remote web application to consume a REST API served from a different origin. And assuming, of course, that each side has allowed for the CORS specification.
 
 * The CORS specification defines two distinct use cases:
   * __Simple requests__ = This use case applies if we use `HTTP` `GET`, `HEAD` and `POST` methods. In the case of `POST` methods, only content types with the following values are supported: `text/plain`, `application/x-www-form-urlencoded`, and `multipart/form-data`.
@@ -98,7 +98,7 @@ If a request has implications on user data, a simple request is insufficient. In
 1. The browser executes an `OPTIONS` request with the same URL as the target request to check that it has the necessary permissions to execute the request.
 2. This `OPTIONS` request then returns headers that identify what is possible to do for the URL. If rights/permissions match, the browser executes the request.
 
-* Essentially, the preflight request is "asking" the server if it will allow the http request. If the server allows the original request, then it will respond to the preflight request with a 200 status.
+* Essentially, the preflight request is "asking" the server if it will allow the HTTP request. If the server allows the original request, then it will respond to the preflight request with a 200 status.
 
 ```
 +---------------------+                   +--------------------+
@@ -146,7 +146,7 @@ HTTP/1.1 200 OK
 (...)
 Access-Control-Allow-Origin: http://test.org
 Access-Control-Allow-Methods: POST, GET, OPTIONS
-Access-Control-Allow-Headers: content-type,accept
+Access-Control-Allow-Headers: content-type, accept
 Access-Control-Max-Age: 1728000
 ```
 
@@ -183,7 +183,7 @@ Although CORS tries to make cross-origin requests possible within the browser, s
 
 As you can see, to enable cross-origin sharing, permissions must set on the server. These permissions on the server will tell the browser what is allowed, and the browser then enforces those rules.
 
-For an Express server, that code comes in the form of middleware before the api routes.
+For an Express server, that code comes in the form of middleware before the API routes.
 
 ```javascript
 app.use((req, res, next) => {
@@ -210,7 +210,7 @@ res.header("Access-Control-Allow-Origin", "*");
 // be consumed by any client.
 ```
 
-This informs the browser that any other domain can access your api. You will likely want to change the "*" to a fully qualified domain name.
+This informs the browser that any other domain can access your API. You will likely want to change the "*" to a fully qualified domain name.
 
 ```javascript
 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -245,10 +245,9 @@ Once this is installed, axios on the client will be able to communicate with the
 
 ## For Your Consideration:
 1. What is the same origin policy? Why is it enforced?
-2. what is jsonp
+2. What is JSONP?
 3. What is CORS? How is it useful?
-4. why is cors better than jsonp
-5. Why is CORS preferred over JSONP? What advantages does it give us over JSONP?
+4. Why is CORS preferred over JSONP? What advantages does it give us over JSONP?
 
 ## Resources
 
