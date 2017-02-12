@@ -1,5 +1,9 @@
 # CORS
 
+## Key Terms
+* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domains (origin).
+* __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
+
 ## Same-Origin Policy security model
 
 All of the major web browsers implement the Web Application Security Model outlined by the [w3c](http://www.w3.org) for [Same Origin Policy](http://www.w3.org/Security/wiki/Same_Origin_Policy). This policy is a security concept implemented by web browsers to prevent JavaScript code from making queries against a different origin. In other words, the same-origin policy prevents a web application from calling an external API. The browser only considers resources to be of the same origin if they use the same protocol (http/https), the same port, and the same domain -- even different subdomains will be blocked.
@@ -220,26 +224,22 @@ Make sure that any Express middleware being used (such as CORS, in this case) is
 
 Once this is installed, axios on the client will be able to communicate with the API as needed. You'll know it's configured correctly when axios is able to get data from the API. If you jump back over to your project making the axios request, the error should be gone and the data should be logged to the console. Success!
 
-## Terms
-* __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having a different domains (origin).
-* __JSONP__ - _JSON with Padding_. Used to request data from a server residing in a different domain than the client. This enables sharing of data in spite of the same-origin policy.
-
 ## Resources
 
-[MDN: 'Same-Origin Policy'](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
+[_MDN_. 'Same-Origin Policy'](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
 
-[_Spring.io_ 'Understanding CORS'](https://spring.io/understanding/CORS)
+[_Spring.io_. 'Understanding CORS'](https://spring.io/understanding/CORS)
 
 [Templier, Thierry. _Restlet Blog_. 'Understanding and using CORS' ](http://restlet.com/blog/2015/12/15/understanding-and-using-cors/)
 
 [Adobe Developer Connection: 'Understanding Cross-Origin Resource Sharing (CORS)'](https://www.adobe.com/devnet/archive/html5/articles/understanding-cross-origin-resource-sharing-cors.html)
 
-[wikipedia: 'Cross-Origin resource sharing'](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#How_CORS_works)
+[_Wikipedia_. 'Cross-Origin resource sharing'](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing#How_CORS_works)
 
-[Wikipedia: 'Same-Origin Policy'](https://en.wikipedia.org/wiki/Same-origin_policy)
+[_Wikipedia_. 'Same-Origin Policy'](https://en.wikipedia.org/wiki/Same-origin_policy)
 
-[JSONP: Wikipedia](https://en.wikipedia.org/wiki/JSONP)
+[_Wikipedia_. 'JSONP'](https://en.wikipedia.org/wiki/JSONP)
 
-[Security StackExchange: 'Why is the same origin policy so important?'](http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important)
+[_Security StackExchange_. 'Why is the same origin policy so important?'](http://security.stackexchange.com/questions/8264/why-is-the-same-origin-policy-so-important)
 
-[MDN: 'HTTP access control (CORS)'](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+[_MDN_. 'HTTP access control (CORS)'](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
