@@ -12,6 +12,11 @@ The purpose of this policy is to protect against malicious scripting attacks. Un
 
 To overcome the limitations of the same-origin policy, JSON-P (kind of a hack) and CORS (a new HTML5 feature) can be  implemented. With the adoption of CORS, developers can now leverage cross-origin images, stylesheets, scripts, iframes, web fonts, AJAX API calls, videos, scripts, etc to improve web applications.
 
+If you make a cross-origin request in Chrome, you will see:
+```
+XMLHttpRequest cannot load http://localhost:3000. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access.
+```
+
 ### Getting Around the Same-Origin Policy
 
 The HTML `<script>` tag is able to execute content retrieved from foreign origins. However, services replying with pure JSON data are not allowed to share data across domains, and any attempt to use this data from another domain will result in a JavaScript error. The browser downloads the `<script>` file, evaluate the contents, misinterprets the raw JSON data as a block, and then throws a syntax error. Even if the JSON were interpreted as a JavaScript object literal, the JSON cannot be accessed by the JavaScript running in the browser because there is no variable assignment on the object literal.
@@ -214,6 +219,16 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
 This informs the browser which headers are allowed to be sent. If you want to add any additional headers, like a token header, you must add it here.
 
 If you need to whitelist multiple domains, then you will need to make the middleware dynamic so that it will automatically choose what headers to send to the client.
+
+If you only want to serve some routes to clients of all origins, set the `res.hearders` specifically for these routes and omit the `next()`. Instead, just send your response.
+
+```javascript
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.json({data: [1,2,3,4]})
+});
+```
 
 ## Configure CORS with an npm Module
 
