@@ -9,7 +9,13 @@
 ## Introduction to Node
 Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing a variety of server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. In short, Node allows developers to write JavaScript programs that run directly on an operating system. That being said, Node.js is _not_ good for CPU intensive applications.
 
-From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
+##### Definition
+So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
+* __Non-Blocking__ - non-blocking code refers to operations that do not block further execution until that operation finishes.
+* __Single-Threaded__ - A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). In a single-threaded system, this means that one command is processed at a time. In the case of Node.js, the JavaScript engine runs on a single thread; however, it uses a library called libuv to handle multiple threads that are concerned with operating system tasks in the background.
+* __I/O__ - I/O is short for input/output and describes any program operation or device that transfers data to or from a peripheral device. Inputs are the signals or data received by a system and outputs are the signals or data sent from it.  
+
+> From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
 
 ### Node Architecture
 ```
@@ -48,7 +54,6 @@ From a developer's point of view, Node.js is single-threaded, but under the hood
 * __OpenSSL__: Is an open source implementation of Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols as well as a full-strength general purpose cryptography library. It is based on SSLeay library and built using C. It provides all the necessary cryptography methods like hash, hmac, cipher, decipher, sign and verify methods.
 * __Zlib__: Is a general purpose data compression library written in C.
 
-
 The Node.js API consists of about 27 core modules, which are concerned with operating system tasks, and, therefore, has access to the following functions:
 
 ```javascript
@@ -59,10 +64,10 @@ The Node.js API consists of about 27 core modules, which are concerned with oper
 * server.listen()
 ```
 
-Tasks like `readFile` and `writeFile` are called blocking because they take time to complete. Indeed, they are much slower than operations that use a CPU. For example, during a hard disk operation that takes 10ms to perform, a 1 GHz CPU would have performed ten million instruction-processing cycles.
+Tasks like `readFile` and `writeFile` are called _blocking_ because they take time to complete. Indeed, they are much slower than operations that use a CPU. For example, during a hard disk operation that takes 10ms to perform, a 1 GHz CPU would have performed ten million instruction-processing cycles.
 
 ### Asynchronous Node
-All API's of Node.js are asynchronous or non-blocking. This means that callbacks and promises are at the core of asynchronous JavaScript and Node.js. A simple definition of a callback is one functions passed as an argument to other functions.
+All API's of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous JavaScript and Node.js. A simple definition of a callback is one functions passed as an argument to other functions.
 
 Error-first callbacks are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/).
 

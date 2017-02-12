@@ -18,6 +18,8 @@ PostgreSQL
 
 Knex.js
 
+[Socket.io](./node/socketio.md)
+
 ### Client Side Frameworks
 Angular 1.5
 

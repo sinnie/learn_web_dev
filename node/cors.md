@@ -273,7 +273,7 @@ Note that this is an iframe method that sets the value of document.domain to a s
 `
 After that statement executes, the page would pass the origin check with `http://company.com/dir/page.html`. However, by the same reasoning, company.com could not set `document.domain` to `othercompany.com`.
 
-With this method, you would be allowed to exectue javascript from an iframe sourced on a subdomain on a page sourced on the main domain. This method is not suited for cross-domain resources as browsers like Firefox will not allow you to change the `document.domain` to a completely alien domain.
+With this method, you would be allowed to execute javascript from an iframe sourced on a subdomain on a page sourced on the main domain. This method is not suited for cross-domain resources as browsers like Firefox will not allow you to change the `document.domain` to a completely alien domain.
 
 Source: https://developer.mozilla.org/en/Same_origin_policy_for_JavaScript
 
