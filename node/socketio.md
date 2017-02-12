@@ -164,9 +164,9 @@
 
 * socket.io-stream
 
-  ```
-  var fs = require('fs’);
-  var io = require('socket.io')(3000);
+  ```javascript
+  const fs = require('fs');
+  const io = require('socket.io')(3000);
   require('socket.io-stream')(io);
   io.on('connection', function(socket){
         io.emit(fs.createReadStream('file.jpg'));
@@ -175,7 +175,7 @@
     * The client side will receive a Stream object that emits data events
 
 ## With Express Framework
-  ```
+  ```javascript
   Server (app.js)
   var app = require('express').createServer();
   var io = require('socket.io')(app);
@@ -202,12 +202,12 @@
     * the __emit method__
         * sends the mapped method name to the client or the server.
         * two arguments - the mapped method name and the data to be fed to the anonymous function
-```javascript        
-  const listener = io.listen(server);
-  listener.sockets.on('connection', function(socket){
-      socket.emit('message', {'message': 'hello world'});
-    });
-```
+  ```javascript        
+    const listener = io.listen(server);
+    listener.sockets.on('connection', function(socket){
+        socket.emit('message', {'message': 'hello world'});
+      });
+  ```
 * when the listener gets a call for the ‘connection’ action, we will perform the function that follows it.
 * When the ‘connection’ action is called, we trigger an emit action that will send a “message” action to the client.
 * The Message action will send the JSON object `{‘message’: ‘hello world’}`
@@ -215,7 +215,7 @@
 
 ## Collecting Data from the Client
 
-    ```JavaScript
+    ```javascript
     const socket = io.connect();
 
       socket.on('message', function(data){
