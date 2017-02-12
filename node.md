@@ -127,3 +127,5 @@ while there are still events to process:
 [Understanding the Node.js Event Loop](https://nodesource.com/blog/understanding-the-nodejs-event-loop/)
 
 [Introduction to Node.js by Abdel Raoof](http://abdelraoof.com/blog/2015/10/19/introduction-to-nodejs/)
+
+[Alicea, Anthony. _Udemy_. Learn and Understand NodeJS](https://www.udemy.com/understand-nodejs/learn/v4/overview)

@@ -10,6 +10,8 @@
 ### Server-Side
 [Node](./node.md)
 
+[CORS](./node/cors.md)
+
 Express
 
 PostgreSQL

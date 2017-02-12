@@ -1,10 +1,12 @@
 # Promises
 
+[Learn Web Dev](./README.md)
+
 [Are you a visual learner? Take a look at this project by Nicolás Bevacqua.](https://github.com/bevacqua/promisees)
 
 ## Definition
 
-A __promise__ is an object used for asynchronous computations. It represents a value that may be available now, in the future, or never. Essentially, a promise is an object that stores information about whether asynchronous events have happened or what their outcome is.
+A __promise__ is an object used for asynchronous computations. It represents a value that may be available now, in the future, or never. Essentially, a promise is an object that stores information about whether asynchronous events have happened and what the outcome is.
 
 ## Advantages of a Promise
 
@@ -22,7 +24,7 @@ A __promise__ is an object used for asynchronous computations. It represents a v
 
 ### Parameters
 
-* executor
+* Executor
   * A function with the arguments __resolve__ and __reject__. This function is immediately invoked by the Promise implementation, passing __resolve__ and __reject__ functions.
   * The executor starts an asynchronous operation.
 * `resolve` and `reject` are callable functions that take an argument which represents the event's details. Calling either `resolve` or `reject` will mark the promise as resolved and cause any handlers to be run.
@@ -38,7 +40,7 @@ A __promise__ is an object used for asynchronous computations. It represents a v
   * __Rejected__ - the operation has failed (resolved)
 * A promise can only represent one event and it can only be in one state at a time. Each function (`reject(), resolve(), fulfill()`) permanently changes the state of the promise. Once a promise is resolved, its state can not be reverted.
 * A new Promise is initially in a Pending state. It can either be _fulfilled_ with a value or _rejected_ with an error. When this happens, the associated handlers are queued up by a promise's `.then()` method.
-  * __race conditions__ are avoided because handlers attached to a promise in a fulfilled or rejected state will also be called.
+  * Note that __race conditions__ are avoided because handlers attached to a promise in a fulfilled or rejected state will also be called.
 
 ## Handling Success or Failure
 * A promise is resolved when the asynchronous operation has completed. To access the result of the callback, use the `.then()` method to register a handler. These callbacks will be invoked with the result of the executor when the promise is fulfilled.
