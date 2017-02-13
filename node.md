@@ -9,11 +9,11 @@
 [Socket.IO](./node/socketio.md)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on an operating system. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
+Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on operating systems. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
 
 ### Definition
 #### So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
-* __Event-Driven__ - Event driven programming is when the application flow control is determined by events or changes in state. It generally has a central mechanism that listens for events and calls a callback function once an event has been detected. In the case of Node.js, this is the event loop.
+* __Event-Driven__ - Event driven programming is when the application flow control is determined by events or changes in state. It generally has a central mechanism that listens for events and invokes a callback function once an event has been detected. In the case of Node.js, this is the event loop.
 * __Non-Blocking__ - non-blocking code refers to operations that do not block further execution until that operation finishes, which means that your program will not hang on a process that has to complete. Instead, commands execute in parallel and use callbacks to signal completion or failure.
 * __Single-Threaded__ - A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). It's a kind of lightweight process that shares memory with every other thread within the same process. Threads were created as an ad hoc extension of the former model to accommodate concurrency [(Teixeira)](#resources). In a single-threaded system, one command is processed at a time. Node.js' performance is improved by being single-threaded, which bypasses thread context switching. However, Node is not _truly_ single-threaded. It uses a library called libuv to handle multiple threads that manage tasks related to the operating system.
   * A downside to being single-threaded is that Node.j is not able to easily scale by increasing the number of CPU cores.
@@ -103,7 +103,7 @@ Although V8 is single-threaded, the underlying C++ API of Node is not, which mea
 
 One way Node.js implements an event-driven approach is by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js uses libuv to send these operations to a different thread. This allows V8 to keep executing code. Node invokes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
-The Node.js JavaScript core modules only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. All callbacks are invoked in an infinite loop whenever the main thread has finished its previous task.
+The Node.js JavaScript core modules only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. All callbacks are invoked whenever the main thread has finished its previous task.
 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
@@ -130,7 +130,7 @@ Below is a digram of a Node.js server's event loop.
               | | |     | |                  |         |  |
               | | +-----+ |                  | +-----+ |  |        +--------------+
    Requests   | |         |      XXXX        | +-----+ <---------+ | File System  |
- <----------+ | +-----+ |       XX  XX       |         |  |        +--------------+
+ <----------+ |   +-----+ |     XX  XX       |         |  |        +--------------+
               | | |     | |   XX      XX     | +-----+ |  |
               | | +-----+ |   X        |     | +-----+ |  |        +--------------+
               | |         |   X        V     |         |  |        |  Network     |
