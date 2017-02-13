@@ -158,12 +158,52 @@ Climb Mount Fuji,
 But slowly, slowly!
 ```
 
-Let's break down this code:
- 1. The `on` method is invoked with the type `'haiku'` and the listener `function() {console.log('Climb Mount Fuji')} `as arguments. It assigns the type as the property name, and pushes the listener into an array as a value.
- 2. Add another listener to the function of the same type - also gets pushed to the array.
+In this example,
+ 1. The `on` method is invoked with the type `'haiku'` and the listener `function() {console.log('Climb Mount Fuji')}` as arguments. It assigns the type as the property name, and then pushes the listener into an array as a value.
+ 2. Another `on` method is called with the same type and a similar function is pushed pushed to the array.
  3. `'O snail'` is logged to the console.
- 4. Finally, the emit method is invoked with the type 'haiku'.
-  * The emit method finds the type as a property of the event object, and then loops through the array invoking a function at every index.
+ 4. Finally, the `emit` method is invoked with the type 'haiku'.
+  * The emit method finds the 'haiku' as a property of the event object, and then loops through the array and invokes the listener at every index.
+
+You can easily find the Node.js EventEmitter by looking into the Node core modules in the `lib` directory in the `events.js` file. It is much more robust than the one we just built, but the idea is the same, including an `emit`, and `on` function.
+
+To use node's event emitter:
+```javascript
+  const Emitter = require('events');
+  const emtr = new Emitter();
+```
+* Just like in our example, the Node module's `on` method takes a string (type) and a function (listener), and the `emit` method is also invoked with the type name.
+
+Although this technique is useful for concisely controlling the logic of our programs, it has one drawback: Magic Strings. A simple definition of a __magic string__ is a string that has some special meaning in the code. This is problematic because it's easy for typos to cause bugs and there aren't many tools to help find a solution.
+  * A good workaround is to assign this to a variable in a config file [(Alicea)](#references).
+
+  ```javascript
+      module.exports = {
+        events: {
+          HAIKU: 'haiku',
+          FILESAVED: 'filesaved'
+        }
+      }  
+  ```
+  ```javascript
+    const Emitter = require('./emitter');
+    const evntCnfg = require('./config').events;
+
+    const emtr = new Emitter();
+
+    emtr.on(evntCnfg.HAIKU, function() {
+      console.log('Climb Mount Fuji');
+    });
+
+    emtr.on(evntCnfg.HAIKU, function() {
+      console.log('But slowly, slowly!');
+    });
+
+    console.log('O snail');
+    emtr.emit(evntCnfg.HAIKU);
+
+  ```
+  [(Alicea)](#references)
 
 
 #### Event Loop Pseudocode
@@ -217,9 +257,9 @@ Macrotasks:
 
 ["Observer Pattern." _Wikipedia_. 2017.](https://www.wikiwand.com/en/Observer_pattern)
 
-Need to Summarize:
+<!-- Need to Summarize:
 
 Thread pool - The main thread call functions post tasks to the shared task queue that threads in the thread pool pull and execute. Inherently non-blocking system functions like networking translates to kernel-side non-blocking sockets, while inherently blocking system functions like file I/O run in a blocking way on its own thread. When a thread in the thread pool completes a task, it informs the main thread of this that in turn wakes up and execute the registered callback. Since callbacks are handled in serial on the main thread, long lasting computations and other CPU-bound tasks will freeze the entire event-loop until completion.
 
 
-Node.js registers itself with the operating system so that it is notified when a connection is made, and the operating system will issue a callback. Within the Node.js runtime, each connection is a small heap allocation. Traditionally, relatively heavyweight OS processes or threads handled each connection. Node.js uses an event loop for scalability, instead of processes or threads.[70] In contrast to other event-driven servers, Node.js's event loop does not need to be called explicitly. Instead callbacks are defined, and the server automatically enters the event loop at the end of the callback definition. Node.js exits the event loop when there are no further callbacks to be performed.
+Node.js registers itself with the operating system so that it is notified when a connection is made, and the operating system will issue a callback. Within the Node.js runtime, each connection is a small heap allocation. Traditionally, relatively heavyweight OS processes or threads handled each connection. Node.js uses an event loop for scalability, instead of processes or threads.[70] In contrast to other event-driven servers, Node.js's event loop does not need to be called explicitly. Instead callbacks are defined, and the server automatically enters the event loop at the end of the callback definition. Node.js exits the event loop when there are no further callbacks to be performed. -->
