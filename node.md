@@ -90,9 +90,10 @@ __Event-driven programming__ is a programming paradigm in which the flow of the 
 
 Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
----
+
   > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core by the `EventEmitter`, and is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
----
+
+
 
 * JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
 
@@ -112,7 +113,8 @@ Node.js employs an event loop, which is a construct that performs two tasks in a
 
 Node.js serves all requests from a single thread, and the program code running in this thread is executed synchronously. However, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. The main thread is not put to sleep and keeps serving other requests. As soon as the previous system call is completed, the event loop executes the callback. Most of the time, this callback is concerned with the result returned and the program flow continues.
 
-```                 Node.js Server
+```      
+                      Node.js Server
         +-------------------------------------------+
         |                                           |
         |  Event Queue                 Thread pool  |
@@ -136,7 +138,9 @@ Requests| |         |      XXXX        | +-----+ <---------+ | File System  |
         |     |       Operation Complete    |       |
         |     +-----------------------------+       |
         +-------------------------------------------+
+
 ```
+
 [(Raoof)](#resources);
 
 <!-- This needs work -->
