@@ -9,7 +9,7 @@
 [Socket.IO](./node/socketio.md)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on an operating system. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
+Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on an operating system. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
 
 ### Definition
 #### So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
@@ -43,6 +43,8 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
 * __V8__ is Google's open source JavaScript engine built for Google Chrome. It's written in C++ and can run either standalone or embedded into any C++ application.
 * [libuv](http://nikhilm.github.io/uvbook/) is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll(4), kqueue(2), Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
   * It was originally an abstraction around libev or Microsoft IOCP, as libev doesn't support Windows. In node-v0.9.0's version of libuv, the dependency on libev was removed
+  * Has a default thread pool size of 4 and uses a queue to manage access to the thread pool.
+    * You can mitigate this by increasing the size of the thread pool through the `UV_THREADPOOL_SIZE` environment variable, as long as the thread pool is required and created: `process.env.UV_THREADPOOL_SIZE = 10`  
   * __Features:__
     * Full-featured event loop backed by epoll, kqueue, IOCP, event ports.
     * Asynchronous TCP and UDP sockets
@@ -110,10 +112,10 @@ To understand how this works, you must understand the __event loop__ and the __t
 ### The Event Loop
 Events are a common pattern in programming and are known more widely as the "observer pattern." The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers. The object automatically notifies the observers of any state changes, usually by calling one of their methods. This pattern is often used to implement distributed event handling systems [("Observer Pattern")](#resources).
 
-Node.js employs an event loop, which is a construct that performs two tasks (__event detection__ and __event handler triggering__) in an infinite loop. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by said events [(Norris)](#resourses). In other words, applications act on events. Node implements this by implementing two mechanisms: the event loop and the `EventEmitter` that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
+Node.js employs an event loop, which is a construct that performs two tasks (__event detection__ and __event handler triggering__). The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by said events [(Norris)](#resourses). In other words, applications act on events, and Node.js implements this through two mechanisms: the event loop and the `EventEmitter` that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
 
-Node.js serves all requests from a single thread, and the program code running in this thread is executed synchronously. However, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. The main thread is not put to sleep and keeps serving other requests. As soon as the previous system call is completed, the event loop executes the callback. Most of the time, this callback is concerned with the result returned and the program flow continues.
+The Node.js event loop runs under a single thread, and the program code running in this thread is executed synchronously. Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool using libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When the I/O operation completes, its callback is pushed onto the event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. The main thread is _not_ tied up and keeps serving other requests.
 
 Below is a digram of a Node.js server's event loop.
 
@@ -128,11 +130,11 @@ Below is a digram of a Node.js server's event loop.
               | | |     | |                  |         |  |
               | | +-----+ |                  | +-----+ |  |        +--------------+
    Requests   | |         |      XXXX        | +-----+ <---------+ | File System  |
- <----------+ | +-----+ |    XXX  XXX      |         |  |        +--------------+
+ <----------+ | +-----+ |       XX  XX       |         |  |        +--------------+
               | | |     | |   XX      XX     | +-----+ |  |
-              | | +-----+ |   X         |    | +-----+ |  |        +--------------+
-              | |         |   X         V    |         |  |        |  Network     |
-              | |         |     Event Loop   |         |  |        +--------------+
+              | | +-----+ |   X        |     | +-----+ |  |        +--------------+
+              | |         |   X        V     |         |  |        |  Network     |
+              | |         |    Event Loop    |         |  |        +--------------+
               | | +-----+ |    ^             |         |  |
               | | |     | |    |        X    |         |  |        +--------------+
               | | +-----+ |    X        X    |         |  |        |  Others      |
