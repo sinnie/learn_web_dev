@@ -7,7 +7,7 @@
 [Socket.IO](./node/socketio.md)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on an operating system. Although Node has some powerful features, it must be noted, however, that Node.js is _not_ good for CPU intensive applications.
+Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on an operating system. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
 
 ### Definition
 #### So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
@@ -88,7 +88,7 @@ Async actions are completed through callbacks and __The Event Loop__.
 ### Event Driven Programming
 __Event-driven programming__ is a programming paradigm in which the flow of the program is dictated by events (changes in state), including user actions, sensor outputs, or messages from other programs or threads. In this paradigm, every command is event based, which means that the program revolves around a loop that polls for input or data (or state change). When an event occurs, a callback is invoked.
 
-Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code under the hood. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
+Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
   > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core (event emitter)
 
@@ -101,7 +101,9 @@ Node.js only provides one thread and one call stack, so when another request is 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
 ### The Event Loop
-An event loop is a construct that performs two functions in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed).
+Event's are a common pattern in programming and are known more widely as the "observer pattern," which is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers, and notifies them automatically of any state changes, usually by calling one of their methods. This pattern is mainly used to implement distributed event handling systems ["Observer Pattern"](#resources).
+
+Node.js employs an event loop, which is a construct that performs two functions in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed).
 
 #### The EventEmitter (JavaScript Events)
 We're going to build our own. (Albeit a simple version)
@@ -186,17 +188,19 @@ Macrotasks:
 
 [Nodejs.org](https://nodejs.org/en/)
 
-[Teixeira, Pedro. "Professional Node.js: Building JavaScript Based Scalable Software." _Safari Books_ ](https://www.amazon.com/Professional-Node-js-Building-Javascript-Scalable/dp/1118185463/ref=sr_1_1?ie=UTF8&qid=1486686418&sr=8-1&keywords=%5BProfessional+Node.js%3A+Building+JavaScript+Based+Scalable+Software%5D%28%29)
+[Teixeira, Pedro. "Professional Node.js: Building JavaScript Based Scalable Software." _Wrox_.  2012. ](https://www.amazon.com/Professional-Node-js-Building-Javascript-Scalable/dp/1118185463/ref=sr_1_1?ie=UTF8&qid=1486686418&sr=8-1&keywords=%5BProfessional+Node.js%3A+Building+JavaScript+Based+Scalable+Software%5D%28%29)
 
-[Halliday, "substack" James. "The Stream Handbook" _github.com/substack/stream-handbook_](https://github.com/substack/stream-handbook#introduction)
+[Halliday, "substack" James. "The Stream Handbook" _github.com/substack/stream-handbook_. 2015.](https://github.com/substack/stream-handbook#introduction)
 
-[Understanding the Node.js Event Loop](https://nodesource.com/blog/understanding-the-nodejs-event-loop/)
+[Norris, Trevor. "Understanding the Node.js Event Loop." _The odesource Blog_. 2015.](https://nodesource.com/blog/understanding-the-nodejs-event-loop/)
 
-[Raoof, Abdel. 'Introduction to Node.js.' _abdelraoof.com_](http://abdelraoof.com/blog/2015/10/19/introduction-to-nodejs/)
+[Raoof, Abdel. 'Introduction to Node.js.' _abdelraoof.com_. 2015.](http://abdelraoof.com/blog/2015/10/19/introduction-to-nodejs/)
 
-[Alicea, Anthony. _Udemy_. Learn and Understand NodeJS](https://www.udemy.com/understand-nodejs/learn/v4/overview)
+[Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
 
-[_Wikipedia_. 'Node.js'](http://www.wikiwand.com/en/Node.js)
+["Node.js." _Wikipedia_. 2017.](http://www.wikiwand.com/en/Node.js)
+
+["Observer Pattern." _Wikipedia_. 2017.](https://www.wikiwand.com/en/Observer_pattern)
 
 Need to Summarize:
 
