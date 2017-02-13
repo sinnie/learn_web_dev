@@ -77,7 +77,7 @@ Tasks like `readFile` and `writeFile` are called _blocking_ because they take ti
 ### Asynchronous Node
 All API's of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous Node.js. A simple definition of a callback is a function passed as an argument to another function.
 
-A common pattern of event-driven programming is succeed or fail. There are two common implementaions of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). The second pattern uses [promises]('./../promises.md').
+A common pattern of event-driven programming is succeed or fail. There are two common implementaions of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). The second pattern uses [promises]('./promises.md').
 
 ##### Note
 * __error-handling__: instead of a `try-catch` block you have to check for errors in the callback
