@@ -103,7 +103,7 @@ The Node.js JavaScript core modules only provides one thread and one call stack,
 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
-[Philip Roberts provides an excellent explanation of the JavaScript call stack and event loop that can be found here.](https://youtu.be/8aGhZQkoFbQ)
+[Philip Roberts provides an excellent explanation of the JavaScript call stack and event loop.](https://youtu.be/8aGhZQkoFbQ)
 
 ### The Event Loop
 Events are a common pattern in programming and are known more widely as the "observer pattern." The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers. The object automatically notifies the observers of any state changes, usually by calling one of their methods. This pattern is often used to implement distributed event handling systems [("Observer Pattern")](#resources).
