@@ -92,7 +92,7 @@ Although V8 is single-threaded, the underlying C++ API of Node is not, which mea
 
   > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core (event emitter)
 
-* JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though the system events and the custom events are the same thing. However,  they are not.  
+* JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
 
 Node.js implements an event-driven approach by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
@@ -101,15 +101,18 @@ Node.js only provides one thread and one call stack, so when another request is 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
 ### The Event Loop
-Event's are a common pattern in programming and are known more widely as the "observer pattern," which is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers, and notifies them automatically of any state changes, usually by calling one of their methods. This pattern is mainly used to implement distributed event handling systems ["Observer Pattern"](#resources).
+Event's are a common pattern in programming and are known more widely as the "observer pattern," which is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers, and notifies them automatically of any state changes, usually by calling one of their methods. This pattern is mainly used to implement distributed event handling systems [("Observer Pattern")](#resources).
 
-Node.js employs an event loop, which is a construct that performs two functions in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events. In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed).
+Node.js employs an event loop, which is a construct that performs two tasks in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events [(Norris)](#resourses). In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
 #### The EventEmitter (JavaScript Events)
-We're going to build our own. (Albeit a simple version)
+To understand how Node handles events, we're going to build our own event loop. (Albeit a simple version).
+
+In this example, we will create an object called `Emitter`. This object will have two methods, `on` and `emit`. The `on` method has two arguments, `type` and `listener`. This method will be used to register an event listener. In order to access the `events` values, the key to the Emitter object will be assigned to the `type`. And the listener will be an array of functions. We can then invoke the listeners by calling the `emit` method. This provides a clean way of controlling logic in the code.  
 
 ```javascript
 
+  // Create an Object "Emitter"
   function Emitter() {
     this.events = {}
   }
@@ -130,7 +133,6 @@ We're going to build our own. (Albeit a simple version)
 ```
 
 Now, to use the Emitter:
-
 ```javascript
 
   const Emitter = require('./emitter');
@@ -149,6 +151,19 @@ Now, to use the Emitter:
   emtr.emit('greet');
 
 ```
+This program will produce:
+```
+Hello!
+Someone said hello.
+A greeting occurred
+```
+
+To step in to this code:
+1. It's looking for an event type, which is "greet." ( a property on the object)
+2. Push the listener. (an array with one function inside of the array)
+3. Add another listener to the function - also gets pushed to the array.
+4. Finally, you manually emit the event.
+  * The function loops through the array, calling the function each time.
 
 
 #### Event Loop Pseudocode
