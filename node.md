@@ -106,64 +106,64 @@ Event's are a common pattern in programming and are known more widely as the "ob
 Node.js employs an event loop, which is a construct that performs two tasks in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events [(Norris)](#resourses). In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
 #### The EventEmitter (JavaScript Events)
-To understand how Node handles events, we're going to build our own event loop. (Albeit a simple version).
+To understand how Node handles events, we're going to build our own event emitter. (Albeit a simple version).
 
-In this example, we will create an object called `Emitter`. This object will have two methods, `on` and `emit`. The `on` method has two arguments, `type` and `listener`. This method will be used to register an event listener. In order to access the `events` values, the key to the Emitter object will be assigned to the `type`. And the listener will be an array of functions. We can then invoke the listeners by calling the `emit` method. This provides a clean way of controlling logic in the code.  
+In this example, we will create an object called `Emitter` that will have two methods, `on` and `emit`. The `on` method will have two arguments, `type` and `listener`, which will be used to register an event listener. In order to access the values of `events`, the key to the Emitter object will be assigned to the `type`. And the listener will be an array of functions. We can then invoke the listeners by calling the `emit` method. This provides a clean way of controlling logic in the code.  
 
 ```javascript
+function Emitter() {
+  this.events = {};
+}
 
-  // Create an Object "Emitter"
-  function Emitter() {
-    this.events = {}
-  }
+Emitter.prototype.on = function(type, listener) {
+  this.events[type] = this.events[type] || [];
+  this.events[type].push(listener);
+}
 
-  Emitter.prototype.on = (type, listener) => {
-    this.events[type] = this.events[type] || [];
-    this.events[type].push(listener);
+Emitter.prototype.emit = function(type) {
+  if (this.events[type]) {
+    this.events[type].forEach((listener) => {
+      listener();
+    });
   }
+};
 
-  Emitter.prototype.emit = (type) => {
-    if (this.events[type]) {
-      this.events[type].forEach((listener) => {
-        listener();
-      });
-    }
-  }
+module.exports = Emitter;
 
 ```
 
 Now, to use the Emitter:
 ```javascript
 
-  const Emitter = require('./emitter');
+const Emitter = require('./emitter');
 
-  const emtr = new Emitter();
+const emtr = new Emitter();
 
-  emtr.on('greet', () => {
-    console.log('Someone said hello');
-  });
+emtr.on('haiku', function() {
+  console.log('Climb Mount Fuji');
+});
 
-  emtr.on('greet', () => {
-    console.log('A greeting occurred');
-  });
+emtr.on('haiku', function() {
+  console.log('But slowly, slowly!');
+});
 
-  console.log('hello');
-  emtr.emit('greet');
+console.log('O snail');
+emtr.emit('haiku');
 
 ```
 This program will produce:
 ```
-Hello!
-Someone said hello.
-A greeting occurred
+O Snail
+Climb Mount Fuji,
+But slowly, slowly!
 ```
 
-To step in to this code:
-1. It's looking for an event type, which is "greet." ( a property on the object)
-2. Push the listener. (an array with one function inside of the array)
-3. Add another listener to the function - also gets pushed to the array.
-4. Finally, you manually emit the event.
-  * The function loops through the array, calling the function each time.
+Let's break down this code:
+ 1. The `on` method is invoked with the type `'haiku'` and the listener `function() {console.log('Climb Mount Fuji')} `as arguments. It assigns the type as the property name, and pushes the listener into an array as a value.
+ 2. Add another listener to the function of the same type - also gets pushed to the array.
+ 3. `'O snail'` is logged to the console.
+ 4. Finally, the emit method is invoked with the type 'haiku'.
+  * The emit method finds the type as a property of the event object, and then loops through the array invoking a function at every index.
 
 
 #### Event Loop Pseudocode
