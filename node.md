@@ -86,7 +86,7 @@ errors in the callback
 Async actions are completed through callbacks and __The Event Loop__.
 
 ### Event Driven Programming
-__Event-driven programming__ is a programming paradigm in which the flow of the program is dictated by events (changes in state), including user actions, sensor outputs, or messages from other programs or threads. In this paradigm, every command is event based, which means that the program revolves around a loop that polls for input or data (or state change). When an event occurs, a callback is invoked.
+__Event-driven programming__ is a programming paradigm in which the flow of the program is dictated by events (changes in state), including user actions, sensor outputs, or messages from other programs or threads. In this paradigm, every command is event based, which means that the program revolves around a loop that polls for input or data (or state change). When an event occurs, a callback is invoked. JavaScript is well suited to this programming style because it has first-class functions and closures.
 
 Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
@@ -96,12 +96,12 @@ Although V8 is single-threaded, the underlying C++ API of Node is not, which mea
 
 Node.js implements an event-driven approach by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
-Node.js only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. Callbacks are called in an infinite loop whenever the main thread has finished its previous task.
+Node.js only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. All callbacks are invoked in an infinite loop whenever the main thread has finished its previous task.
 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
 ### The Event Loop
-Event's are a common pattern in programming and are known more widely as the "observer pattern," which is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers, and notifies them automatically of any state changes, usually by calling one of their methods. This pattern is mainly used to implement distributed event handling systems [("Observer Pattern")](#resources).
+Event's are a common pattern in programming and are known more widely as the "observer pattern." The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers. The object automatically notifies the observers of any state changes, usually by calling one of their methods. This pattern is often used to implement distributed event handling systems [("Observer Pattern")](#resources).
 
 Node.js employs an event loop, which is a construct that performs two tasks in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events [(Norris)](#resourses). In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
@@ -151,7 +151,7 @@ console.log('O snail');
 emtr.emit('haiku');
 
 ```
-This program will produce:
+This program will produce one of [Kobayashi Issa's haikus](https://www.wikiwand.com/en/Kobayashi_Issa):
 ```
 O Snail
 Climb Mount Fuji,
@@ -174,36 +174,40 @@ To use node's event emitter:
 ```
 * Just like in our example, the Node module's `on` method takes a string (type) and a function (listener), and the `emit` method is also invoked with the type name.
 
-Although this technique is useful for concisely controlling the logic of our programs, it has one drawback: Magic Strings. A simple definition of a __magic string__ is a string that has some special meaning in the code. This is problematic because it's easy for typos to cause bugs and there aren't many tools to help find a solution.
+Although this technique is useful for concisely controlling the logic of our programs, it has one drawback: [Magic Strings](https://www.wikiwand.com/en/Magic_string). A simple definition of a __magic string__ is a string that has some special meaning in the code. This is problematic because it is easy for typos to cause difficult to find bugs.
   * A good workaround is to assign this to a variable in a config file [(Alicea)](#references).
 
   ```javascript
-      module.exports = {
-        events: {
-          HAIKU: 'haiku',
-          FILESAVED: 'filesaved'
-        }
-      }  
+  module.exports = {
+    events: {
+      HAIKU: 'haiku',
+      FILESAVED: 'filesaved'
+    }
+  }  
   ```
   ```javascript
-    const Emitter = require('./emitter');
-    const evntCnfg = require('./config').events;
+  const Emitter = require('./emitter');
+  const evntCnfg = require('./config').events;
 
-    const emtr = new Emitter();
+  const emtr = new Emitter();
 
-    emtr.on(evntCnfg.HAIKU, function() {
-      console.log('Climb Mount Fuji');
-    });
+  emtr.on(evntCnfg.HAIKU, function() {
+    console.log('Climb Mount Fuji');
+  });
 
-    emtr.on(evntCnfg.HAIKU, function() {
-      console.log('But slowly, slowly!');
-    });
+  emtr.on(evntCnfg.HAIKU, function() {
+    console.log('But slowly, slowly!');
+  });
 
-    console.log('O snail');
-    emtr.emit(evntCnfg.HAIKU);
+  console.log('O snail');
+  emtr.emit(evntCnfg.HAIKU);
 
   ```
   [(Alicea)](#references)
+
+---
+
+
 
 
 #### Event Loop Pseudocode
