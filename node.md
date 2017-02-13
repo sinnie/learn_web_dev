@@ -11,6 +11,7 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
 
 ### Definition
 #### So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
+* __Event-Driven__ - Event driven programming is when the application flow control is determined by events or changes in state. It generally has a central mechanism that listens for events and calls a callback function once an event has been detected. In the case of Node.js, this is the event loop.
 * __Non-Blocking__ - non-blocking code refers to operations that do not block further execution until that operation finishes, which means that your program will not hang on a process that has to complete. Instead, commands execute in parallel and use callbacks to signal completion or failure.
 * __Single-Threaded__ - A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). It's a kind of lightweight process that shares memory with every other thread within the same process. Threads were created as an ad hoc extension of the former model to accommodate concurrency [(Teixeira)](#resources). In a single-threaded system, one command is processed at a time. Node.js' performance is improved by being single-threaded, which bypasses thread context switching. However, Node is not _truly_ single-threaded. It uses a library called libuv to handle multiple threads that manage tasks related to the operating system.
   * A downside to being single-threaded is that Node.j is not able to easily scale by increasing the number of CPU cores.
@@ -76,11 +77,10 @@ Tasks like `readFile` and `writeFile` are called _blocking_ because they take ti
 ### Asynchronous Node
 All API's of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous Node.js. A simple definition of a callback is a function passed as an argument to another function.
 
-Error-first callbacks are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/).
+A common pattern of event-driven programming is succeed or fail. There are two common implementaions of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). The second pattern uses [promises]('./../promises.md').
 
 ##### Note
-* __error-handling__: instead of a `try-catch` block you have to check for
-errors in the callback
+* __error-handling__: instead of a `try-catch` block you have to check for errors in the callback
 * __no return value__: async functions do not return values; however, values will be passed to the callbacks
 
 Async actions are completed through callbacks and __The Event Loop__.
@@ -90,7 +90,7 @@ __Event-driven programming__ is a programming paradigm in which the flow of the 
 
 Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
-  > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core (event emitter)
+  > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core by the `EventEmitter`, and is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
 
 * JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
 
@@ -101,12 +101,12 @@ Node.js only provides one thread and one call stack, so when another request is 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
 ### The Event Loop
-Event's are a common pattern in programming and are known more widely as the "observer pattern." The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers. The object automatically notifies the observers of any state changes, usually by calling one of their methods. This pattern is often used to implement distributed event handling systems [("Observer Pattern")](#resources).
+Events are a common pattern in programming and are known more widely as the "observer pattern." The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers. The object automatically notifies the observers of any state changes, usually by calling one of their methods. This pattern is often used to implement distributed event handling systems [("Observer Pattern")](#resources).
 
 Node.js employs an event loop, which is a construct that performs two tasks in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events [(Norris)](#resourses). In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
 #### The EventEmitter (JavaScript Events)
-To understand how Node handles events, we're going to build our own event emitter. (Albeit a simple version).
+According to [Norris](#resources), the `EventEmitter` was created to simplify the interaction with the event loop. The `EventEmitter` was created as a generic wrapper to facilitate creating event-based APIs. To understand how Node handles events, we're going to build our own event emitter. (Albeit a simple version).
 
 In this example, we will create an object called `Emitter` that will have two methods, `on` and `emit`. The `on` method will have two arguments, `type` and `listener`, which will be used to register an event listener. In order to access the values of `events`, the key to the Emitter object will be assigned to the `type`. And the listener will be an array of functions. We can then invoke the listeners by calling the `emit` method. This provides a clean way of controlling logic in the code.  
 
@@ -205,9 +205,34 @@ Although this technique is useful for concisely controlling the logic of our pro
   ```
   [(Alicea)](#references)
 
+> Note: Event emitters are not asynchronous in nature. It often appears to be asynchronous because it is regularly used to signal the completion of asynchronous operations, but the `EventEmitter` API is synchronous. Meaning, listeners will be executed synchronously in the order that they were added before any execution can continue in statements following the call to emit [Norris](#resources).
+
 ---
+## The Event Loop
 
+### Mechanical overview of when things run:
+```
+        +---------------------+
+  +---> |       Timers        |
+  |     +---------------------+
+  |
+  |     +---------------------+
+  |     |  Pending callbacks  |
+  |     +---------------------+         +-----------------------+
+  |                                     |                       |
+  |     +---------------------+         |       Incoming:       |
+  |     |        Poll         | <-------+      Connections,     |
+  |     +---------------------+         |       data, etc.      |
+  |                                     |                       |
+  |     +---------------------+         +-----------------------+
+  +-----+    setImmediate     |
+        +---------------------+
 
+```
+  In addition to the diagram:
+    * callbacks scheduled via `process.nextTick()` are run at the end of a phase of the event loop before transitioning to the next phase. This creates the potential to unintentionally starve the event loop with recursive calls to `process.nextTick()`.
+    * "Pending Callbacks" is where callbacks are queued to run that are not handled by any other phase (e.g. a callback passed to `fs.write()`).
+[(Norris)](#resources)
 
 
 #### Event Loop Pseudocode
