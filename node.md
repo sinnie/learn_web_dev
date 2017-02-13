@@ -16,7 +16,7 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
 * __Single-Threaded__ - A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). It's a kind of lightweight process that shares memory with every other thread within the same process. Threads were created as an ad hoc extension of the former model to accommodate concurrency [(Teixeira)](#resources). In a single-threaded system, one command is processed at a time. Node.js' performance is improved by being single-threaded, which bypasses thread context switching. However, Node is not _truly_ single-threaded. It uses a library called libuv to handle multiple threads that manage tasks related to the operating system.
   * A downside to being single-threaded is that Node.j is not able to easily scale by increasing the number of CPU cores.
 * __I/O__ - I/O is short for input/output and describes any program operation or device that transfers data to or from a peripheral device. Inputs are the signals or data received by a system and outputs are the signals or data sent from it.  
-* You'll often hear __Asynchronous__ as well. Asynchronous means, in the case of Node.js, that the server can respond to multiple requests at a time. It will not stop or block any API requests and will respond to all when the response is ready to send accordingly.
+* You'll often hear __Asynchronous__ as well. Asynchronous means, in the case of Node.js, that the server can respond to multiple requests at a time. It will not stop or block any API requests and will respond to all when the response is ready to send accordingly. Working asynchronously allows you to start processing data that does not require the result of the communication while the communication goes on.
 
 > From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
 
@@ -75,9 +75,9 @@ The Node.js core modules are the heart of Node.js, and the Ndoe.js Bindings, whi
 Tasks like `readFile` and `writeFile` are called _blocking_ because they take time to complete. They are much slower than operations that use a CPU. For example, during a hard disk operation that takes 10ms to perform, a 1 GHz CPU would have performed ten million instruction-processing cycles.
 
 ### Asynchronous Node
-All API's of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous Node.js. A simple definition of a callback is a function passed as an argument to another function.
+All API's of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous Node.js. A simple definition of a callback is a function passed as an argument to another function, and [more information about promises can be found here](./promises.md).
 
-A common pattern of event-driven programming is succeed or fail. There are two common implementaions of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). The second pattern uses [promises]('./promises.md').
+A common pattern of event-driven programming is succeed or fail. There are two common implementations of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). The second pattern uses [promises]('./promises.md').
 
 ##### Note
 * __error-handling__: instead of a `try-catch` block you have to check for errors in the callback
@@ -90,20 +90,59 @@ __Event-driven programming__ is a programming paradigm in which the flow of the 
 
 Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
 
+---
   > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core by the `EventEmitter`, and is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
+---
 
 * JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
 
-Node.js implements an event-driven approach by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js sends these operations to a different thread, allowing V8 to keep executing the code. Node executes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
+One way Node.js implements an event-driven approach is by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js uses libuv to send these operations to a different thread. This allows V8 to keep executing code. Node invokes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
-Node.js only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. All callbacks are invoked in an infinite loop whenever the main thread has finished its previous task.
+The Node.js JavaScript core modules only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. All callbacks are invoked in an infinite loop whenever the main thread has finished its previous task.
 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
+
+[Philip Roberts provides an excellent explanation of the JavaScript call stack and event loop that can be found here.](https://youtu.be/8aGhZQkoFbQ)
 
 ### The Event Loop
 Events are a common pattern in programming and are known more widely as the "observer pattern." The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents called observers. The object automatically notifies the observers of any state changes, usually by calling one of their methods. This pattern is often used to implement distributed event handling systems [("Observer Pattern")](#resources).
 
 Node.js employs an event loop, which is a construct that performs two tasks in a continuous loop: __event detection__ and __event handler triggering__. The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by events [(Norris)](#resourses). In other words, it means that applications act on events. Node implements this by having a central mechanism, the `EventEmitter`, that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
+
+
+Node.js serves all requests from a single thread, and the program code running in this thread is executed synchronously. However, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. The main thread is not put to sleep and keeps serving other requests. As soon as the previous system call is completed, the event loop executes the callback. Most of the time, this callback is concerned with the result returned and the program flow continues.
+
+```                 Node.js Server
+        +-------------------------------------------+
+        |                                           |
+        |  Event Queue                 Thread pool  |
+        | +---------+                  +---------+  |        +--------------+
+        | |         |                  | +-----+ <---------+ | Database     |
+        | | +-----+ |                  | +-----+ |  |        +--------------+
+        | | |     | |                  |         |  |
+        | | +-----+ |                  | +-----+ |  |        +--------------+
+Requests| |         |      XXXX        | +-----+ <---------+ | File System  |
+<-------+ | +-----+ |    XXX  XXX      |         |  |        +--------------+
+        | | |     | |   XX      XX     | +-----+ |  |
+        | | +-----+ |   X         |    | +-----+ |  |        +--------------+
+        | |         |   X         V    |         |  |        |  Network     |
+        | |         |     Event Loop   |         |  |        +--------------+
+        | | +-----+ |    ^             |         |  |
+        | | |     | |    |        X    |         |  |        +--------------+
+        | | +-----+ |    X        X    |         |  |        |  Others      |
+        | |         |     XX     XX    |         |  |        +--------------+
+        | |         |      XXXXXX      |         |  |
+        | +---^-----+                  +----+----+  |
+        |     |       Operation Complete    |       |
+        |     +-----------------------------+       |
+        +-------------------------------------------+
+```
+[(Raoof)](#resources);
+
+<!-- This needs work -->
+
+ This diagram depicts a Node.js server. As you can see, the event loop iterates over the event queue, which can be thought of as a "list" of events and callbacks of completed operations. If a process requires I/O, the event loop delegates the operation to the thread pool. Libuv assigns threads from the thread pool and the I/O operations are executed asynchronously. The event loop will then continue to execute items in the event queue. Once the I/O operation is complete, the callback is queued for processing. The event loop then executes the callback and provides the results.
+
 
 #### The EventEmitter (JavaScript Events)
 According to [Norris](#resources), the `EventEmitter` was created to simplify the interaction with the event loop. The `EventEmitter` was created as a generic wrapper to facilitate creating event-based APIs. To understand how Node handles events, we're going to build our own event emitter. (Albeit a simple version).
