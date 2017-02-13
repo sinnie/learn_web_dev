@@ -219,7 +219,7 @@ To use node's event emitter:
 * Just like in our example, the Node module's `on` method takes a string (type) and a function (listener), and the `emit` method is also invoked with the type name.
 
 Although this technique is useful for concisely controlling the logic of our programs, it has one drawback: [Magic Strings](https://www.wikiwand.com/en/Magic_string). A simple definition of a __magic string__ is a string that has some special meaning in the code. This is problematic because it is easy for typos to cause difficult to find bugs.
-  * A good workaround is to assign this to a variable in a config file [(Alicea)](#references).
+  * A good workaround is to assign this to a variable in a config file (`./config/evntCnfg.js`)[(Alicea)](#references).
 
   ```javascript
   module.exports = {
