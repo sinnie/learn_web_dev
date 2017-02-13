@@ -331,39 +331,53 @@ __Knex.js Seed System:__
 The knex.js seed system allows developers to automate the initialization of table rows in JS.
     * The heart of the seed system are __seed files__. Unlike the knex.js migration system, the seed files do not run in batches; They all run every time you run the knex.js seed command.
 * Why is the Seed System Useful?
-    * Most web applications start with an initial set of table rows. It’s useful to be able to automatically seed a db with that set.
+    * Most web applications start with an initial set of table rows. It is useful to be able to automatically seed a db with that set.
     *  Every time you rollback your database, one or more tables are dropped and all rows are removed.
     * It is helpful to be able to run migration and seed files and be up to speed with the rest of the team.
     * Seed files only export a single function that removes all rows from the table and then inserts the specified rows.
 
     ```javascript
         'use strict';
-        exports.seed = function(knex) {
-         return knex('tracks').del( ) // <—First it deletes all of the data
-           .then(( ) => {
-             return knex('tracks').insert([{ // <— Usually want to insert an arr of obj
+        exports.seed = function(knex, _Promise) {
+         return knex('airplanes').del( ) // <—First it deletes all of the data
+           .then(() => {
+             return knex('airplanes').insert([{ // <— Usually want to insert an arr of obj
                id: 1,
-               title: 'Here Comes the Sun',
-               artist: 'The Beatles',
-               likes: 28808736,
+               name: 'Piper J-3',
+               description: 'The Piper J-3 Cub is a single-engine two-seat light touring aircraft and military trainer and liaison aircraft produced by the US-American manufacturer Piper Aircraft Corporation. The US Army variants were initially designated O-59 and later L-4 Grasshopper, US Navy designation of the J-3 was NE-1. The Piper J-3 Cub is a development of the Taylor J-2 Cub. 5703 of the total 19828 built J-3 were military aircraft.',
+               year_in_service: 1938,
+               country_of_origin: 'United States',
+               operators: 'United States, Brazil',
+               max_speed: 92,
+               max_range: 250,
+               ceiling: 12000,
+               engines: '1 piston 65hp Contenental A-65',
+               img_url: 'https://airandspace.si.edu/sites/default/files/styles/slideshow_sm/public/images/collection-objects/record-images/A19771128000cp10.JPG?itok=26px07OX',
                created_at: new Date('2016-06-26 14:26:16 UTC'),
                updated_at: new Date('2016-06-26 14:26:16 UTC')
              }, {
                id: 2,
-               title: 'Hey Jude',
-               artist: 'The Beatles',
-               likes: 20355655,
+               name: 'Boeing-Stearman Kaydet PT-13 / PT-17 / PT-18 / NS-1 / N2S (Model 75)',
+               description: 'The Stearman Model 75 Kaydet is a single-engine two-seat trainer biplane aircraft produced by the US-American manufacturer Stearman Aircraft Company and later by the Boeing Airplane Company. PT-13 / PT-17 / PT-18 were the main-variants used by the USAAC, NS-1 and NS2S for the US Navy. The Stearman 75 Kaydet was used by the US Army Air Corps and the US Navy as a primary/basic trainer aircraft. After WWII many Stearman 75 were used as crop-duster aircraft due to their slow and low-level flight capability.',
+               year_in_service: 1934,
+               country_of_origin: 'United States',
+               operators: 'United States, Brazil, Canada, China, Phillipines',
+               max_speed: 124,
+               max_range: 505,
+               ceiling: 11200,
+               engines: '1 Radial 220 hp Lycoming R-680-17',
+               img_url: 'http://www.flugzeuginfo.net/acimages/pt13dn_kp.jpg',
                created_at: new Date('2016-06-26 14:26:16 UTC'),
                updated_at: new Date('2016-06-26 14:26:16 UTC')
              }]);
            });
            .then(() => {
              return knex.raw(
-               "SELECT setval('tracks_id_seq', (SELECT MAX(id) FROM tracks));" // <— This allows us to test. Sets the raw sql to update seq id
+               "SELECT setval('airplanes_id_seq', (SELECT MAX(id) FROM airplanes));" // <— This allows us to test. Sets the raw sql to update seq id
              );
            });
         };
-    // (No catch; knex creates one for you)
+    // (Notice that there is no catch. This is because knex creates one for you)
     ```
 ## Terms:
 knex.js
@@ -375,7 +389,8 @@ knex.js
     * Designed like this so that the Knex migration system can identify and order the migrations based on when the files where created and what tables they affect.
     * Exports:
         * `up()` - returns instructions to the knex.js migration system on how to migrate the db forward
-            ```javascript
+        * Here is an example of DB creation with SQL:
+            ```SQL
              CREATE TABLE tracks (
                    id serial PRIMARY KEY,
                    title varchar(255) NOT NULL DEFAULT '',
@@ -386,6 +401,47 @@ knex.js
                  );
                  table.timestamps(true, true); // <- Sets created and updated at timestamps
               ```
+        * Here is an example of a Knex.js Migration:
+        ```javascript
+          'use strict';
+
+          exports.up = function(knex) {
+            return knex.schema.createTable('airplanes', (table) => {
+              table.increments();
+              table.string('name')
+                   .notNullable()
+                   .defaultTo('');
+              table.text('description')
+                   .notNullable()
+                   .defaultTo('');
+              table.integer('year_in_service')
+                   .notNullable();
+              table.string('country_of_origin')
+                   .notNullable();
+              table.text('operators')
+                   .notNullable()
+                   .defaultTo('');
+              table.integer('max_speed')
+                   .notNullable();
+              table.integer('max_range')
+                   .notNullable();
+              table.integer('ceiling')
+                   .notNullable();
+              table.text('engines')
+                   .notNullable()
+                   .defaultTo('');
+              table.text('img_url')
+                   .notNullable()
+                   .defaultTo('');
+              table.timestamps(true, true);
+            });
+          };
+
+          exports.down = function(knex) {
+            return knex.schema.dropTable('airplanes');
+          };
+
+        ```
         * `down()` - returns instructions on how to migrate the db backward
 * __Migrations:__ Migrations dictate how we define and update the database schema.
 * __Knex.js Seed System:__ The knex.js seed system allows developers to automate the initialization of table rows in JavaScript.
