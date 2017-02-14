@@ -1,7 +1,10 @@
 #Knex.js
 
+[__Knex.js__](http://Knex.jsjs.org/#Installation-node) is a third party JavaScript library that builds SQL commands and sends them to a relational database like PostgreSQL. In brief, Knex.js is an object-relational mapping tool between JavaScript code and SQL commands. According to their documentation, Knex.js features traditional node-style callbacks as well as a promise interface that supplies a cleaner interface for asynchronous flow control, a stream interface, full-featured query and schema builders, transaction support (with savepoints), connection pooling, and standardized responses between different query clients and dialects [(__Knex.js__)](http://Knex.jsjs.org/#Installation-node).
+
+---
+
 ## Terms:
-* [__Knex.js__](http://Knex.jsjs.org/#Installation-node) - a third party JS library that builds SQL commands and sends them to a RDB like PostgreSQL; Communicate with a SQL server with Node.js; build and send SQL queries; it is a query builder; ORM (object relational mapping)
 * [__Promise__](../promises.md) - an object that’s used for asynchronous operations; Actually an object that hasn’t completed yet but will in the future; It offers a separation of success handling from error handling
     * __async__ - non-blocking when it’s done
 * __SQL Injection Attack__ - Occurs when user input is not filtered to escape characters and is then passed into an SQL conned, which results in the potential for a malicious user to manipulate the database commands that a web app performs
@@ -9,13 +12,25 @@
     * Knex.js does this for you automatically; therefore, it is safer than SQL
 * __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`)
 
-> NOTE:
-> by convention, all table names are plural by default
-
 ## Connecting Knex.js to a SQL Server
 
-When the `require(‘Knex.js’)(config)` function is called, Knex.js opens two connections to a server. This allows Knex.js to send multiple SQL commands to a server concurrently. When Knex.js.destroy( ) => is called, Knex.js closes the connections. If the connections are not closed, the program will run indefinitely.
+When the `require(‘Knex.js’)(config)` function is called, Knex.js opens two connections to a server. This allows Knex.js to send multiple SQL commands to a server concurrently. When `Knex.js.destroy()` => is called, Knex.js closes the connections. If the connections are not closed, the program will run indefinitely.
 * Knex.js can open up to 10 connections
+* Does Knex handle Connection Pooling?
+Yes, knex.js handles connection pooling by using the generic pool library. The connection pool has a default setting of  `2` and a max of `10` for the `MySQL` and `PG` libraries, but it uses a single connection for `sqlite3` because of problems with using many connections on a single file. Developers can configure the pool size by passing a pool option as one of the keys in the initialize block. If you ever need to explicitly remove the connection pool, you may use `knex.destroy([callback])`. You can use `knex.destroy` by passing a callback or by chaining as a promise, not both.  
+* Example of Config:
+```javascript
+		var knex = require('knex')({
+  		  client: 'mysql',
+                 connection: {
+    		    host : '127.0.0.1',
+   		    user : 'your_database_user',
+    		    password : 'your_database_password',
+    		    database : 'myapp_test'
+  		  },
+  		  pool: { min: 0, max: 7 }
+		});
+```
 
 ## Why is Knex.js useful?
 * One can build Node.js web applications that can create, read, update, and destroy the rows tables, and dos of a RDBS like PostgresQL
