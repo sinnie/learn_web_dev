@@ -9,14 +9,14 @@
 [Socket.IO](./node/socketio.md)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an event-driven, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on operating systems. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
+Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an _event-driven_, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on operating systems. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
 
-### Definition
+### Terms
 #### So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
 * __Event-Driven__ - Event driven programming is when the application flow control is determined by events or changes in state. It generally has a central mechanism that listens for events and invokes a callback function once an event has been detected. In the case of Node.js, this is the event loop.
-* __Non-Blocking__ - non-blocking code refers to operations that do not block further execution until that operation finishes, which means that your program will not hang on a process that has to complete. Instead, commands execute in parallel and use callbacks to signal completion or failure.
-* __Single-Threaded__ - A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). It's a kind of lightweight process that shares memory with every other thread within the same process. Threads were created as an ad hoc extension of the former model to accommodate concurrency [(Teixeira)](#resources). In a single-threaded system, one command is processed at a time. Node.js' performance is improved by being single-threaded, which bypasses thread context switching. However, Node is not _truly_ single-threaded. It uses a library called libuv to handle multiple threads that manage tasks related to the operating system.
-  * A downside to being single-threaded is that Node.j is not able to easily scale by increasing the number of CPU cores.
+* __Non-Blocking__ - non-blocking code refers to operations that __do not block__ further execution until that operation finishes, which means that your program will not hang on a process that has to complete. Instead, commands execute in parallel and use callbacks to signal completion or failure.
+* __Single-Threaded__ - A __thread of execution__ is the smallest sequence of programmed instructions that can be managed independently by a scheduler (a part of the OS). It is a kind of lightweight process that shares memory with every other thread within the same process. Threads were created as an ad hoc extension of the former model to accommodate concurrency [(Teixeira)](#resources). In a single-threaded system, one command is processed at a time. Node.js' performance is attributed to being single-threaded, which bypasses thread context switching. However, Node is not _truly_ single-threaded. In the background, Node.js uses a library called libuv to handle multiple threads that manage I/O tasks related to the operating system.
+  * A downside to being single-threaded is that Node.js is not able to easily scale by increasing the number of CPU cores.
 * __I/O__ - I/O is short for input/output and describes any program operation or device that transfers data to or from a peripheral device. Inputs are the signals or data received by a system and outputs are the signals or data sent from it.  
 * You'll often hear __Asynchronous__ as well. Asynchronous means, in the case of Node.js, that the server can respond to multiple requests at a time. It will not stop or block any API requests and will respond to all when the response is ready to send accordingly. Working asynchronously allows you to start processing data that does not require the result of the communication while the communication goes on.
 
@@ -43,7 +43,7 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
 * __V8__ is Google's open source JavaScript engine built for Google Chrome. It's written in C++ and can run either standalone or embedded into any C++ application.
 * [libuv](http://nikhilm.github.io/uvbook/) is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll(4), kqueue(2), Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
   * It was originally an abstraction around libev or Microsoft IOCP, as libev doesn't support Windows. In node-v0.9.0's version of libuv, the dependency on libev was removed
-  * Has a default thread pool size of 4 and uses a queue to manage access to the thread pool.
+  * libuv has a default thread pool size of 4 and uses a queue to manage access to the thread pool.
     * You can mitigate this by increasing the size of the thread pool through the `UV_THREADPOOL_SIZE` environment variable, as long as the thread pool is required and created: `process.env.UV_THREADPOOL_SIZE = 10`  
   * __Features:__
     * Full-featured event loop backed by epoll, kqueue, IOCP, event ports.
@@ -66,7 +66,7 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
 ---
 
 ### Node Core
-The Node.js core modules are the heart of Node.js, and the Ndoe.js Bindings, which are written in C++, enable these technologies to communicate. The Node.js API consists of about 27 core modules, and are most concerned with operating system tasks. Therefore, Node.js core modules have access to the following functions:
+The Node.js core modules are the heart of Node.js, and the Node.js Bindings, which are written in C++, enable these technologies to communicate. The Node.js API consists of about 27 core modules and are most concerned with operating system tasks. Therefore, Node.js core modules have access to the following functions:
 
 ```javascript
 * fs.readFile();
@@ -79,9 +79,9 @@ The Node.js core modules are the heart of Node.js, and the Ndoe.js Bindings, whi
 Tasks like `readFile` and `writeFile` are called _blocking_ because they take time to complete. They are much slower than operations that use a CPU. For example, during a hard disk operation that takes 10ms to perform, a 1 GHz CPU would have performed ten million instruction-processing cycles.
 
 ### Asynchronous Node
-All API's of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous Node.js. A simple definition of a callback is a function passed as an argument to another function, and [more information about promises can be found here](./promises.md).
+All APIs of Node.js are _asynchronous or non-blocking_. This means that callbacks and promises are at the core of asynchronous Node.js. A simple definition of a callback is a function passed as an argument to another function, and [more information about promises can be found here](./promises.md).
 
-A common pattern of event-driven programming is succeed or fail. There are two common implementations of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). The second pattern uses [promises]('./promises.md').
+A common pattern of event-driven programming is succeed or fail. There are two common implementations of that pattern in Node.js. The first is the Error-first callbacks, which are widely used in Node by the core modules as well as most of the modules found on [npm](https://www.npmjs.com/). Although error-first callbacks sound complicated, they are actually quite simple. An error-first callback is simply a callback that accepts an error object as the first argument. If there is no error, the first argument is `null`. The second pattern uses [promises]('./promises.md'), an object used for asynchronous computations.
 
 ##### Note
 * __error-handling__: instead of a `try-catch` block you have to check for errors in the callback
@@ -92,11 +92,10 @@ Async actions are completed through callbacks and __The Event Loop__.
 ### Event Driven Programming
 __Event-driven programming__ is a programming paradigm in which the flow of the program is dictated by events (changes in state), including user actions, sensor outputs, or messages from other programs or threads. In this paradigm, every command is event based, which means that the program revolves around a loop that polls for input or data (or state change). When an event occurs, a callback is invoked. JavaScript is well suited to this programming style because it has first-class functions and closures.
 
-Although V8 is single-threaded, the underlying C++ API of Node is not, which means that whenever we call something that is a non-blocking operation, Node will call __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives the value, it awaits for or throws an error, and then the provided callback is called with the necessary parameters.
+Although V8 is single-threaded, the underlying C++ API of Node.js is not, which means that whenever we call something that is an I/O operation, Node relies on __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives a value, it awaits for data or throws an error, and then the provided callback is called with the necessary parameters.
 
 
-  > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core by the `EventEmitter`, and is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
-
+  > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core by the `EventEmitter`. The `EventEmitter` is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
 
 
 * JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
@@ -120,28 +119,28 @@ The Node.js event loop runs under a single thread, and the program code running 
 Below is a digram of a Node.js server's event loop.
 
 ```      
-                            Node.js Server
+                            LIBUV (Async I/0)
               +-------------------------------------------+
               |                                           |
               |  Event Queue                 Thread pool  |
-              | +---------+                  +---------+  |        +--------------+
-              | |         |                  | +-----+ <---------+ | Database     |
-              | | +-----+ |                  | +-----+ |  |        +--------------+
+              | +---------+                  +---------+  | Blocking Operation  +--------------+
+              | |         |                  | +-----+ <-----------------------+|  Database    |
+              | | +-----+ |                  | +-----+ |  |                     +--------------+
               | | |     | |                  |         |  |
-              | | +-----+ |                  | +-----+ |  |        +--------------+
-   Requests   | |         |      XXXX        | +-----+ <---------+ | File System  |
- <----------+ |   +-----+ |     XX  XX       |         |  |        +--------------+
+              | | +-----+ |                  | +-----+ |  | Execute Callback    +--------------+
+   Requests   | |         |      XXXX        | +-----+ <----------------------+ |  File System |
+<-------------+   +-----+ |     XX  XX       |         |  |                     +--------------+
               | | |     | |   XX      XX     | +-----+ |  |
-              | | +-----+ |   X        |     | +-----+ |  |        +--------------+
-              | |         |   X        V     |         |  |        |  Network     |
-              | |         |    Event Loop    |         |  |        +--------------+
+              | | +-----+ |   X        |     | +-----+ |  |                     +--------------+
+              | |         |   X        V     |         |  |                     |  Network     |
+              | |         |    Event Loop    |         |  |                     +--------------+
               | | +-----+ |    ^             |         |  |
-              | | |     | |    |        X    |         |  |        +--------------+
-              | | +-----+ |    X        X    |         |  |        |  Others      |
-              | |         |     XX     XX    |         |  |        +--------------+
+              | | |     | |    |        X    |         |  |                     +--------------+
+              | | +-----+ |    X        X    |         |  |                     |   Others     |
+              | |         |     XX     XX    |         |  |                     +--------------+
               | |         |      XXXXXX      |         |  |
               | +---^-----+                  +----+----+  |
-              |     |       Operation Complete    |       |
+              |     ^      Operation Complete     |       |
               |     +-----------------------------+       |
               +-------------------------------------------+
 
