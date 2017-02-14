@@ -7,14 +7,14 @@
 * __SQL Injection Attack__ - Occurs when user input is not filtered to escape characters and is then passed into an SQL conned, which results in the potential for a malicious user to manipulate the database commands that a web app performs
     * Protect against SQL injection attacks, escape the special characters that a user, may input into a web app. In SQL a single-quote ( ‘ ) character is escaped with another single-quote
     * Knex.js does this for you automatically; therefore, it is safer than SQL
-* Query Builder - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`)
+* __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`)
 
->> NOTE:
+> NOTE:
 > by convention, all table names are plural by default
 
 ## Connecting Knex.js to a SQL Server
 
-When the `require(‘Knex.js’)(config)` => is called, Knex.js opens two connections to a server. This allows Knex.js to send multiple SQL commands to a server concurrently. When Knex.js.destroy( ) => is called, Knex.js closes the connections. If the connections are not closed, the program will run indefinitely.
+When the `require(‘Knex.js’)(config)` function is called, Knex.js opens two connections to a server. This allows Knex.js to send multiple SQL commands to a server concurrently. When Knex.js.destroy( ) => is called, Knex.js closes the connections. If the connections are not closed, the program will run indefinitely.
 * Knex.js can open up to 10 connections
 
 ## Why is Knex.js useful?
@@ -25,76 +25,94 @@ When the `require(‘Knex.js’)(config)` => is called, Knex.js opens two connec
     * `insert()`
     * `update()`
     * `del()`
-* Query Builder - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`)
-    * `SELECT` -  created a `SELECT` command; Accepts an optional list of column names as string arguments and adds them tot eh SELECT clause of a query. When no arguments are specified, it adds a * to the SELECT clause. The `select()` method returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given an array of objects for the matching rows in a table.
-    * `WHERE` - Several Knex.js methods exist in adding dynamic `WEHRE` clauses to a query. The first is the `where()` method.
-        * It accepts two arguments and one optional arg: a column name as a string and a value to match against
-        * (Note: supplying `where()` with an undefined val will throw an error); To add `AND` clauses to a query, chain `where()` methods
-        * accepts three args:
-            * col name as string
+* __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`).
+    * `SELECT` -  creates a `SELECT` command. It accepts an optional list of column names as string arguments and adds them to the `SELECT` clause of a query. When no arguments are specified, it adds a `*` to the SELECT clause. The `select()` method returns a promise. __When the promise is resolved, the `.then()` method’s callback is triggered and given an array of objects for the matching rows in a table.__
+    * `WHERE` - Several Knex.js methods exist in adding a dynamic `WEHRE` clauses to a query. The first is the `where()` method.
+        * The `where()` method accepts two arguments and one optional argument: 1.) a column name as a string and 2.) a value to match against
+        ```javascript
+        .where('id', 6)
+        ```
+
+        * Note: supplying `where()` with an undefined value will throw an error.
+        * To add `AND` clauses to a query, chain `where()` methods
+        * The `where()` method also accepts three arguments:
+            * column name as string
             * operator as a string
             * value to operate against
-        * accepts one arg:
-            * object with key-value pairs
+            ```javascript
+            .where('score', '>=', 9)
+            ```
+        * The `where()` method can also accepts a single argument:
+            * An object with key-value pairs
                 * keys translate column names and the values translate to their respective comparison values.
                 * if an object with multiple key-value pairs is given, the `where()` method adds multiple `AND` clauses to the query
-        * `orWhere()` - works the same, except it adds an OR clause to the query, grouping its arguments in parens
-        * `whereNot()`
-        * `whereIn()`
-        * `whereNotIn()`
-        * `whereNull()`
-        * `whereNotNull()`
-        * `whereExists()`
-        * `whereNotExists()`
-        * `whereBetween()`
-        * `whereNotBetween()`
-        * `whereRaw()`
+            ```javascript
+            .where({ year_in_service: '1942', country_of_origin: 'United States' })
+            ```
+        * The `orWhere()` method works the same as the `where()` method, except it adds an `OR` clause to the query, grouping its arguments in parenthesis
+        ```javascript
+        .orWhere('operators', 'Great Britain')
+        ```
+      *  In Addition Knex.js supports the following `WHERE` clause methods:
+          * `whereNot()`
+          * `whereIn()`
+          * `whereNotIn()`
+          * `whereNull()`
+          * `whereNotNull()`
+          * `whereExists()`
+          * `whereNotExists()`
+          * `whereBetween()`
+          * `whereNotBetween()`
+          * `whereRaw()`
     * `orderBy` - adds an `ORDER BY` clause to the query
-        * two args:
-            * col name
-            * direction
-    * `limit()`
-        * adds a LIMIT clause to the query
-            * single number argument
+        * The `orderBy` method has two arguments:
+            * a column name
+            * a direction
+          ```javascript
+          .orderBy('year_in_service', 'DESC')
+          ```
+    * The `limit()` method adds a `LIMIT` clause to the query.
+      * This method takes a single number argument, which is the limit value:
+        ```javascript
+          .limit(10)
+        ```
+## CRUD
     * `POST`
         * `insert()`
             * creates an `INSERT` command.
             * accepts an object of key-value pairs to be inserted into a row in the table
-            * returns a promise; when the promise is resolved, the `.then()` method’s callback is triggered and given an object that contains the number of rows inserted
-            * accepts a list of sting column names as a second argument, which indicates what columns of the newly inserted row to pass into the `.then()` method’s callback.
-                * usually * is used to pass along all the columns of the row
-                * any col value (id, col, value, etc) ( for this example )
+            * `insert()` returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given an object that contains the number of rows inserted.
+            * `insert()` accepts a list of string column names as a second argument, which indicates what columns of the newly inserted row to pass into the `.then()` method’s callback.
+                * usually `*` is used to pass along all the columns of the row
+                * any column value (id, col, value, etc) ( for this example)
     * `UPDATE`
-        * `update()`
-            *  returns a promise; when the promise is resolved, the `.then()` method’s callback is triggered and given a single value representing the number of rows updated
+        * `update()` creates an `UPDATE` command.
+          * The `update()` method either accepts an object of key-value pairs that update a row in a table or it accepts a list of string column names as a second argument. The list informs Knex.js which columns of the updated row to pass into the `.then()` method's callback. Like the other methods, an `*` is uded to denote all columns of the row.
+          * This method returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given a single value representing the number of rows updated.
     * `DELETE`
-        *  `del()`
-            * no args
-            * returns a promise; when the promise is resolved, the then( ) method’s callback is triggered and given a single value representing the number of rows deleted.
-                * delete - is a keyword in js, so - del( ) is used by Knex.js.
+        *  Knex.js uses the `del()` method because `delete` is a JavaScript reserved word. This method does not accept any arguments. And like most other Knex.js methods, it returns a promise. When the promise resolves, the `.then()` method's callback is triggered and given a single value representing the number of rows deleted.
+
+---
+
 
 ## `DELETE` clause:
 ```javascript
-  const env = 'development';
-  const config = require('./knexfile.js')[env];
-  const knex = require('knex')(config);
 
+  let aircraft;
 
-  knex(table)
+  knex('aircraft')
+    .del()
+    .where('name', 'Piper J-3')    
     .then((result) => {
       console.log(result);
-      knex.destroy();
-    });
+      knex.destroy();      
+    })
     .catch((err) =>{
       console.error(err);
       knex.destroy();
       process.exit(1);
     });
-
 ```
-
-
-
 
 ## `SELECT` clause:
 ```javascript
@@ -103,16 +121,21 @@ When the `require(‘Knex.js’)(config)` => is called, Knex.js opens two connec
   const config = require('./Knex.jsfile.js')[env];
   const Knex.js = require('Knex.js')(config);
 
-  Knex.js('movies')
-    .select('id', 'title', 'rating', 'is_3d', 'score')
-    .then((result) => {
-      console.log(result);
-      Knex.js.destroy();
+  knex('favorites')
+    .select('*')
+    .innerJoin('airplanes', 'airplanes.id', 'favorites.airplane_id')
+    .where('favorites.user_id', userId)
+    .where('aircraft.id', aircraftId)
+    .first()
+    .then((row) => {
+      if (!row) {
+        return res.send(false);
+      }
+
+      res.send(true);
     })
     .catch((err) => {
-      console.error(err);
-      Knex.js.destroy();
-      process.exit(1);
+      next(err);
     });
 ```
 
@@ -125,9 +148,10 @@ When the `require(‘Knex.js’)(config)` => is called, Knex.js opens two connec
   const Knex.js = require('Knex.js')(config);
 
   Knex.js('movies')
-    .select('id', 'title', 'rating', 'is_3d', 'score')
-    .where('score', '>=', 7.5)
-    .where('rating', 'PG')
+    .select('id', 'name', 'description', 'img_url', 'engines')
+    .where('airplane_id', aircraftId)
+    .where('user_id', userId)
+    .first()
     .then((result) => {
       console.log(result);
       Knex.js.destroy();
@@ -161,6 +185,8 @@ When the `require(‘Knex.js’)(config)` => is called, Knex.js opens two connec
 * `pluck()`
 * `first()`
 * `raw()`
+
+---
 
 ## Workflow to set up new DB and init:
 ```
@@ -298,8 +324,7 @@ A knex migration will take all new migration files, group them in a batch and th
     * Example:
         * Create Migration File 1 then Create Migration File 2. Then run `knex migrate:latest` Two migrations will run, and one batch created. If you call `knex migrate:rollback`, the two migrations will be rolled back, but only one batch.
         * To help illustrate this, here is an example:
-
-        ```
+```
     ┌──────────────----───────┐
     │ Create Migration File 1 │
     │ Create Migration File 2 │
@@ -316,7 +341,7 @@ A knex migration will take all new migration files, group them in a batch and th
     │ knex migrate:rollback                               │
     │ Two migrations rolled back, one batch rolled back   │
     └────────────────────────-----------------────────────┘
-    ```
+```
 
     * vs
         * Create Migration File 1 One migration run, one batch created. knex migrate:latest Create Migration File 2 One migrations run, one batch created. knex migrate:rollback One migrations rolled back, one batch rolled back. knex migrate:rollback One migrations rolled back, one batch rolled back.
