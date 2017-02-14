@@ -5,19 +5,40 @@
 ---
 
 ## Terms:
-* [__Promise__](../promises.md) - an object that’s used for asynchronous operations; Actually an object that hasn’t completed yet but will in the future; It offers a separation of success handling from error handling
+* [__Promise__](../promises.md) - an object that’s used for asynchronous operations. It is an object that hasn’t completed yet but will in the future. Mainly, the benefit of a promise is that it offers a separation of success handling from error handling
     * __async__ - non-blocking when it’s done
-* __SQL Injection Attack__ - Occurs when user input is not filtered to escape characters and is then passed into an SQL conned, which results in the potential for a malicious user to manipulate the database commands that a web app performs
-    * Protect against SQL injection attacks, escape the special characters that a user, may input into a web app. In SQL a single-quote ( ‘ ) character is escaped with another single-quote
-    * Knex.js does this for you automatically; therefore, it is safer than SQL
-* __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`)
+* __SQL Injection Attack__ - Occurs when user input is not filtered to escape characters and is then passed into an SQL conned, which results in the potential for a malicious user to manipulate the database commands.
+    * To protect against SQL injection attacks, escape the special characters that a user, may input into a web app. In SQL a single-quote ( ‘ ) character is escaped with another single-quote
+    * Knex.js does this for you automatically; therefore, it is marginally safer than SQL
+* __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`).
+* __Connection Pooling__ - A database connection pool is a [cache](http://www.webopedia.com/TERM/C/cache.html) of database connections that are maintained so that the connections can be reused when future requests to the database are required. Connection pooling is an attempt to reduce the amount of time it takes to establish a database connection because connection to the database is a resource intensive operation. Essentially, pooling keeps connections active so that wwhen another connection is requested, there is already an existing, active connection to handle the request.
+  * Below is a diagram that explains connection pooling. This diagram is from   [(paxdiablo)](http://stackoverflow.com/questions/4041114/what-is-database-pooling).
+  ```
+    +---------+
+    |         |
+    | Clients |
+  +---------+ |
+  |         |-+        +------+          +----------+
+  | Clients | ===#===> | Open | =======> | RealOpen |
+  |         |    |     +------+          +----------+
+  +---------+    |         ^
+                 |         |
+                 |     /------\
+                 |     | Pool |
+                 |     \------/
+                 |         ^
+                 |         |
+                 |     +-------+         +-----------+
+                 #===> | Close | ======> | RealClose |
+                       +-------+         +-----------+
+  ```
 
 ## Connecting Knex.js to a SQL Server
 
 When the `require(‘Knex.js’)(config)` function is called, Knex.js opens two connections to a server. This allows Knex.js to send multiple SQL commands to a server concurrently. When `Knex.js.destroy()` => is called, Knex.js closes the connections. If the connections are not closed, the program will run indefinitely.
 * Knex.js can open up to 10 connections
 * Does Knex handle Connection Pooling?
-Yes, knex.js handles connection pooling by using the generic pool library. The connection pool has a default setting of  `2` and a max of `10` for the `MySQL` and `PG` libraries, but it uses a single connection for `sqlite3` because of problems with using many connections on a single file. Developers can configure the pool size by passing a pool option as one of the keys in the initialize block. If you ever need to explicitly remove the connection pool, you may use `knex.destroy([callback])`. You can use `knex.destroy` by passing a callback or by chaining as a promise, not both.  
+Yes, knex.js handles connection pooling by using the generic pool library. The connection pool has a default setting of  `2` and a max of `10` for the `MySQL` and `PG` libraries, but it uses a single connection for `sqlite3` because of problems with using many connections on a single file. Developers can configure the pool size by passing «a pool option as one of the keys in the initialize block. If you ever need to explicitly remove the connection pool, you may use `knex.destroy([callback])`. You can use `knex.destroy` by passing a callback or by chaining as a promise, not both.  
 * Example of Config:
 ```javascript
 		var knex = require('knex')({
@@ -32,24 +53,24 @@ Yes, knex.js handles connection pooling by using the generic pool library. The c
 		});
 ```
 
-## Why is Knex.js useful?
-* One can build Node.js web applications that can create, read, update, and destroy the rows tables, and dos of a RDBS like PostgresQL
-* Protects against SQL injection attacks
+## Looking into Knex.js
+* One can build Node.js web applications that can `create`, `read`, `update`, and `destroy` the tables and rows of a RDBS like PostgresQL.
+* In addition, Knex.js offers protection against SQL injection attacks.
 * `CRUD`
     * `select()`
     * `insert()`
     * `update()`
     * `del()`
-* __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`).
-    * `SELECT` -  creates a `SELECT` command. It accepts an optional list of column names as string arguments and adds them to the `SELECT` clause of a query. When no arguments are specified, it adds a `*` to the SELECT clause. The `select()` method returns a promise. __When the promise is resolved, the `.then()` method’s callback is triggered and given an array of objects for the matching rows in a table.__
+* Knex.js is a __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`).
+    * `SELECT` -  creates a `SELECT` command. It accepts an optional list of column names as string arguments and adds them to the `SELECT` clause of a query. When no arguments are specified, it adds a `*` to the SELECT clause. The `select()` method returns a promise. __When the promise is resolved__, the `.then()` method’s callback is triggered and given an array of objects for the matching rows in a table.
     * `WHERE` - Several Knex.js methods exist in adding a dynamic `WEHRE` clauses to a query. The first is the `where()` method.
         * The `where()` method accepts two arguments and one optional argument: 1.) a column name as a string and 2.) a value to match against
         ```javascript
         .where('id', 6)
         ```
+        > Note: supplying `where()` with an undefined value will throw an error.
 
-        * Note: supplying `where()` with an undefined value will throw an error.
-        * To add `AND` clauses to a query, chain `where()` methods
+        * To add `AND` clauses to a query, chain `where()` methods.
         * The `where()` method also accepts three arguments:
             * column name as string
             * operator as a string
@@ -91,26 +112,27 @@ Yes, knex.js handles connection pooling by using the generic pool library. The c
         ```javascript
           .limit(10)
         ```
+---
+
 ## CRUD
-    * `POST`
-        * `insert()`
-            * creates an `INSERT` command.
-            * accepts an object of key-value pairs to be inserted into a row in the table
-            * `insert()` returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given an object that contains the number of rows inserted.
-            * `insert()` accepts a list of string column names as a second argument, which indicates what columns of the newly inserted row to pass into the `.then()` method’s callback.
-                * usually `*` is used to pass along all the columns of the row
-                * any column value (id, col, value, etc) ( for this example)
-    * `UPDATE`
-        * `update()` creates an `UPDATE` command.
-          * The `update()` method either accepts an object of key-value pairs that update a row in a table or it accepts a list of string column names as a second argument. The list informs Knex.js which columns of the updated row to pass into the `.then()` method's callback. Like the other methods, an `*` is uded to denote all columns of the row.
-          * This method returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given a single value representing the number of rows updated.
-    * `DELETE`
-        *  Knex.js uses the `del()` method because `delete` is a JavaScript reserved word. This method does not accept any arguments. And like most other Knex.js methods, it returns a promise. When the promise resolves, the `.then()` method's callback is triggered and given a single value representing the number of rows deleted.
+* `POST`
+    * `insert()`
+        * creates an `INSERT` command.
+        * accepts an object of key-value pairs to be inserted into a row in the table
+        * `insert()` returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given an object that contains the number of rows inserted.
+        * `insert()` accepts a list of string column names as a second argument, which indicates what columns of the newly inserted row to pass into the `.then()` method’s callback.
+            * usually `*` is used to pass along all the columns of the row
+            * any column value (id, col, value, etc) ( for this example)
+* `UPDATE`
+    * `update()` creates an `UPDATE` command.
+      * The `update()` method either accepts an object of key-value pairs that update a row in a table or it accepts a list of string column names as a second argument. The list informs Knex.js which columns of the updated row to pass into the `.then()` method's callback. Like the other methods, an `*` is uded to denote all columns of the row.
+      * This method returns a promise. When the promise is resolved, the `.then()` method’s callback is triggered and given a single value representing the number of rows updated.
+* `DELETE`
+    *  Knex.js uses the `del()` method because `delete` is a JavaScript reserved word. This method does not accept any arguments. And like most other Knex.js methods, it returns a promise. When the promise resolves, the `.then()` method's callback is triggered and given a single value representing the number of rows deleted.
 
 ---
 
-
-## `DELETE` clause:
+### `DELETE` clause:
 ```javascript
 
   let aircraft;
@@ -129,7 +151,7 @@ Yes, knex.js handles connection pooling by using the generic pool library. The c
     });
 ```
 
-## `SELECT` clause:
+### `SELECT` clause:
 ```javascript
   'use strict';
   const env = 'development';
@@ -154,7 +176,7 @@ Yes, knex.js handles connection pooling by using the generic pool library. The c
     });
 ```
 
-## `WHERE` clause:
+### `WHERE` clause:
 ```javascript
 'use strict';
 
@@ -178,23 +200,25 @@ Yes, knex.js handles connection pooling by using the generic pool library. The c
     });
 ```
 
-## OFFSET clause
+## Other Common Knex.js SQL Commands:
+
+### OFFSET clause
 * `offset()`
 
-## JOIN clause
+### JOIN clause
 * `innerJoin()`
 
-## DISTINCT clause
+### DISTINCT clause
 * `distinct()`
 
-## Aggregate methods
+### Aggregate methods
 * `count()`
 * `max()`
 * `min()`
 * `sum()`
 * `avg()`
 
-## Helper methods
+### Helper methods
 * `increment()`
 * `decrement()`
 * `pluck()`

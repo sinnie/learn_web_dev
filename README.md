@@ -16,7 +16,7 @@ Express
 
 PostgreSQL
 
-Knex.js
+[Knex.js](./node/knex.md)
 
 [Socket.io](./node/socketio.md)
 

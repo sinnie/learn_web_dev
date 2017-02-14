@@ -108,7 +108,7 @@ yield[[expression]]
 
 ## Async / await
 * ES7 introduces Async functions, which are currently only available with a transpiler like babel.
-* Use the `async` keyword before the function declaration, which will allow the use of the `await` keyword inside of your newly created async function.
+* Use the `async` keyword before the function declaration, which will allow the use of the `await` keyword inside of the newly created async function.
 * It is similar to generators in that it suspends execution in the context until the promise resolves. If the awaited expression is not a promise, it is cast into a promise. Again, it always returns a promise.
 
 ```javascript
