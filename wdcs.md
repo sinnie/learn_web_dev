@@ -224,3 +224,6 @@ Also, ensure that `$http` is included in every service
 
 ### Ryan’s React Config
 * `brunch new <project_name> --skeleton ryansobol/with-react` ()-s flag short for skeleton)
+
+
+What is the difference between req.params, req.query, req.body?

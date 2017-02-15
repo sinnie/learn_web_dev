@@ -41,10 +41,15 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
       +--------+--------+--------+---------+---------+--------+
 ```
 * __V8__ is Google's open source JavaScript engine built for Google Chrome. It's written in C++ and can run either standalone or embedded into any C++ application.
-* [libuv](http://nikhilm.github.io/uvbook/) is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll(4), kqueue(2), Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
+* [libuv](http://nikhilm.github.io/uvbook/) is a multi-platform C library that provides support for asynchronous I/O based on event loops. It is used to abstract non-blocking I/O operations to a consistent interface across all supported platforms by providing mechanisms to handle file system, DNS, network, child processes, pipes, signal handling, polling and streaming. It also includes a thread pool for offloading work for some things that can't be done asynchronously at the operating system level. It supports epoll, kqueue, Windows IOCP, and Solaris event ports. And although It is primarily designed for use in Node.js, it is also used by other software projects.
   * It was originally an abstraction around libev or Microsoft IOCP, as libev doesn't support Windows. In node-v0.9.0's version of libuv, the dependency on libev was removed
+  * Programming Model:
+    * async APIs
+    * heavy use of callbacks
+    * structured Inheritance chain for request types
+      * memory based inheritance
   * libuv has a default thread pool size of 4 and uses a queue to manage access to the thread pool.
-    * You can mitigate this by increasing the size of the thread pool through the `UV_THREADPOOL_SIZE` environment variable, as long as the thread pool is required and created: `process.env.UV_THREADPOOL_SIZE = 10`  
+    * You can increase the size of the thread pool through the `UV_THREADPOOL_SIZE` environment variable, as long as the thread pool is required and created: `process.env.UV_THREADPOOL_SIZE = 10`  
   * __Features:__
     * Full-featured event loop backed by epoll, kqueue, IOCP, event ports.
     * Asynchronous TCP and UDP sockets
@@ -92,7 +97,7 @@ Async actions are completed through callbacks and __The Event Loop__.
 ### Event Driven Programming
 __Event-driven programming__ is a programming paradigm in which the flow of the program is dictated by events (changes in state), including user actions, sensor outputs, or messages from other programs or threads. In this paradigm, every command is event based, which means that the program revolves around a loop that polls for input or data (or state change). When an event occurs, a callback is invoked. JavaScript is well suited to this programming style because it has first-class functions and closures.
 
-Node.js employs an event loop, which is a construct that performs two tasks (__event detection__ and __event handler triggering__). The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by said events [(Norris)](#resourses). In other words, applications act on events, and Node.js implements this through two mechanisms: the event loop and the `EventEmitter` that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
+Node.js employs an event loop, which is a construct that performs two tasks (__event detection__ and __event handler triggering__). The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by said events [(Norris)](#resourses). In other words, applications act on events, and Node.js implements this through two mechanisms: the __event loop__ and the `EventEmitter` that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
 Although V8 is single-threaded, the underlying C++ API of Node.js is not, which means that whenever we call something that is an I/O operation, Node relies on __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives a value, it awaits for data or throws an error, and then the provided callback is called with the necessary parameters.
 
@@ -117,17 +122,38 @@ while (r != 0 && loop->stopflag == 0) {
 }
 ```
 
-The Node.js event loop runs infinitely under a single thread, and the JavaScript program code running in this thread is executed synchronously. Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool using libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When the I/O operation completes, its callback is pushed onto the event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. The main thread is _not_ tied up and keeps serving other requests.
+The Node.js event loop runs semi-infinitely under a single thread, and the JavaScript program code running in this thread is executed synchronously. Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool by libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When an I/O operation completes, its callback is pushed onto the shared event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. When a thread in the thread pool completes a task, it informs the main thread, which in turn wakes up and executes the registered callback. The main thread is _not_ tied up and keeps synchronously executing code. Since callbacks are handled synchronously on the main thread, long lasting computations and other CPU-bound tasks will block the entire event-loop until completion.
+
+### kernel
+* tcp/udp sockets, servers
+* unix domain sockets, servers
+* pipes
+* tty input* dns.resolveXXXX
+
+### Signal Handler (posix only)
+* child processes
+* signals
+
+### Thread pool
+* files
+* fs.*
+* dns.lookup - operating system specific
+* pipes (exceptional)
+
+### Wait Thread (Windows only)
+* child processes
+* console input
+* tcp servers (exceptional)
 
 Below is a digram of a Node.js server's event loop.
 
 ```      
-                            LIBUV (Async I/0)
+               LIBUV (epoll/kqueue/IOCP on Linux/Mac/Windows)
               +-------------------------------------------+
               |                                           |   
-              |  Event Queue                 Thread pool  |                     Operating System
+              |  Event Queue                 Thread pool  |                         Kernel
               | +---------+                  +---------+  | Blocking Operation  +--------------+
-              | |         |                  | +-----+ <-----------------------+|  Database    |
+              | |         |                  | +-----+ <------------------------+  Database    |
               | | +-----+ |                  | +-----+ |  |                     +--------------+
               | | |     | |                  |         |  |
   Execute CB  | | +-----+ |                  | +-----+ |  |                     +--------------+
@@ -148,8 +174,45 @@ Below is a digram of a Node.js server's event loop.
               +-------------------------------------------+
 
 ```
+> Note [A better diagram of the event loop can be found here.](http://stackoverflow.com/questions/26740888/how-node-js-event-loop-model-scales-well)
 
-As you can see, the event loop iterates over the event queue, which can be thought of as a "list" of events and callbacks of completed operations. If a process requires I/O, the event loop delegates the operation to the thread pool. Libuv assigns threads from the thread pool and the I/O operations are executed asynchronously. The event loop will then continue to execute items in the event queue. Once the I/O operation is complete, the callback is queued for processing. The event loop then executes the callback and provides the results.
+As you can see, the event loop iterates over the event queue, which can be thought of as a "list" of events and callbacks of completed operations. If a process requires I/O, the event loop delegates the operation to the thread pool. Libuv assigns threads from the thread pool and the I/O operations are executed asynchronously. The event loop will then continue to execute items in the event queue. Once the I/O operation is complete, the corresponding callback is queued (in the event queue) for processing. The event loop then executes the callback and provides the results.
+
+However, as [josh3736](http://stackoverflow.com/questions/34140101/how-many-events-can-node-js-queue) points out, there is no single event queue. Instead, there are many places where different kinds of events can be dispatched into JS.
+
+* __Timers:__
+  * `process.nextTick()` - called at the end of the current tick until the `nextTick` queue is empty.
+  * `setImmediate()` - called at the start of the next tick. (Therefore, `nextTick` tasks can add things to the current tick indefinitely, which will prevent other operations from executing. In contrast, `setImmediate` tasks can only add things to the queue for the next tick.)
+* __I/O events__ are handled by libuv via `epoll`/`kqueue`/`IOCP` on Linux/Mac/Windows respectively. When the OS notifies libuv that I/O has happened, it invokes the appropriate handler in JS. A given tick of the event loop may process zero or more I/O events. If a tick takes a long time, I/O events will queue in an operating system queue.
+* Signals sent by the OS.
+  * [Signal events](https://nodejs.org/api/process.html#process_signal_events) are emitted when the Node.js process recieves a signal.
+* Finally, as we've seen, some native code (C/C++) executed on a separate thread may invoke JavaScript functions, usually from the libuv work queue.
+
+### Mechanical Overview of _When_ Things Run:
+```
+        +---------------------+
+  +---> |       Timers        |
+  |     +---------------------+
+  |
+  |     +---------------------+
+  |     |  Pending callbacks  |
+  |     +---------------------+         +-----------------------+
+  |                                     |                       |
+  |     +---------------------+         |       Incoming:       |
+  |     |        Poll         | <-------+      Connections,     |
+  |     +---------------------+         |       data, etc.      |
+  |                                     |                       |
+  |     +---------------------+         +-----------------------+
+  +-----+    setImmediate     |
+        +---------------------+
+
+```
+  In addition to the diagram:
+    * callbacks scheduled via `process.nextTick()` are run at the end of a phase of the event loop before transitioning to the next phase. This creates the potential to unintentionally starve the event loop with recursive calls to `process.nextTick()`.
+    * "Pending Callbacks" is where callbacks are queued to run that are not handled by any other phase (e.g. a callback passed to `fs.write()`).
+[(Norris)](#resources)
+
+Another important concept to understand how Node.js implements event-driven architecture is the `EventEmitter`.
 
 #### The EventEmitter (JavaScript Custom Events)
 According to [Norris](#resources), the `EventEmitter` was created to simplify the interaction with the event loop. The `EventEmitter` was created as a generic wrapper to facilitate creating event-based APIs. To understand how Node handles events, we're going to build our own event emitter. (Albeit a simple version).
@@ -259,29 +322,7 @@ Although this technique is useful for concisely controlling the logic of our pro
 ---
 ## The Event Loop
 
-### Mechanical overview of when things run:
-```
-        +---------------------+
-  +---> |       Timers        |
-  |     +---------------------+
-  |
-  |     +---------------------+
-  |     |  Pending callbacks  |
-  |     +---------------------+         +-----------------------+
-  |                                     |                       |
-  |     +---------------------+         |       Incoming:       |
-  |     |        Poll         | <-------+      Connections,     |
-  |     +---------------------+         |       data, etc.      |
-  |                                     |                       |
-  |     +---------------------+         +-----------------------+
-  +-----+    setImmediate     |
-        +---------------------+
 
-```
-  In addition to the diagram:
-    * callbacks scheduled via `process.nextTick()` are run at the end of a phase of the event loop before transitioning to the next phase. This creates the potential to unintentionally starve the event loop with recursive calls to `process.nextTick()`.
-    * "Pending Callbacks" is where callbacks are queued to run that are not handled by any other phase (e.g. a callback passed to `fs.write()`).
-[(Norris)](#resources)
 
 
 #### Microtasks and Macrotasks
@@ -327,9 +368,6 @@ Macrotasks:
 
 ["Observer Pattern." _Wikipedia_. 2017.](https://www.wikiwand.com/en/Observer_pattern)
 
-<!-- Need to Summarize:
+[mscdex. "How Node.js event loop model scales well."  _StackOverflow_](http://stackoverflow.com/questions/26740888/how-node-js-event-loop-model-scales-well)
 
-Thread pool - The main thread call functions post tasks to the shared task queue that threads in the thread pool pull and execute. Inherently non-blocking system functions like networking translates to kernel-side non-blocking sockets, while inherently blocking system functions like file I/O run in a blocking way on its own thread. When a thread in the thread pool completes a task, it informs the main thread of this that in turn wakes up and execute the registered callback. Since callbacks are handled in serial on the main thread, long lasting computations and other CPU-bound tasks will freeze the entire event-loop until completion.
-
-
-Node.js registers itself with the operating system so that it is notified when a connection is made, and the operating system will issue a callback. Within the Node.js runtime, each connection is a small heap allocation. Traditionally, relatively heavyweight OS processes or threads handled each connection. Node.js uses an event loop for scalability, instead of processes or threads.[70] In contrast to other event-driven servers, Node.js's event loop does not need to be called explicitly. Instead callbacks are defined, and the server automatically enters the event loop at the end of the callback definition. Node.js exits the event loop when there are no further callbacks to be performed. -->
+---
