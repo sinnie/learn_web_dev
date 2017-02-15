@@ -221,6 +221,8 @@ To use node's event emitter:
 ```
 * Just like in our example, the Node module's `on` method takes a string (type) and a function (listener), and the `emit` method is also invoked with the type name.
 
+* When the `EventEmitter` object emits an event, all of the functions attached to that event are invoked _asynchronously_. Any values returned by the called listeners are _ignored_ and will be discarded [(Node)](https://nodejs.org/dist/latest-v6.x/docs/api/events.html).
+
 Although this technique is useful for concisely controlling the logic of our programs, it has one drawback: [Magic Strings](https://www.wikiwand.com/en/Magic_string). A simple definition of a __magic string__ is a string that has some special meaning in the code. This is problematic because it is easy for typos to cause difficult to find bugs.
   * A good workaround is to assign this to a variable in a config file (`./config/evntCnfg.js`)[(Alicea)](#references).
 
@@ -280,15 +282,6 @@ Although this technique is useful for concisely controlling the logic of our pro
     * callbacks scheduled via `process.nextTick()` are run at the end of a phase of the event loop before transitioning to the next phase. This creates the potential to unintentionally starve the event loop with recursive calls to `process.nextTick()`.
     * "Pending Callbacks" is where callbacks are queued to run that are not handled by any other phase (e.g. a callback passed to `fs.write()`).
 [(Norris)](#resources)
-
-
-#### Event Loop Pseudocode
-```
-while there are still events to process:
-    e = get the next event
-    if there is a callback associated with e:
-        call the callback
-```
 
 
 #### Microtasks and Macrotasks
