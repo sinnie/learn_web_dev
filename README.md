@@ -27,6 +27,9 @@ React.js
 
 ### Computer Science
 
+[Pillars of OOP](./oop.md)
+
+
 ### Miscellaneous
 [Web Development Cheat Sheet](./wdcs.md)
 
