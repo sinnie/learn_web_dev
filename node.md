@@ -20,7 +20,7 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
 * __I/O__ - I/O is short for input/output and describes any program operation or device that transfers data to or from a peripheral device. Inputs are the signals or data received by a system and outputs are the signals or data sent from it.  
 * You'll often hear __Asynchronous__ as well. Asynchronous means, in the case of Node.js, that the server can respond to multiple requests at a time. It will not stop or block any API requests and will respond to all when the response is ready to send accordingly. Working asynchronously allows you to start processing data that does not require the result of the communication while the communication goes on.
 
-> From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it.
+> From a developer's point of view, Node.js is single-threaded, but under the hood, Node uses __libuv__ to handle __threading, file system events, implements the event loop, features thread pooling__ etc. In most cases, you won't interact with libuv directly, but you should be aware of it because libuv is really the foundation of Node.js.
 
 ---
 
@@ -101,24 +101,27 @@ Async actions are completed through callbacks and __The Event Loop__.
 ### Event Driven Programming
 __Event-driven programming__ is a programming paradigm in which the flow of the program is dictated by events (changes in state), including user actions, sensor outputs, or messages from other programs or threads. In this paradigm, every command is event based, which means that the program revolves around a loop that polls for input or data (or state change). When an event occurs, a callback is invoked. JavaScript is well suited to this programming style because it has first-class functions and closures.
 
-Node.js employs an event loop, which is a construct that performs two tasks (__event detection__ and __event handler triggering__). The event loop detects which events just happened as well as determining which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by said events [(Norris)](#resourses). In other words, applications act on events, and Node.js implements this through two mechanisms: the __event loop__ and the `EventEmitter` that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
+Node.js employs an event loop, which is a construct that performs two tasks (__event detection__ and __event handler triggering__). The event loop detects which events just happened and also determines which event callback to invoke once an event has happened. The event loop is responsible for scheduling asynchronous operations and facilitates the event-driven programming paradigm in which the flow of the program is determined by said events [(Norris)](#resourses). In other words, applications act on events, and Node.js implements this through two mechanisms: the __event loop__ and the `EventEmitter` that listens for events and invokes a callback function once an event has been detected (i.e. state has changed) [(maxogden)](#resources).
 
 Although V8 is single-threaded, the underlying C++ API of Node.js is not, which means that whenever we call something that is an I/O operation, Node relies on __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives a value, it awaits for data or throws an error, and then the provided callback is called with the necessary parameters.
 
-  > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which are handled by the JavaScript core by the `EventEmitter`. The `EventEmitter` is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
+  > In Node.js, there are actually two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which originate from the `EventEmitter`. The `EventEmitter` is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
 
-JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
+JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make  it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
 
-One way Node.js implements an event-driven approach is by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js uses libuv to send these operations to a different thread. This allows V8 to keep executing code. Node invokes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
+Node.js implements an event-driven approach is by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js uses libuv to send these operations to a different thread. This allows V8 to keep executing code synchronously on the main thread. Node invokes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
-The Node.js JavaScript core modules only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty.
+Node.js only provides __one thread and one call stack__, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty.
 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
 [Philip Roberts provides an excellent explanation of the JavaScript call stack and event loop.](https://youtu.be/8aGhZQkoFbQ)
 
 ### The Event Loop In a little more detail
-The Node.js event loop runs semi-infinitely under a single thread, and the JavaScript program code running in this thread is executed synchronously. When Node.js starts, it initializes the event loop, processes the provided script or drops into the REPL. This may make asynchronous API calls, schedule timers, or call `process.nextTick()`. It then begins processing the event loop.
+The Node.js event loop is actually the libuv I/O loop. It runs semi-infinitely under a single thread, and the JavaScript program code running in this thread is executed synchronously. The event loop follows the reather usual single-threaded asynchronous I/O approack: all (network) I/O is performed on non-blocking sockets, which are polled using the best mechanism available on the given platform: epoll on Linux, kqueue on OSX, and other BSDs, event ports on SunOS and IOCP on Windows [(libuv)](http://docs.libuv.org/en/v1.x/design.html). On each iteration, the loop will block waiting for I/O activity on sockets that have been added to the _poller_ and callbacks will be fired indicating socket conditions (readable, writable hangup). Therefore, handles are able to read, write, or perform the desired I/O operation.
+
+
+When Node.js starts, it initializes the event loop, processes the provided script or drops into the REPL. This may make asynchronous API calls, schedule timers, or call `process.nextTick()`. It then begins processing the event loop.
 
 Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool by libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When an I/O operation completes, its callback is pushed onto the event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. When a thread in the thread pool completes a task, it is picked up by the main thread, which executes the registered callback. The main thread is _not_ tied up and keeps synchronously executing code. Since callbacks are handled synchronously on the main thread, long lasting computations and other CPU-bound tasks will block the entire event-loop until completion.
 
@@ -126,29 +129,41 @@ Below is a digram of the "components" or of Node.js' event loop. Here, each Box 
 
 Event loop's order of operations:
 ```
-        +---------------------+
-  +---> |       Timers        |
-  |     +---------------------+
+
+  +------->   +---------------------+
+  |           | (Update Loop Time)  |
+  |           +---------------------+
   |
-  |     +---------------------+
-  |     |   I/O callbacks     |
-  |     +---------------------+
+  | +---------+     No   +-------------+
+  | |  END    |  <------ | Loop Alive? |
+  | +---------+          +-------------+
+  |                Yes
+  |                 |  
+  |                 V                 
+  |           +---------------------+
+  |           |   Run Due Timers    |
+  |           +---------------------+
+  |  
+  |           +---------------------+
+  |           |   Call Pending      |    
+  |           |    callbacks        |
+  |           +---------------------+
   |
-  |     +---------------------+
-  |     |   Idle, prepare     |
-  |     +---------------------+
+  |           +---------------------+
+  |           |   Idle, prepare     |
+  |           +---------------------+
   |
-  |     +---------------------+
-  |     |        Poll         | <-------------------+
-  |     +---------------------+         +-----------|-----------+
-  |                                     |                       |
-  |     +---------------------+         |       Incoming:       |
-  |     |        check        |         |      Connections,     |
-  |     +---------------------+         |       data, etc.      |
-  |                                     |                       |
-  |     +---------------------+         +-----------------------+
-  +-----+   close callbacks   |
-        +---------------------+
+  |           +---------------------+
+  |           |        Poll         | <-------------------+
+  |           +---------------------+         +-----------|-----------+
+  |                                           |                       |
+  |           +---------------------+         |       Incoming:       |
+  |           |        check        |         |      Connections,     |
+  |           +---------------------+         |       data, etc.      |
+  |                                           |                       |
+  |           +---------------------+         +-----------------------+
+  +-----------+   close callbacks   |
+              +---------------------+
 
 ```
 In addition to the Information included in the diagram:
@@ -161,8 +176,14 @@ Any operations in any phase may schedule more operations and new events processe
 
 ### Phases of the Event Loop
 
+#### Update Loop Time
+In this phase, the loop concept of "now" is updated. The event loop catches the current time at the start of the event loop tic in order to reduce the number of time-related system calls.
+
+#### Is the Loop Alive?
+Then, if the loop is still alive, an iteration, or 'tick' is started. Otherwise, the loop will exit immediately. A loop is considered to be alive if the loop has active and ref'd handles, active requests, or closing handles [(libuv)](http://docs.libuv.org/en/v1.x/design.html).
+
 #### __Timers__
-Timers execute callbacks scheduled by `setTimeout()` and `setInterval()`. Timers will run as early as they can be scheduled after the specified amount of time has passed. By default, when a timer is scheduled, the Node.js event loop will continue running as long as the timer is active.
+Timers are run. Timers execute callbacks scheduled by `setTimeout()` and `setInterval()`. Timers will run as early as they can be scheduled after the specified amount of time has passed. By default, when a timer is scheduled, the Node.js event loop will continue running as long as the timer is active. In other words, all active timers that are scheduled for a time before the loop's concept of _now_ have their callbacks called.
 
   * A timer specifies the threshold after which a provided callback may be executed. Note that OS system scheduling or the running of other callbacks may delay timers.
 
@@ -172,18 +193,29 @@ Timers execute callbacks scheduled by `setTimeout()` and `setInterval()`. Timers
     * This allows you to completely defer a callback to a new stack to be invoked at the next _tick_ (an iteration of the event loop). This means that the function that called `nextTick` has to return - along with its parent and all the way up to the root of the stack. Afterwards, when the loop is trying to execute new events, your nextTick'ed function will be there in a new stack.
   * `setImmediate()` is called at the start of the next tick. (Therefore, `nextTick` tasks can add things to the current tick indefinitely, which will prevent other operations from executing. In contrast, `setImmediate` tasks can only add things to the queue for the next tick).
 
-####  __I/O Callbacks__
+####  __Call Pending Callbacks__
+In this phase, pending callbacks are called. All I/O callbacks are invoked immediately after polling for I/O, for the most part. However, there are cases in which calling such a callback is deferred for the next loop iteration. If the previous iteration deferred any I/O callback it will be run at this point.
+
 Input/Output that may or may not be blocking. During the I/O callbacks phase, almost all callbacks are executed. However, there are exceptions including close callbacks, ones scheduled by timers, and `setImmediate()`.
 * Some system operations such as types of TCP errors, like `ECONNREFUSED` which occur when attempting to connect, will be queued to execute during the I/O callbacks phase.
 
-#### __I/O events__
-I/O events are handled by libuv via `epoll`/`kqueue`/`IOCP` on Linux/Mac/Windows respectively. When the OS notifies libuv that I/O has happened, it invokes the appropriate handler in JS. A given tick of the event loop may process zero or more I/O events. If a tick takes a long time, I/O events will queue in an operating system queue.
-
 #### __Idle, Prepare__
-This phase is used internally, and an [interesting discussion can be found here](http://stackoverflow.com/questions/39132618/node-js-why-are-idle-and-prepare-phases-only-used-internally)
+Idle handle callbacks are called. Despite the name, idle handles are run on every iteration and is active. This phase is used internally, and an [interesting discussion can be found here](http://stackoverflow.com/questions/39132618/node-js-why-are-idle-and-prepare-phases-only-used-internally)
 
 #### __Poll__
-During the __poll__ phase, scripts for timers whose threshold has elapsed are executed. Retrieves new I/O events (Node.js will block here when appropriate).
+First, poll timeout is calculated. Before blocking for I/O the loop calculates for how long it should block. These are the rules when calculating the timeout:
+  * If the loop was run with the `UV_RUN_NOWAIT` flag, the timeout is 0.
+  * If the loop is going to be stopped (`uv_stop()` was called), the timeout is 0.
+  * If there are no active handles or requests, the timeout is 0.
+  * If there are any idle handles active, the timeout is 0.
+  * If there are any handles pending to be closed, the timeout is 0.
+  * If none of the above cases matched, the timeout of the closest timer is taken, or if there are no active timers, the loop will run indefinitely.
+
+At this point the loop will block for I/O for the timeout calculated by the poll timeout. All I/O related handles that were monitoring a given file descriptor for a read or write operation get their callbacks called at this point.
+
+I/O events are handled by libuv via `epoll`/`kqueue`/`IOCP` on Linux/Mac/Windows respectively. When the OS notifies libuv that I/O has happened, it invokes the appropriate handler in JS. A given tick of the event loop may process zero or more I/O events. If a tick takes a long time, I/O events will queue in an operating system queue.
+
+During the __poll__ phase, scripts for timers whose threshold has elapsed are executed. Then new I/O events are retrieved.
   * The poll phase executes scripts for timers whose threshold has elapsed and process events in the __poll__ queue, and completes those tasks in that order.
   * When the event loop enters the poll phase and there are no timers scheduled, one of two things will happen.
     * If the poll queue is not empty, the event loop will iterate through its queue of callbacks and execute them synchronously until the queue is empty or the system-dependent hard limit is reached.
@@ -192,17 +224,27 @@ During the __poll__ phase, scripts for timers whose threshold has elapsed are ex
       * If scripts have not been scheduled by `setImmediate()`, the event loop will wait for callbacks to be added to the queue, then execute them immediately.
     * Once the __poll queue__ is empty, the event loop will check for timers whose time thresholds have been reached. If one or more timers are ready, the event loop will wrap back to the __timers__ phase to execute those timers' callbacks.
 
-#### __Check__
+#### Check handle callbacks are called
+Check handles get their callbacks called right after the loop has blocked for I/O. Check handles are essentially the counterpart of prepare handles.
+
  During the __check__ phase, `setImmediate()` callbacks are invoked.
   * The __check__ phase allows callbacks to be invoked immediately after the poll phase has completed. If the __poll__ phase becomes idle and scripts have been queued with `setImmediate()`, the event loop can continue to the __check__ phase rather than waiting.
 
 > `setImmediate()` is a special timer that runs in a separate phase of the event loop. It uses a libuv API that schedules callbacks to execute after the poll phase has completed.
 
-  * Typically, the event loop will reach the __poll__ phase where it will wait for an incoming connection, request, etc. However, if a callback has been scheduled with `setImmediate`, and the __poll__ becomes idle, it will end and continue to the check phase rather than waiting for __poll__ events.  
+* Typically, the event loop will reach the __poll__ phase where it will wait for an incoming connection, request, etc. However, if a callback has been scheduled with `setImmediate`, and the __poll__ becomes idle, it will end and continue to the check phase rather than waiting for __poll__ events.  
 
 #### __Close Callbacks__
 When a socket or handle is closed abruptly, e.g. `socket.on('close', ...)`, the close event is emitted in this phase.
   * If a socket or handle is closed abruptly (e.g `socket.destroy()`), the `close` event will be emitted in this phase. Otherwise, it will be emitted via `process.nextTick()`.
+
+Close callbacks are called. If a handle was closed by calling uv_close() it will get the close callback called.
+
+#### Special cases
+If the loop was run with UV_RUN_ONCE, it’s possible that no I/O callbacks were fired after blocking for I/O, but some time has passed so there might be timers that are due. At this point, those timers get their callbacks called.
+
+#### Iteration ends
+If the loop was run with UV_RUN_NOWAIT or UV_RUN_ONCE modes the iteration is ended and uv_run() will return. If the loop was run with UV_RUN_DEFAULT it will continue from the start if it’s still alive, otherwise it will also end.
 
 #### `Process.nextTick()`
 `process.nextTick()` is not technically part of the event loop, but it is part of the asynchronous API. nextTickQueue processes after the current operation completes regardless of the current phase of the event loop.
@@ -221,6 +263,8 @@ If used incorrectly, `nextTick()` can prevent the Event Loop from reaching the _
 As you can see, the event loop iterates over the phases, which can be thought of as a "list" of events and callbacks of completed operations. If a process requires I/O, the libuv delegates the operation to the thread pool. The assigned threads from the  pool and the I/O operations are executed asynchronously. The event loop will then continue to execute items in the event queue. Once the I/O operation is complete, the corresponding callback is queued (in the event queue) for processing. The event loop then executes the callback and provides the results.
 
 Another important concept to understand how Node.js implements event-driven architecture is the `EventEmitter`.
+
+> libuv uses a thread pool to make asynchronous file I/O operations possible, but network I/O is always performed in a single thread synchronously. Unlike network I/O, there are no platform-specific file I/O primitives libuv can rely on. Therefore, blocking file I/O operations are run by the thread pool. Three types of opertions are run in this pool: Filesystem opertions, DNS functions (getaddrinfo and getnameinfo), and User Specified code via uv_queue_work(). <-- don't do this.
 
 #### The EventEmitter (JavaScript Custom Events)
 According to [Norris](#resources), the `EventEmitter` was created to simplify the interaction with the event loop. The `EventEmitter` was created as a generic wrapper to facilitate creating event-based APIs. To understand how Node handles events, we're going to build our own event emitter. (Albeit a simple version).
