@@ -11,7 +11,7 @@
     * To protect against SQL injection attacks, escape the special characters that a user, may input into a web app. In SQL a single-quote ( ‘ ) character is escaped with another single-quote
     * Knex.js does this for you automatically; therefore, it is marginally safer than SQL
 * __Query Builder__ - the API used to build and send SQL queries (`SELECT`, `INSERT`, `UPDATE`, `DELETE`).
-* __Connection Pooling__ - A database connection pool is a [cache](http://www.webopedia.com/TERM/C/cache.html) of database connections that are maintained so that the connections can be reused when future requests to the database are required. Connection pooling is an attempt to reduce the amount of time it takes to establish a database connection because connection to the database is a resource intensive operation. Essentially, pooling keeps connections active so that wwhen another connection is requested, there is already an existing, active connection to handle the request.
+* __Connection Pooling__ - A database connection pool is a [cache](http://www.webopedia.com/TERM/C/cache.html) of database connections that are maintained so that the connections can be reused when future requests to the database are required. Connection pooling is an attempt to reduce the amount of time it takes to establish a database connection because connection to the database is a resource intensive operation. Essentially, pooling keeps connections active so that when another connection is requested, there is already an existing, active connection to handle the request.
   * Below is a diagram that explains connection pooling. This diagram is from   [(paxdiablo)](http://stackoverflow.com/questions/4041114/what-is-database-pooling).
   ```
     +---------+
@@ -38,19 +38,19 @@
 When the `require(‘Knex.js’)(config)` function is called, Knex.js opens two connections to a server. This allows Knex.js to send multiple SQL commands to a server concurrently. When `Knex.js.destroy()` => is called, Knex.js closes the connections. If the connections are not closed, the program will run indefinitely.
 * Knex.js can open up to 10 connections
 * Does Knex handle Connection Pooling?
-Yes, knex.js handles connection pooling by using the generic pool library. The connection pool has a default setting of  `2` and a max of `10` for the `MySQL` and `PG` libraries, but it uses a single connection for `sqlite3` because of problems with using many connections on a single file. Developers can configure the pool size by passing «a pool option as one of the keys in the initialize block. If you ever need to explicitly remove the connection pool, you may use `knex.destroy([callback])`. You can use `knex.destroy` by passing a callback or by chaining as a promise, not both.  
+Yes, knex.js handles connection pooling by using the generic pool library](https://github.com/coopernurse/node-pool). The connection pool has a default setting of  `2` and a max of `10` for the `MySQL` and `PG` libraries, but it uses a single connection for `sqlite3` because of problems with using many connections on a single file. Developers can configure the pool size by passing «a pool option as one of the keys in the initialize block. If you ever need to explicitly remove the connection pool, you may use `knex.destroy([callback])`. You can use `knex.destroy` by passing a callback or by chaining as a promise, not both.  
 * Example of Config:
-```javascript
-		var knex = require('knex')({
-  		  client: 'mysql',
-                 connection: {
-    		    host : '127.0.0.1',
-   		    user : 'your_database_user',
-    		    password : 'your_database_password',
-    		    database : 'myapp_test'
-  		  },
-  		  pool: { min: 0, max: 7 }
-		});
+```JavaScript
+		const knex = require('knex')({
+			client: 'mysql',
+			connection: {
+				host : '127.0.0.1',
+				user : 'your_database_user',
+				password : 'your_database_password',
+				database : 'myapp_test'
+			},
+			pool: { min: 0, max: 7 }
+			});
 ```
 
 ## Looking into Knex.js
