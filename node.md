@@ -9,7 +9,7 @@
 [Socket.IO](./node/socketio.md)
 
 ## Introduction to Node
-Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an _event-driven_, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on operating systems. Although Node has some powerful features, it should be avoided when working with CPU intensive applications.
+Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an _event-driven_, _single-threaded_ (sorta), _non-blocking_ I/O model that makes it lightweight and efficient. Node.js excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node.js is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on operating systems. Although Node.js has some powerful features, it should be avoided when working with CPU intensive applications.
 
 ### Terms
 #### So what exactly does _event-driven_, _non-blocking_, and _single-threaded_ mean? And what is I/O?
@@ -64,6 +64,7 @@ Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaS
     * High resolution clock
     * Threading and synchronization primitives
 
+
     > A good introduction to libuv by Saul Ibarra Corretge can be found [here](http://www.slideshare.net/saghul/libuv-nodejs-and-everything-in-between).
 
 * __c-ares__ - a C library for async DNS request, including name resolves. It is intended for applications that need to perform DNS queries without blocking, or need to perform multiple DNS queries in parallel.
@@ -110,7 +111,7 @@ JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an ev
 
 One way Node.js implements an event-driven approach is by attaching listeners to events. When those events fire, the listener executes the provided callback. Whenever you call `setTimeout`, `http.get`, or `fs.readFile`, Node.js uses libuv to send these operations to a different thread. This allows V8 to keep executing code. Node invokes the callback when the counter has run down or the I/O operation/http operation has finished. Therefore, you can read a file while processing a request in your server, and then make an http call based on the read contents without blocking other requests from being handled.
 
-The Node.js JavaScript core modules only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty. The __task queue (event queue, or message queue)__ is the place where callbacks are waiting to be executed. All callbacks are invoked whenever the main thread has finished its previous task.
+The Node.js JavaScript core modules only provides one thread and one call stack, so when another request is being served as a file is read, its callback will need to wait for the stack to become empty.
 
 To understand how this works, you must understand the __event loop__ and the __task queue__.
 
@@ -121,7 +122,7 @@ The Node.js event loop runs semi-infinitely under a single thread, and the JavaS
 
 Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool by libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When an I/O operation completes, its callback is pushed onto the shared event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. When a thread in the thread pool completes a task, it informs the main thread, which in turn wakes up and executes the registered callback. The main thread is _not_ tied up and keeps synchronously executing code. Since callbacks are handled synchronously on the main thread, long lasting computations and other CPU-bound tasks will block the entire event-loop until completion.
 
-Below is a digram of a Node.js server's event loop.
+Below is a digram of a Node.js' event loop.
 ```
         +---------------------+
   +---> |       Timers        |
@@ -154,17 +155,17 @@ In addition to the Information included in the diagram:
 
 Each Box represents a "Phase" of the event loop.
 
-### Phase:
+### The Event Loop's Phases:
 * Timers - executes callbacks scheduled by `setTimeout()` and `setInterval()`
-  * A timer specifes the threshold after which a provided callback may be executed rather than the exact time a person wants it to be executed. OS system scheduling or the runnign of other callbacks may delay them
+  * A timer specifes the threshold after which a provided callback may be executed rather than the exact time a person wants it to be executed. OS system scheduling or the running of other callbacks may delay them.
 
-> Be aware that it is technically the poll phase that dictates when timers are executed. To prevent the poll phase from starving the event loop, libuv has a maximum before it stops polling for more events.
+> Be aware that it is technically the __poll__ phase that dictates when timers are executed. To prevent the poll phase from starving the event loop, libuv has a maximum before it stops polling for more events.
 
   * `process.nextTick()` - called at the end of the current tick until the `nextTick` queue is empty.
-    * allows you to completely defer a callback to a new stack to be invoked at the next _tick_ (an iteration of the event loop). This means that the function that called `nextTick` has to return as well as its parent, all the way up to the root of the stack. Afterwards, when the loop is trying to execute new events, your nextTick'ed function will be there in a new stack.
+    * This allows you to completely defer a callback to a new stack to be invoked at the next _tick_ (an iteration of the event loop). This means that the function that called `nextTick` has to return as well as its parent, all the way up to the root of the stack. Afterwards, when the loop is trying to execute new events, your nextTick'ed function will be there in a new stack.
   * `setImmediate()` - called at the start of the next tick. (Therefore, `nextTick` tasks can add things to the current tick indefinitely, which will prevent other operations from executing. In contrast, `setImmediate` tasks can only add things to the queue for the next tick.)
 
-* I/O Callbacks - executes almost all callbacks. The exceptions are close callbacks, ones scheduled by timers, and `setImmediate()`
+* __I/O Callbacks__ - executes almost all callbacks. The exceptions are close callbacks, ones scheduled by timers, and `setImmediate()`
   * System operations such as types of TCP errors, like `ECONNREFUSED` when attempting to connect. The reporting of this error will be queued to execute during the I/O callbacks phase.
   * __I/O events__ are handled by libuv via `epoll`/`kqueue`/`IOCP` on Linux/Mac/Windows respectively. When the OS notifies libuv that I/O has happened, it invokes the appropriate handler in JS. A given tick of the event loop may process zero or more I/O events. If a tick takes a long time, I/O events will queue in an operating system queue.
 * __Idle, Prepare__ - used internally
