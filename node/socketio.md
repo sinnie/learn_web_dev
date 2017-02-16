@@ -17,6 +17,7 @@
     * HTTP not designed for this, so implementations remained hacky:
         * browsers reacted differently when faced with long-running request responses
         * keeping the connection opened usually resulted in inefficient load behavior on the server.
+
 #### __Today we have _WebSockets_: (protocol developed and standardized to overcome failure of HTTP)__
 * allow real-time web apps without external web technoo like java applets, flash, or ActiveX
 *   __WebSocket__ won't close the connection after sending a message or receiving one. It's essentially "TCP for the web", but with a security model built in the protocol, a fairly rare framing system and UTF-8 encoding (no binary).
@@ -49,7 +50,7 @@
         ```
 
         * this response marks the end of the handshake, and the connection switches to data transfer mode, enabling both sides to transfer data back and forth without any HTTP overhead or additional handshakes, making it a bi-directional, full-duplex communication connection in which both client and server can send messages to one another at any time without having to wait for one another.
-* an effort "to provide a mechanism for browser-based applications that need two-way communication with servers that does not rely on opening multiple HTTP connections", as the author Ian Hickson puts it.
+* an effort "to provide a mechanism for browser-based applications that need two-way communication with servers that does not rely on opening multiple HTTP connections," as the author Ian Hickson puts it.
 * WebSocket takes advantage of the Upgrade header of the HTTP/1.1 specification, which means it's essentially a new protocol for communication:
     * problems:
         * The server has to give special treatment to the WebSocket requests, performing a handshake unique to the WebSocket protocol, and implement its new security system.
