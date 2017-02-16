@@ -12,6 +12,7 @@
 #### What is your dev environment?
 #### Do you use Github’s GUI or do you stick to the command line?
 
+---
 
 ## Migo
 
@@ -20,20 +21,20 @@
 Yes, knex.js handles connection pooling by using the [generic pool library](https://github.com/coopernurse/node-pool). The connection pool has a default setting of  2 and a max of 10 for the MySQL and PG libraries, but it uses a single connection for sqlite3 because of problems with handling multiple connections on a single file. Developers can configure the pool size by passing a pool option as one of the keys in the initialize block (seen below). If you ever need to explicitly remove the connection pool, you may use knex.destroy( [callback] ). You can use knex.destroy by passing a callback or by chaining as a promise, not both.  
 Example of pool configuration in the initialize block:
 ```JavaScript
-		var knex = require('knex')({
-  		  client: 'mysql',
-                 connection: {
-    		    host : '127.0.0.1',
-   		    user : 'your_database_user',
-    		    password : 'your_database_password',
-    		    database : 'myapp_test'
-  		  },
-  		  pool: { min: 0, max: 7 }
-		});
+		const knex = require('knex')({
+			client: 'mysql',
+			connection: {
+				host : '127.0.0.1',
+				user : 'your_database_user',
+				password : 'your_database_password',
+				database : 'myapp_test'
+			},
+			pool: { min: 0, max: 7 }
+			});
 ```
 #### What are generators?
 
-[Read more here]https://github.com/rsstdd/learn_web_dev/blob/master/iterators_generators_asyncawait.md
+[Read more here](https://github.com/rsstdd/learn_web_dev/blob/master/iterators_generators_asyncawait.md)
 
 Generators are part of the ES6 Specification and allow developers to postpone the execution of a function, complete other computations and then return to complete the execution. In other words, a generator is a function that can pause and resume execution. Some of the best applications of generators are implementing iterables and blocking on asynchronous function calls. Each pause/resume cycle of a generator allows for two-way message-passing. The generator can return a value, and the controlling code that resumes it can send a value back in.
 #### What is a promise?
@@ -44,7 +45,7 @@ A promise is an object used for asynchronous computations. It represents a value
 
 #### What is Async / await?
 
-[Read more here](https://github.com/rsstdd/learn_web_dev/blob/master/iterators_generators_asyncawait.md).
+[Read more here](https://github.com/rsstdd/learn_web_dev/blob/master/iterators_generators_asyncawait.md)
 
 Async / await is a part of the ES7 specification, and are currently only available with a transpiler like babel.
 This async function can be used by including the 'async' keyword before the function declaration, which will allow the use of the 'await' keyword inside of the newly created async function. Async / await is similar to generators in that it suspends execution in the function context until the promise resolves, and if the awaited expression is not a promise, it is cast into a promise.
@@ -73,6 +74,8 @@ The data from the Arduino is being "stored" or transferred by a stream.
 If your sensors were being controlled from a single board, how would you distinguish the data between the different sensors?
 What is one of the biggest technical challenges you think Migo will face?
 What do you think of when you think of a computer?
+
+---
 
 ## Azuqua
 
