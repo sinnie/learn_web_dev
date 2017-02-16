@@ -120,9 +120,11 @@ To understand how this works, you must understand the __event loop__ and the __t
 ### The Event Loop In a little more detail
 The Node.js event loop runs semi-infinitely under a single thread, and the JavaScript program code running in this thread is executed synchronously. When Node.js starts, it initializes the event loop, processes the provided script or drops into the REPL. This may make asynchronous API calls, schedule timers, or call `process.nextTick()`. It then begins processing the event loop.
 
-Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool by libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When an I/O operation completes, its callback is pushed onto the shared event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. When a thread in the thread pool completes a task, it informs the main thread, which in turn wakes up and executes the registered callback. The main thread is _not_ tied up and keeps synchronously executing code. Since callbacks are handled synchronously on the main thread, long lasting computations and other CPU-bound tasks will block the entire event-loop until completion.
+Every call that involves an I/O operation requires a callback to be registered. Certain functions and modules, usually written in C/C++, support asynchronous I/O. When asynchronous events are invoked, they are assigned a thread from the thread pool by libuv. This allows the program to perform multiple I/O operations in parallel with the main thread. When an I/O operation completes, its callback is pushed onto the event queue where it will be executed as soon as all other callbacks on that queue are invoked. In other words, every time a system call takes place, that event will be delegated to the event loop along with a callback function, or listener. When a thread in the thread pool completes a task, it is picked up by the main thread, which executes the registered callback. The main thread is _not_ tied up and keeps synchronously executing code. Since callbacks are handled synchronously on the main thread, long lasting computations and other CPU-bound tasks will block the entire event-loop until completion.
 
-Below is a digram of a Node.js' event loop.
+Below is a digram of the "components" or of Node.js' event loop. Here, each Box represents a "Phase" of the event loop, meaning that the event loop visits each of these in turn and executes code at each stage. When Node.js starts, the program initializes the event loop, processes the provided input script (or drops into the REPL) which may make async API calls, schedule timers, or call `process.nextTick()` before processing the event loop.
+
+Event loop's order of operations:
 ```
         +---------------------+
   +---> |       Timers        |
@@ -141,7 +143,7 @@ Below is a digram of a Node.js' event loop.
   |     +---------------------+         +-----------|-----------+
   |                                     |                       |
   |     +---------------------+         |       Incoming:       |
-  |     |        check         |        |      Connections,     |
+  |     |        check        |         |      Connections,     |
   |     +---------------------+         |       data, etc.      |
   |                                     |                       |
   |     +---------------------+         +-----------------------+
@@ -153,23 +155,35 @@ In addition to the Information included in the diagram:
 * callbacks scheduled via `process.nextTick()` are run at the end of a phase of the event loop before transitioning to the next phase. This creates the potential to unintentionally starve the event loop with recursive calls to `process.nextTick()`.
 * "Pending Callbacks" is where callbacks are queued to run that are not handled by any other phase (e.g. a callback passed to `fs.write()`).
 
-Each Box represents a "Phase" of the event loop.
+It is important to know that each phase has a FIFO queue of callbacks to execute. When the event loops enters a particular phase, any operations specific to that phase are executed until the queue is empty or the maximum number of callbacks have been executed. When either of these things have happened, the event loop progresses to the next phase.
 
-### The Event Loop's Phases:
-* Timers - executes callbacks scheduled by `setTimeout()` and `setInterval()`
-  * A timer specifes the threshold after which a provided callback may be executed rather than the exact time a person wants it to be executed. OS system scheduling or the running of other callbacks may delay them.
+Any operations in any phase may schedule more operations and new events processed in the __poll__ phase are queued by the kernel, __poll__ events can be queued while polling events are being processed. If a callback is long-running, the __poll__ phase is likely to exceed the timer's threshold.
 
-> Be aware that it is technically the __poll__ phase that dictates when timers are executed. To prevent the poll phase from starving the event loop, libuv has a maximum before it stops polling for more events.
+### Phases of the Event Loop
 
-  * `process.nextTick()` - called at the end of the current tick until the `nextTick` queue is empty.
-    * This allows you to completely defer a callback to a new stack to be invoked at the next _tick_ (an iteration of the event loop). This means that the function that called `nextTick` has to return as well as its parent, all the way up to the root of the stack. Afterwards, when the loop is trying to execute new events, your nextTick'ed function will be there in a new stack.
-  * `setImmediate()` - called at the start of the next tick. (Therefore, `nextTick` tasks can add things to the current tick indefinitely, which will prevent other operations from executing. In contrast, `setImmediate` tasks can only add things to the queue for the next tick.)
+#### __Timers__
+Timers execute callbacks scheduled by `setTimeout()` and `setInterval()`. Timers will run as early as they can be scheduled after the specified amount of time has passed. By default, when a timer is scheduled, the Node.js event loop will continue running as long as the timer is active.
 
-* __I/O Callbacks__ - executes almost all callbacks. The exceptions are close callbacks, ones scheduled by timers, and `setImmediate()`
-  * System operations such as types of TCP errors, like `ECONNREFUSED` when attempting to connect. The reporting of this error will be queued to execute during the I/O callbacks phase.
-  * __I/O events__ are handled by libuv via `epoll`/`kqueue`/`IOCP` on Linux/Mac/Windows respectively. When the OS notifies libuv that I/O has happened, it invokes the appropriate handler in JS. A given tick of the event loop may process zero or more I/O events. If a tick takes a long time, I/O events will queue in an operating system queue.
-* __Idle, Prepare__ - used internally
-* __Poll__ - Retrieve new I/O events (node blocks here when appropriate)
+  * A timer specifies the threshold after which a provided callback may be executed. Note that OS system scheduling or the running of other callbacks may delay timers.
+
+> Also, it is technically the __poll__ phase that dictates when timers are executed. To prevent the poll phase from starving the event loop, libuv has a maximum before it stops polling for more events.
+
+  * `process.nextTick()`  is called at the end of the current tick until the `nextTick` queue is empty.
+    * This allows you to completely defer a callback to a new stack to be invoked at the next _tick_ (an iteration of the event loop). This means that the function that called `nextTick` has to return - along with its parent and all the way up to the root of the stack. Afterwards, when the loop is trying to execute new events, your nextTick'ed function will be there in a new stack.
+  * `setImmediate()` is called at the start of the next tick. (Therefore, `nextTick` tasks can add things to the current tick indefinitely, which will prevent other operations from executing. In contrast, `setImmediate` tasks can only add things to the queue for the next tick).
+
+####  __I/O Callbacks__
+Input/Output that may or may not be blocking. During the I/O callbacks phase, almost all callbacks are executed. However, there are exceptions including close callbacks, ones scheduled by timers, and `setImmediate()`.
+* Some system operations such as types of TCP errors, like `ECONNREFUSED` which occur when attempting to connect, will be queued to execute during the I/O callbacks phase.
+
+#### __I/O events__
+I/O events are handled by libuv via `epoll`/`kqueue`/`IOCP` on Linux/Mac/Windows respectively. When the OS notifies libuv that I/O has happened, it invokes the appropriate handler in JS. A given tick of the event loop may process zero or more I/O events. If a tick takes a long time, I/O events will queue in an operating system queue.
+
+#### __Idle, Prepare__
+This phase is used internally, and an [interesting discussion can be found here](http://stackoverflow.com/questions/39132618/node-js-why-are-idle-and-prepare-phases-only-used-internally)
+
+#### __Poll__
+During the __poll__ phase, scripts for timers whose threshold has elapsed are executed. Retrieves new I/O events (Node.js will block here when appropriate).
   * The poll phase executes scripts for timers whose threshold has elapsed and process events in the __poll__ queue, and completes those tasks in that order.
   * When the event loop enters the poll phase and there are no timers scheduled, one of two things will happen.
     * If the poll queue is not empty, the event loop will iterate through its queue of callbacks and execute them synchronously until the queue is empty or the system-dependent hard limit is reached.
@@ -177,23 +191,32 @@ Each Box represents a "Phase" of the event loop.
       * If scripts have been scheduled by `setImmediate()`, the event loop will end the poll phase and continue to the check phase to execute those scheduled scripts.
       * If scripts have not been scheduled by `setImmediate()`, the event loop will wait for callbacks to be added to the queue, then execute them immediately.
     * Once the __poll queue__ is empty, the event loop will check for timers whose time thresholds have been reached. If one or more timers are ready, the event loop will wrap back to the __timers__ phase to execute those timers' callbacks.
-* __Check__ - `setImmediate()` callbacks are invoked here.
+
+#### __Check__
+ During the __check__ phase, `setImmediate()` callbacks are invoked.
   * The __check__ phase allows callbacks to be invoked immediately after the poll phase has completed. If the __poll__ phase becomes idle and scripts have been queued with `setImmediate()`, the event loop can continue to the __check__ phase rather than waiting.
 
 > `setImmediate()` is a special timer that runs in a separate phase of the event loop. It uses a libuv API that schedules callbacks to execute after the poll phase has completed.
 
   * Typically, the event loop will reach the __poll__ phase where it will wait for an incoming connection, request, etc. However, if a callback has been scheduled with `setImmediate`, and the __poll__ becomes idle, it will end and continue to the check phase rather than waiting for __poll__ events.  
 
-* __Close Callbacks__ - e.g. `socket.on('close', ...)`
+#### __Close Callbacks__
+When a socket or handle is closed abruptly, e.g. `socket.on('close', ...)`, the close event is emitted in this phase.
   * If a socket or handle is closed abruptly (e.g `socket.destroy()`), the `close` event will be emitted in this phase. Otherwise, it will be emitted via `process.nextTick()`.
+
+#### `Process.nextTick()`
+`process.nextTick()` is not technically part of the event loop, but it is part of the asynchronous API. nextTickQueue processes after the current operation completes regardless of the current phase of the event loop.
+
+If used incorrectly, `nextTick()` can prevent the Event Loop from reaching the __Poll__ phase.
 
 > Between each iteration (tick) of the event loop, Node.js checks if it is waiting for any asynchronous I/O or timers  and exits it there are not any more events.
 
+#### `process.nextTick()` vs `setImmediate()`
+`process.nextTick()` is invoked on the same phase that it was called whereas `setImmediate()` fires in the following tick.
+
 [Node](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/).
 
-
-
-> Note [A better diagram of the event loop can be found here.](http://stackoverflow.com/questions/26740888/how-node-js-event-loop-model-scales-well)
+> Note [Another diagram and explanation of the event loop can be found here.](http://stackoverflow.com/questions/26740888/how-node-js-event-loop-model-scales-well)
 
 As you can see, the event loop iterates over the phases, which can be thought of as a "list" of events and callbacks of completed operations. If a process requires I/O, the libuv delegates the operation to the thread pool. The assigned threads from the  pool and the I/O operations are executed asynchronously. The event loop will then continue to execute items in the event queue. Once the I/O operation is complete, the corresponding callback is queued (in the event queue) for processing. The event loop then executes the callback and provides the results.
 
@@ -335,3 +358,5 @@ Although this technique is useful for concisely controlling the logic of our pro
 ["Observer Pattern." _Wikipedia_. 2017.](https://www.wikiwand.com/en/Observer_pattern)
 
 [mscdex. "How Node.js event loop model scales well."  _StackOverflow_](http://stackoverflow.com/questions/26740888/how-node-js-event-loop-model-scales-well)
+
+---
