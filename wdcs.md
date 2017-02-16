@@ -29,9 +29,10 @@ Authentication mechanisms, known as strategies, are packaged as individual modul
 
 
 ## ESLint:
-### Ryan’s Config:
+### [Ryan’s Config:](https://github.com/ryansobol/eslint-config-ryansobol)
 
 #### ESLint Setup:
+* For local useage, install the package: `npm install -D eslint eslint-config-ryansobol`
 * touch .eslintrc.js
 * Add language configuration and environment configuration to the .eslintrc.js file:
 
