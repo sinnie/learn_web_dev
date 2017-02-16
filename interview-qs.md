@@ -1,15 +1,26 @@
 # Seattle Area Interview Questions Spring 2017
 
 ## Snap! Raise.
+
 #### cohesion  & coupling?
+
 #### Explain 0n + 1
+
 #### What is Active Record?
+
 #### Explain the difference between a hash and an array?
+
 #### Can you write SQL raw queries?
+
 #### Are you familiar with the different SQL joins?
+
 #### What is OOP?
+[Read more here](./oop.md)
+
 #### Explain Prototypical inheritance in JS
+
 #### What is your dev environment?
+
 #### Do you use Github’s GUI or do you stick to the command line?
 
 ---
