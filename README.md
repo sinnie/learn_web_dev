@@ -30,6 +30,8 @@ React.js
 ### Miscellaneous
 [Web Development Cheat Sheet](./wdcs.md)
 
+[Technical Interview Preparation](./Interview-qs.md)
+
 ---
 
 ### Contributing
