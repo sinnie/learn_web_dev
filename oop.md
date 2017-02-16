@@ -1,9 +1,9 @@
 # Four Pillars of OOP:
 
-1. __Abstraction__ - the process of exposing essential feature of an entity while hiding other irrelevant detail
+1. __Abstraction__ - the process of exposing essential features of an entity while hiding other irrelevant details
     1. reduces code complexity and, at the same time, it makes code aesthetically pleasant
     2. provide methods to the outside world to access and use data variables; however, all variables are hidden (abstracted) from direct access.
-2. __Encapsulation__ - (leads to data hiding) hid your modules’ internal data and all other implementation details/mechanism from other modules
+2. __Encapsulation__ - (leads to data hiding) hide your modules’ internal data and all other implementation details/mechanisms from other modules
     1. a way of restricting access to certain properties or components
     2. All about binding the data variables and functions together in a class
 3. __Inheritance__ - The ability to create a new class from an existing class and share methods/properties
