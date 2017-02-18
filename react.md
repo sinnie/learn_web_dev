@@ -9,6 +9,8 @@ __[React.js](https://facebook.github.io/react/)__ is a javaScript library for bu
 * React.js provides a hierarchy of components that encapsulate presentation, state, and behavior.
 * One-way data binding where only changes to state are immediately propagated to the presentation.
 
+---
+
 ## Terms
 * __Component__ - encapsulated code that handles presentation, state, and behavior. It knows how it should look and act given its current underlying information.
     * Developer creates React Elements. Usually larger parts of the user interface which contain both the structure and functionality.
@@ -43,6 +45,8 @@ __[React.js](https://facebook.github.io/react/)__ is a javaScript library for bu
 * __Transpiler__ - is a special type of compiler that changes the source code of one programming language into the approximate equivalent of another language.
 * __Synthetic events__ - a cross-browser wrapper around the browser’s native event. It has the same interface as the browser’s native event, including stopPropagation()  and preventDefault( ), except the events work identically across all browsers.
     * Can reach the browser's native event through `nativeEvent`
+
+---
 
 ## Introduction To React:
 
@@ -128,6 +132,8 @@ the `render()` function can now build up a local message variable, which is then
 * custom event handlers
 * event object
 
+---
+
 ## React Tools:
 ### React JSX: [makes building React.js ui easier](https://medium.com/javascript-scene/jsx-looks-like-an-abomination-1c1ec351a918#.hriu8ab3i)
 
@@ -152,7 +158,7 @@ React component Class
 
   ```
 
-* React.js components must specify a render( ) function that returns a single ReactElement
+* React.js components must specify a `render( )` function that returns a single ReactElement
 Nested React component Classes
 * component classes can be nested with other JSX tags
 Single-line attribute expressions
@@ -170,7 +176,7 @@ const element = <input
 
 ### What’s a [(http://codepen.io/ryansobol/pen/Lpvayw?editors=001)]?
 
-Synthetic event - an object that wraps a browser’s native event object; an object within another JS object.
+__Synthetic event__ - an object that wraps a browser’s native event object; an object within another JS object.
 * React.js wraps native events with a SyntheticEvent object and passes it to an event handler as its first parameter.
 * most likely will not need the underlying native event object, but you can with event.nativeEvent
 * the listener is on one of the props
@@ -193,7 +199,7 @@ Using Synthetic Events
     * `onChange={this.handleChange}`
 * You do not put these on components or high-level structure. Instead, you will put these as attributes to specific HTML elements. React does some performance upgrades to attach this on the root element for you. They are mounted when used and unmounted when not in use.
 * you can use the capturing phase by registering an event handler with an event prop that ends in the word Capture. (onChangeCapture)
-* If you find that you need the underlying browser event for some reason, use the nativeElement attr to get ti.
+* If you find that you need the underlying browser event for some reason, use the nativeElement attribute to get it.
 * Each SyntheticEvent contains the following properties:
     * boolean bubbles
     * boolean cancelable
@@ -226,6 +232,8 @@ Select Tag
 | A        |   65       |       65        |
 | Return   |   13       |       13        |
 | Escape   |   27       |       N/A       |
+
+---
 
 ## Stateful and Stateless Components:
 
@@ -309,6 +317,8 @@ owner - a component that sets the props of another component
 4. A stateless component's event handler is processed by invoking a stateful component's state mutator.
 5. A stateful component's state mutator is resolved by changing its state.
 6. Repeat step 1.
+
+---
 
 ## [Component Lifecycle](https://facebook.github.io/react/docs/react-component.HTML)
 
@@ -434,6 +444,8 @@ Questions:
 * You need to initialize a UI component from a third party (think Materialize, chart.js, d3) once it is loaded.
 Add Comment C
 *  look into Polling
+
+---
 
 ## React Router:
 
