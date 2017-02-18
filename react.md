@@ -1,6 +1,6 @@
 # React.js
 
-React.js is a javaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
+[React.js](https://facebook.github.io/react/) is a javaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
 * A core theme of React.js is component hierarchies and one-way data binding. The idea is that you can create your own HTML elements that have customized functionality. You can think of them closely as Angular directives that you can nest.
 * React.js provides a template language and some function hooks to essentially render HTML. React components allow you to create HTML tags that can contain custom functionality. Reusing components is a key idea behind React.js, so each instantiated component receives its own scope, which allows you to reuse your components as many times as you would like without worrying about variable collisions and other typical scope-sharing conflicts
 * Although React.js is powerful, you cannot build a fully functional dynamic application with React.js alone
@@ -50,7 +50,7 @@ library; accessible; short learning curve; easier to debug; more flexible; compo
 ### How Does React Work?
 
 #### [Virtual DOM](http://reactkungfu.com/2015/10/the-difference-between-virtual-dom-and-dom/)
-Two-Way data binding: pretty great, but has some problems;
+__Two-Way data binding:__ pretty great, but has some problems;
 * changes to one two-way bind will change another data binding to change, which causes the first to change again.
 * expensive in terms of CPU resources - slow
 React uses one way data binding.
@@ -104,14 +104,14 @@ Component State
     * Note: the order children are passed into the `React.createElement( )` function is the order they’ll be mounted.
 * The props object is made up of key-value pairs that set the HTML attributes of the element. Any HTML attribute can be a key in the props object so long as it’s converted to camel case.
     * Since class and for are reserved keywords in javaScript so className and htmlFor must be used instead.
-    * list of supported HTML tags and attributes
+    * [Here is a list of supported HTML tags and attributes](https://facebook.github.io/react/docs/dom-elements.html)
 
 ### One-way Data Binding
 * React.js uses one-way data bindings that prevents changes made to the presentation from automatically propagating to the state. We’ll have to manually propagate the presentation changes to the state by writing this code ourselves.
 * Component classes can also define custom event handlers
     * event handlers respond to events fired from a ReactElement
     * assign an event handler(this.handleChange) to a camel case event (onChange) in its props object. Then, any time a user changes the element, the event is triggered and the event handler is invoked.
-        * Here is the list of Event Handlers
+        * [Here is the list of Event Handlers](https://facebook.github.io/react/docs/events.html#supported-events)
     * When an event handler is invoked, an object is passed in as the first argument. The event object contains all the relevant information about the event that was just fired. Because of one-way data binding, you have to use the event object to update the component’s state.
     * After merging, the component is also automatically re-rendered, updating the presentation. Because of this, you never modify the this.state object d irectly. To change a component’s state, always use the this.setState( ) function.
 * React thinks of components as simple state machines. A state machine is an object that:
@@ -128,37 +128,47 @@ the `render()` function can now build up a local message variable, which is then
 * event object
 
 ## React Tools:
-### React JSX: makes building React.js ui easier
+### React JSX: [makes building React.js ui easier](https://medium.com/javascript-scene/jsx-looks-like-an-abomination-1c1ec351a918#.hriu8ab3i)
+
 * presentation and behavior are tied, so why keep them in separate files?
 * Dedicated template languages tend to be inadequate when implementing a complex UI
-* protects against xss attacks
+* protects against XSS attacks
 How use?
 * Syntactically similar to HTML; Use babel to transpile
 React component Class
 * React components can be transformed form JSX to JavaScript
-const Truck = React.createClass({
-  render: function() {
-    return <div>
-      <a href="http://www.streetdonuts.com/">Street Donuts</a>
-    </div>;
-  }
-});
 
-const element = <Truck />;
+  ```javascript
+  const Truck = React.createClass({
+    render: function() {
+      return <div>
+        <a href="http://www.streetdonuts.com/">Street Donuts</a>
+      </div>;
+    }
+  });
+
+  const element = <Truck />;
+
+  ```
+
 * React.js components must specify a render( ) function that returns a single ReactElement
 Nested React component Classes
 * component classes can be nested with other jsx tags
 Single-line attribute expressions
-* A jsx attribute tag can be the result of a JavaScript exression
+* A JSX attribute tag can be the result of a JavaScript expression
 Multi-line attribute expressions
+
+```javascript
 const element = <input
   onChange={this.handleChange}
   type="text"
   value={this.state.searchTerm}
 />;
+```
+## Synthetic Events
 
-Synthetic Events
-What’s a Synthetic Event?
+### What’s a [(http://codepen.io/ryansobol/pen/Lpvayw?editors=001)]?
+
 Synthetic event - an object that wraps a browser’s native event object; an object within another JS object.
 * React.js wraps native evens with a SyntheticEvent objet and passes it to an event handler as its first parameter.
 * most likely will not need the underlying native event object, bu tyou can with event.nativeEvent
@@ -167,7 +177,7 @@ What’s with synthetic events?
 Native events aren’t uniform across browsers. Synthetic Events are.
 * When React.js loads, it attaches a single event listener onto the root document object of the DOM hierarchy. Therefore, you do not attach any additional event listeners to the DOM
 * The React.js synthetic event system is independent from native events
-* Handlign a synthetic event system works identically
+* Handling a synthetic event system works identically
 * The synthetic event is pooled, meaning that the syntheticEvent obj will be reused and all properties will be nullified after the event callback has been invoked. this is for performance reasons.
     * Because of this, you cannot access the event in an  asynchronous way.
     * If you want to access the event properties in an asynchronous way, you should call event.persist() on the event, which will remove the synthetic event from the pool and allow references to the event to be retained by user code.
@@ -175,11 +185,11 @@ Native events aren’t uniform across browsers. Synthetic Events are.
     * problematic because it renders a read only element - a user cannot change the value property.
 Using Synthetic Events
 * register an event handler with its onChange prop and set the value prop with an automatic one-way data binding:
-    * const element = <input onChange={this.handleChange} type="text" value={this.state.value} />;
+    * `const element = <input onChange={this.handleChange}` `type="text" value={this.state.value} />;`
 * When a user changes the component's underlying element, its event handler is triggered. The handler can then update this.state.value with the this.setState() method. This causes the component hierarchy to re-render which updates the DOM hierarchy. On most devices, this happens so fast that a user never perceives a delay.
 * use camelCase
-* with jsx pass a function as the event handler, rather than a string
-    * onChange={this.handleChange}
+* With JSX pass a function as the event handler, rather than a string
+    * `onChange={this.handleChange}`
 * You do not put these on components or high-level structure. Instead, you will put these as attributes to specific HTML elements. React actually does some performance upgrades to attach this on the root element for you. They are mounted when used and unmounted when not in use.
 * you can use the capturing phase by registering an event handler with an event prop that ends in the word Capture. (onChangeCapture)
 * If you find that you need the underlying browser event for some reason, use the nativeElement attr to get ti.
@@ -208,90 +218,90 @@ Controlled Components
 * If you combine the two, by making the React state the ‘single source of truth’. The React.js component that renders a form also controls what happens in that form on subsequent user input. An input form element whose value is conrolled by React.js in this way is called a controlled component.
 Select Tag
 
-// Key     Key code       Character code
-// a          65                     97
-// A          65                     65
-// Return  13                     13
-// Escape  27                    N/A
 
-// Here's a table to help you quickly remember which event does what.
-//
-// Event    Trigger(s)    event.which
-// onKeyDown    When pressed down. Repeats while holding.    Key code
-// onKeyPress    When inserted. Repeats while inserting.    Character code
-// onKeyUp    When released up.    Key code
+| Key      | Key code   | Character Code  |
+| -------- | --------   | ----------------|
+| a        |   65       |       97        |
+| A        |   65       |       65        |
+| Return   |   13       |       13        |
+| Escape   |   27       |       N/A       |
 
-Stateful and Stateless Components:
-What are props?
-Props - data that is passed into a component when it is created.
+## Stateful and Stateless Components:
+
+### What are props?
+__Props__ - data that is passed into a component when it is created.
 * Props are immutable data that configures a new component before it’s mounted.
-* JS object - can have any kind of JS type
-* They are accessible anywhere inside a component class via this.props object.
-* props are like a component’s configuration - options, kinda
+* JavaScript object - can have any kind of JS type
+* They are accessible anywhere inside a component class via `this.props` object.
+* props are like a components' configuration. You can think of them as options (kinda).
 * After a component’s props are set, they never change.
     * Data that you give a component when it is created. Kinda like an HTML attribute. You cannot change this data once the component is Mounted, so it’s not a good idea to include information that you want to be dynamic.
-What is the state object?
-State - Data that’s initialized (with a default value) and changed from within a component. (mostly changed from user events)
-* It is initialized by a component’s getInitialState( ) method, which is automatically invoked once before a component is mounted.
+
+### What is the state object?
+__State__ - Data that’s initialized (with a default value) and changed from within a component. (mostly changed from user events)
+* It is initialized by a component’s `getInitialState()` method, which is automatically invoked once before a component is mounted.
 * It is available anywhere within a component class via the this.state object
 * This state is mutable data that represents the internal state of a component.
-* To mutate state use this.setState( ), which is typically done after an event handler is triggered from a user interaction or a server response.
-* State object is perfect for storing data that changes over time. Use this.setState( ) method to merge changes into the current this.state object. After the merge, the component is automatically re-rendereed.
-    * Ok, so state is different from props in two main ways: It is mutable, and it is initialized with a method (getInitialState( ) ). You can use state to persist/change/use data received from a user. When merged, the component is re-rendered to reflect these changes. The component controls the state - its own state. The props are being assigned by the owner. No control. Mutable v immutable.
+* To mutate state use `this.setState()`, which is typically done after an event handler is triggered from a user interaction or a server response.
+* State object is perfect for storing data that changes over time. Use `this.setState()` method to merge changes into the current this.state object. After the merge, the component is automatically re-rendereed.
+    * Ok, so state is different from props in two main ways: It is mutable, and it is initialized with a method (`getInitialState( )`). You can use state to persist/change/use data received from a user. When merged, the component is re-rendered to reflect these changes. The component controls the state - its own state. The props are being assigned by the owner. No control. Mutable vs immutable.
     * changed by itself? State governs the rendering of the component
-Why are Props and State Important?
-* Props and State are implicit inputs to the render( ) method, which is invoked whenever it’s mounted or its state is changed.
-* props + state is the input data for the render( ) of a component
-* Both are JS objects
+
+## Why are Props and State Important?
+* Props and State are implicit inputs to the `render()` method, which is invoked whenever it is mounted or its state is changed.
+* `props` + `state` is the input data for the `render()` of a component
+* Both are JavaScript objects
 * both changes trigger a render update
 * both should do the same thing on the same components
 * if a component needs to alter one of its attributes at some point in time, that attribute should be part of its state, otherwise it should just be a prop for that component
 * Using one-way data binding, a component’s props, state, and presentation logic are combined into a user interface.
 * Steps of reconciliation:
-    * React invokes the component’s render( ) method
+    * React invokes the component’s `render()` method
     * the render method combines this.props and this.state objects with the component’s presentation logic and returns a component hierarchy
     * this component hierarchy is then used to generate and mount elements onto the DOM
     * React remembers this component hierarchy after mounting
-    * When a user then interacts with the component, an onChange event is fired and the component’s this.handleChange( ) method is triggered. The event handler changes the component’s state using the this.setState( ) method.
-    * After updating the state, the component’s render( ) is called again, combining this.props and this.state object with the component’s presentation logic. As a result, new component hierarchy is returned by the render( )
+    * When a user then interacts with the component, an onChange event is fired and the component’s `this.handleChange( )` method is triggered. The event handler changes the component’s state using the `this.setState( )` method.
+    * After updating the state, the component’s `render( )` is called again, combining this.props and this.state object with the component’s presentation logic. As a result, new component hierarchy is returned by the `render( )`
     * React compares the old component hierarchy with the new component and if the value of the component has changed, React applies those differences to the DOM hierarchy, updating only what’s changed.
-* Reconciliation practice is easier to understand when its render( ) method is implemented as a pure function. Don’t do these things inside of the render( )
+* Reconciliation practice is easier to understand when its render( ) method is implemented as a pure function. Don’t do these things inside of the `render( )`
 * Pure Function:
     * Return the same component hierarchy given the same props and state objects
-    * Does not modify the component’s state directly or with the this.state( )
+    * Does not modify the component’s state directly or with the `this.state( )`
     * Does not read from or write directly from the DOM
-    * Not interact with the Browser via functions like setTimeout( )
+    * Not interact with the Browser via functions like `setTimeout( )`
     * The true def: given a set of inputs the same output is produced every single time
         * given the state and props, the same component will be rendered
-Using Props and State to Separate the concerns of a React user Interface:
+
+## Using Props and State to Separate the concerns of a React user Interface:
 * React components are either:
-    * Stateful components: has a state but may or may not have props.
+    * __Stateful components:__ has a state but may or may not have props.
         * State managers
             * in charge of client-server communication, processing data, and responding to user events
-        * at or near the root of a component hierarchy, thus responsible for managing the majority of the herarchy’s state.
+        * at or near the root of a component hierarchy, thus responsible for managing the majority of the hierarchy’s state.
         * The fewer stateful components a component has, the easier it is to understand how information flows through it.
-    * Stateless components: often has props, but has no state
+    * __Stateless components:__ often have props, but has no state
         * relies on state
-        * not much to it other than render( )
+        * not much to the object other than `render()`
         * all logic revolves around the props they receive
         * called dumb components
         * typically at or near the leaves of a component hierarchy
         * responsible for handling the majority of the hierarchy’s events.
         * Typically, components have more stateless components than stateful, especially if it creates a user interface with lots of events.
-How does information Flow between stateful and stateless components?
+
+## How does information Flow between stateful and stateless components?
 owner - a component that sets the props of another component
 * should adhere to the single responsibility principal
 * Note: the key prop is used by React to uniquely identify sibling components of the same type. If a keyed component is changed in any way, React can more efficiently update the DOM hierarchy. The key prop is not accessible via this.props.key
 * Stateless components (ownee components) are affected state mutator methods
-    * this.props.incrementLikes( )
-* state mutator - method inside a stateful component that invokes this.setState( )
+    * `this.props.incrementLikes()`
+* state mutator - method inside a stateful component that invokes `this.setState( )`
     * called from a stateless component
-* __autobinding__ - the process of binding a component to every method that’s defined in its specification object. This is why the this variable inside the incrementLikes( ) method refers to an <App /> component even though it was invoked using this.props.incrementLikes( )
+* __autobinding__ - the process of binding a component to every method that’s defined in its specification object. This is why the this variable inside the `incrementLikes( )` method refers to an `<App />` component even though it was invoked using `this.props.incrementLikes( )`
     * React automatically binds components to methods specified in the React.createClass( ) method but not in ES6 class.
-* The Object.assign( ) method creates a new object that contains a copy of the key-value pairs from an object merged with a copy of the key-value pairs from an object defined as a parameter in the  Object.assign( ).
-    * const nextTrack = Object.assign({}, track, { likes: nextLikes });
-    * This is part of the immutable data model, which is an entity or collection (obj or arr) whose state cannot be changed after it’s created.
-so:
+* The `Object.assign() `method creates a new object that contains a copy of the key-value pairs from an object merged with a copy of the key-value pairs from an object defined as a parameter in the  `Object.assign( )`.
+    * `const nextTrack = Object.assign({}, track, { likes: nextLikes });`
+    * This is part of the immutable data model, which is an entity or collection (Object or Array) whose state cannot be changed after it’s created.
+#### So:
 1. A stateful component's state and state mutators are passed to a stateless component's props.
 2. A stateless component's props are combined with presentation logic to render a user interface.
 3. An event is handled by invoking a stateless component's event handler.
@@ -299,9 +309,11 @@ so:
 5. A stateful component's state mutator is resolved by changing its state.
 6. Repeat step 1.
 
-## Component Lifecycle
-codepen
-Initial Render:
+## [Component Lifecycle](https://facebook.github.io/react/docs/react-component.html)
+
+[Codepen Example](https://jsfiddle.net/5g0a6oba/1/)
+
+### Initial Render:
 `getDefaultProps( )` - similar to `getInitialState( )`.
 * First lifecycle method fired when going through the initial render of the component
 * another way to set initial properties on a component
@@ -315,7 +327,7 @@ Initial Render:
 `render()`
 * only lifecycle method that is required
 
-## `componentDidMount( )`
+### `componentDidMount( )`
 * method runs after the component is mounted
 * if you want to fetch data, this is where you will want to make API calls and set state
 
@@ -413,7 +425,7 @@ Questions:
 4. What kinds of things would we do in the componentWillUnmount method?
 5. In this example, inside the componentDidMount method, we are using `.bind(this)`. What does this do? What happens if we omit the bind method?
 
-#### We are describing some scenarios that involve tapping into the component lifecycle:
+#### Some scenarios that involve tapping into the component lifecycle:
 * You want to make a request to fetch the user's orders when you are ready to display the orders table (a component).
 * You want to detect when a search field has changed to trigger a new search request.
 * You are filtering a set of cities in the United States based on search in your `render` method. For performance reasons, you only want to render when the search field has changed.
@@ -432,7 +444,7 @@ Has lazy code loading, dynamic route matching, and location transition handling 
 *  nesting of URL will match the nesting of React Route Components. You can also load multiple named components from a single route (admin nav and aside vs a regular user navbar and aside)
 * `npm install —save React.js-router@next` <— the @next installs the version in development
 
-### Material UI:
+## [Material UI:](http://www.material-ui.com/#/)
 What is Material UI?
 * framework of components
 * `npm install --save material-ui`
@@ -440,7 +452,7 @@ What is Material UI?
 * Config with brunch:     
     * `brunch new path/to/app --skeleton gSchool/with-React.js-material`
 
-## HTTP Requests with Axios:
+## [HTTP Requests with Axios:](https://www.npmjs.com/package/axios)
 
 ## Axios:
 * Promised-based HTTP client for the browser and node.js - enables us to use the API the same way regardless of whenther we are making requests in the browser or from Node.
@@ -507,9 +519,10 @@ export default Foo;
 * You may want to make multiple requests at the same time
     * concurrency helper methods.
         * .all - with .spread
-        * pass in an array of funcitons to the .all method, and all will return a promise with an array of the resolved promises. If one should fail, it will reject and handled by .catch.
+        * pass in an array of functions to the `.all` method, and all will return a promise with an array of the resolved promises. If one should fail, it will reject and handled by .catch.
         * The spread operator, under the hood, does the same thing as the spread operator
             * the callback makes available the results of each of the requests you made in the scope of a single function.
+
 ```javascript
 function getUserAccount() {
   return axios.get('/user/12345');
