@@ -174,7 +174,7 @@ const element = <input
 ```
 ## Synthetic Events
 
-### What’s a [Synthetic Event]((http://codepen.io/ryansobol/pen/Lpvayw?editors=001))?
+### What’s a [Synthetic Event?](http://codepen.io/ryansobol/pen/Lpvayw?editors=001)
 
 __Synthetic event__ - an object that wraps a browser’s native event object; an object within another JS object.
 * React.js wraps native events with a SyntheticEvent object and passes it to an event handler as its first parameter.
