@@ -3,7 +3,7 @@
 [Learn Web Dev](./README.md)
 
 __[React.js](https://facebook.github.io/react/)__ is a javaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
-* A core theme of React.js is component hierarchies and one-way data binding. The idea is that you can create your own HTML elements that have customized functionality. You can think of them closely as Angular directives that you can nest.
+* A core theme of React.js is component hierarchies and one-way data binding. The idea is that you can create your own HTML elements that have customized functionality. You can think of them as being close to Angular directives that you can nest.
 * React.js provides a template language and some function hooks to essentially render HTML. React components allow you to create HTML tags that can contain custom functionality. Reusing components is a key idea behind React.js, so each instantiated component receives its own scope, which allows you to reuse your components as many times as you would like without worrying about variable collisions and other typical scope-sharing conflicts
 * Although React.js is powerful, you cannot build a fully functional dynamic application with React.js alone
 * React.js provides a hierarchy of components that encapsulate presentation, state, and behavior.
@@ -33,8 +33,8 @@ __[React.js](https://facebook.github.io/react/)__ is a javaScript library for bu
 * __Composition__ -  combining smaller components to form a larger whole.
 * __Data binding__ - Data binding is the process of establishing a connection between a user interface’s state and presentation.
 * __Two-way data binding__
-  1.) changes its state (data received from a server) are immediately propagated to the presentation.
-  2.) changes to its presentation (input received from a user) are immediately propagated to the state.
+  1. changes its state (data received from a server) are immediately propagated to the presentation.
+  2. changes to its presentation (input received from a user) are immediately propagated to the state.
 * __one-way data binding__ - When building a component hierarchy, its state and presentation are combined to produce a UI. Whenever the state changes, it is automatically recombined with the presentation and an updated user interface is produced. Changes made to the presentation are not automatically propagated to the state. You have to write the code to change the presentation to the state explicitly.
 * __Flux__ - a pattern; The view triggers an event (say, after the user types a name into a text field), that event updates a model, then the model triggers an event and the view responds to that model’s event by re-rendering with the latest data.
 * The __single responsibility principle__ states that every module or class should have responsibility for a single part of the functionality provided by the software and that responsibility should be entirely encapsulated by the class. All its services should be narrowly aligned with that responsibility. Robert C. Martin expresses the principle as follows:
@@ -52,10 +52,9 @@ library; accessible; short learning curve; easier to debug; more flexible; compo
 ### How Does React Work?
 
 #### [Virtual DOM](http://reactkungfu.com/2015/10/the-difference-between-virtual-dom-and-dom/)
-__Two-Way data binding:__ pretty great, but has some problems;
-* changes to one two-way bind will change another data binding to change, which causes the first to change again.
-* expensive in terms of CPU resources - slow
-React uses one-way data binding.
+__Two-Way data binding__ like Angular.js 1 / 1.5 is pretty great, but has some problems. One of which is that changes to one two-way bind will change another data binding to change, which causes the first to change again. This is expensive in terms of CPU resources, and results in slow application.
+
+__React uses one-way data binding__
 * React components:
     * encapsulated code that handles presentation, state, and behavior
     * expose a render method DOM that allows you to output an element with an arbitrary amount of DOM child nodes. The render method is all you need to make the simplest component. React tracks all DOM nodes that the render method produces <— helper methods called `createElement( )`
