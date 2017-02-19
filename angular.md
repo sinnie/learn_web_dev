@@ -46,7 +46,6 @@
 3. Third, we told AngularJS to display the data yourName in the directive template called `{{ yourName }}.`
 
 ## Angular can be broken down into 5 major components:
-
 1. Directives
 2. Controllers
 3. Scopes
@@ -56,12 +55,11 @@
 * __ngModel__ - The `ngModel` directive binds an input, select, text area (or custom form control) to a property on the scope using NgModelController, which is created and exposed by this directive.
 *   __ngBind__ - The `ngBind` attribute tells Angular to replace the text content of the specified HTML element with the value of a given expression, and to update the text content when the value of that expression changes.
 * __ngController__ - The `ngController` directive attaches a controller class to the view. This is a key aspect of how angular supports the principles behind the Model-View-Controller design pattern.
-
-- Binding the view into the model, which other directives such as input, text area or select require.
-- Providing validation behavior (i.e. required, number, email, url).
-- Keeping the state of the control (valid/invalid, dirty/pristine, touched/untouched, validation errors).
-- Setting related css classes on the element (ng-valid, ng-invalid, ng-dirty, ng-pristine,ng-touched, ng-untouched, ng-empty, ng-not-empty) including animations.
-- Registering the control with its parent form.
+* Binding the view into the model, which other directives such as input, text area or select require.
+* Providing validation behavior (i.e. required, number, email, url).
+* Keeping the state of the control (valid/invalid, dirty/pristine, touched/untouched, validation errors).
+* Setting related css classes on the element (`ng-valid`, `ng-invalid`, `ng-dirty`, `ng-pristine`, `ng-touched`, `ng-untouched`, `ng-empty`, `ng-not-empty`) including animations.
+* Registering the control with its parent form.
 
 ### Angular is Useful Because:
 * Code reuse
@@ -80,13 +78,14 @@
          <div ng-repeat="(key, value) in myObj"> ... </div> (object)
              <li ng-repeat='name in names'>{{ name }}</li> (arr)
         ```
-            *   The order of keys returned for an object is dependent on the order returned by the browser using (for key in myObj)
-            *   Keys starting with $ will be ignored
-            *   Built in filters such as orderBy and filter do not work with objects (to be discussed later)
+
+            * The order of keys returned for an object is dependent on the order returned by the browser using (for key in myObj)
+            * Keys starting with $ will be ignored
+            * Built in filters such as orderBy and filter do not work with objects (to be discussed later)
 * __ng-hide/ng-show__ - `ngShow` and `ngHide` will show or hide a specific HTML element based off of a provided expression. Let's take a look at some examples.
     * The element is hidden when the expression provided to ng-show attribute is false. `ng-hide` will hide an element when the expression given to ng-hide is true.
 * __ngClass__ -   `ng-class` will dynamically set an element's class depending on a provided expression.
-    *   `<div ng-class='{highlight: 4 + 4 === 8}'> 4 + 4 = 8</div>`
+    * `<div ng-class='{highlight: 4 + 4 === 8}'> 4 + 4 = 8</div>`
 * __ngSrc & ngHref__ -  Using Angular markup like `{{hash}}` in src and href attributes does not work right: The browser will fetch from the URL with the literal text `{{hash}}` until Angular replaces the expression inside `{{hash}}`. The ngSrc and ngHref directives solve this problem.
   ```
     <img ng-src="http://www.imageurl.com/{{expression}}” alt="Description"/>
@@ -96,22 +95,22 @@
     *  __currency__ - converts a number into a currency value
         * {{ expression | filter }}
     * __date__ - converts a string into a datetime or UNIX timestamp
-        *   `{{ 1288323623006 | date : 'medium' }}`
-        *   `{{ 1288323623006 | date : "MM/dd/yyyy 'at' h:mma" }}`
-        *   `{{ 1288323623006 | date : "EEEE" }}`
+        * `{{ 1288323623006 | date : 'medium' }}`
+        * `{{ 1288323623006 | date : "MM/dd/yyyy 'at' h:mma" }}`
+        * `{{ 1288323623006 | date : "EEEE" }}`
     * __filter__ - returns a subset of items from an array
-        *  `<tr ng-repeat="friend in friends | filter : searchText">`
-        *   number - round numbers to specific decimal
-        *   `{{ 3.14159265359 | number : 3 }}`
-        *   `{{ 3.14159265359 | number : 6 }}`
-        *   `{{ 3.14159265359 | number : 1 }}`
+        * `<tr ng-repeat="friend in friends | filter : searchText">`
+        * number - round numbers to specific decimal
+        * `{{ 3.14159265359 | number : 3 }}`
+        * `{{ 3.14159265359 | number : 6 }}`
+        * `{{ 3.14159265359 | number : 1 }}`
     * __json__ - converts a JavaScript object to JSON
     * `limitTo` - returns a new string or array that contains only a limited number of elements
     * `lowercase` - converts a string to lowercase
     * `uppercase` - converts a string to uppercase
     * `number` - formats a number as text
     * `orderBy` - orders an array of objects by specific predicate
-        *   `<tr ng-repeat="friend in friends | orderBy : 'age'">`
+        * `<tr ng-repeat="friend in friends | orderBy : 'age'">`
 * __Angular Modules__ -   The `angular.module` is a global place for creating, registering and retrieving Angular modules. All modules (angular core or 3rd party) that should be available to an application must be registered using this mechanism. In app/app.js, you will see this:
 ```javascript
       import angular from 'angular'
