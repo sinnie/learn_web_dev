@@ -21,7 +21,7 @@ PostgreSQL
 [Socket.io](./node/socketio.md)
 
 ### Client Side Frameworks
-Angular 1.5
+[Angular 1.5](angular.md)
 
 [React.js](./react.md)
 
