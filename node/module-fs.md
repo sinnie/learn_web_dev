@@ -10,6 +10,7 @@ Node.js puts little functionality in the global scope because it is organized in
 In Node.js, the `module`  __is a global variable with an `exports` property that references an empty object by default.__ You can export objects or functions using the `module.export` object and require them into another section of you code with the `require()` function, which accepts a module id as an argument. When invoking `require()`, assign the required object to a variable to access its properties. `require()` returns a reference to the value of `module.exports`.
 
 __Pseudo-code example of how a module is defined:__
+
     ```
       const theModule = {
         exports: {}
