@@ -56,7 +56,9 @@ Zero-length __path__ segments are ignored. If the joined path string is a zero-l
    // => a/b/c
   ```
 ## Process Module
-Each Node.js process has built-in functionality that can be accessed through the global `process` module. This `process` module does not have to be required because it is a 'wrapper' around the currently executing process, and many of the methods it exposes are actually wrappers around calls into some of Node.js' core C libraries. There are several methods made available through the process object, which include:
+Each Node.js process has built-in functionality that can be accessed through the global `process` module. This `process` module does not have to be required because it is a 'wrapper' around the currently executing process, and many of the methods it exposes are actually wrappers around calls into some of Node.js' core C libraries.
+
+__There are several methods made available through the process object, which include:__
 
 1. exit
 2. beforeExit
@@ -64,11 +66,12 @@ Each Node.js process has built-in functionality that can be accessed through the
 4. Signal Events
 
 ## process.argv
-* property that returns an `<Array>` containing the command line arguments passed when the Node.js process was launched.
-    * first element = `process.execPath`
-    * second element = path to the JS file being executed
-    * remaining elements = any additional command line arguments
-For Example, assuming the following script for `process-args.js`:
+* The `process.argv` property returns an `<Array>` containing the command line arguments passed when a Node.js process was launched.
+  * First element = `process.execPath`
+  * Second element = path to the JS file being executed
+  * Any remaining elements = any additional command line arguments
+
+__For Example, assuming the following script for `process-args.js`:__
   ```javascript
   // print process.argv
 
