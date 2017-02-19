@@ -56,7 +56,8 @@ Zero-length __path__ segments are ignored. If the joined path string is a zero-l
    // => a/b/c
   ```
 ## Process Module
-Each Node.js process has built-in functionality that can be accessed through the global `process` module. This `process` module does not have to be required because it is a 'wrapper' around the currently executing process, and many of the methods it exposes are actually wrappers around calls into some of Node.js' core C libraries. There are several methods made available through the process object, including:
+Each Node.js process has built-in functionality that can be accessed through the global `process` module. This `process` module does not have to be required because it is a 'wrapper' around the currently executing process, and many of the methods it exposes are actually wrappers around calls into some of Node.js' core C libraries. There are several methods made available through the process object, which include:
+
 1. exit
 2. beforeExit
 3. uncaughtException
