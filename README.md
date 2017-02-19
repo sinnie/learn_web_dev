@@ -35,6 +35,8 @@ PostgreSQL
 
 [Technical Interview Preparation](./interview-qs.md)
 
+[Testing](./testing.md)
+
 ---
 
 ### Contributing
