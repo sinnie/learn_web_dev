@@ -110,7 +110,7 @@ Node.js also employs an event loop, which is a construct that performs two tasks
 
 Although V8 is single-threaded, the underlying C++ API of Node.js is not, which means that whenever we call something that is an I/O operation, Node relies on __libuv__ to run code concurrently with our javascript code. Once this thread (form _libuv_) receives a value, it awaits for data or throws an error, and then the provided callback is called with the necessary parameters.
 
-  > In Node.js, there are two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which originate from the `EventEmitter`. The `EventEmitter` is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
+  > Remember: in Node.js, there are two separate kinds of events. There are __system events__, which are lower-level events that are handed by libuv, and __custom events__, which originate from the `EventEmitter`. The `EventEmitter` is used by many of Node.js' core modules, including `Server`, `Socket`, and  `http`.
 
 JavaScript code sometimes wraps calls to the C++ side of Node. Often, when an event occurs in libuv, it generates a custom event to make  it easier to manage our code and decide what code should run when that event happens. This makes it seem as though system events and custom events are the same. They are not.  
 
@@ -381,7 +381,7 @@ Although this technique is useful for concisely controlling the logic of our pro
 ##### Remember:
 * There is at most one event handler running at any given time.
 * Any event handler will run to completion without being interrupted.
-* JavaScript is a single-threaded, non-blocking, asynchronous, concurrent language.
+* JavaScript is a single-threaded, non-blocking, asynchronous language.
 * V8 has:
   1. A single call stack
   2. A single thread (one call stack; one thing at a time)
@@ -391,6 +391,9 @@ Although this technique is useful for concisely controlling the logic of our pro
   1. callback queue
   2. Other APIs and stuff
 
+---
+
+[Now, let's take a look at Node.js' Module system and File System (`fs`) module. ](./node/module-fs.md)
 
 ---
 
