@@ -1,5 +1,7 @@
 # Angular 1.5
 
+[Learn Web Dev](./README.md)
+
 ## Terms:
 * __model__ - data stored on the client (raw in server)
     * data shown to the user in the view and with which the user interacts
