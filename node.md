@@ -2,7 +2,7 @@
 
 [Node Docs](https://nodejs.org/en/)
 
-[A Robust List of Resources](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js)
+[A Robust List of Node.j Resources](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js)
 
 [Learn Web Dev](./README.md)
 
