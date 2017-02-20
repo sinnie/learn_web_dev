@@ -105,20 +105,20 @@ invokePromise()
 
 ```text
 
- new Promise(executor)         then(onFulfilled)                  New Promise()
-┌──---------─┐             ┌──-------------------──┐            ┌──────-------─┐
-│            │             │                       │─ fulfill ─▶│              │
-│            │── fulfill ─▶│                       │   return   │              │
-│            │             │                       │            │              │
-│            │             │                       │─  reject -▶│              │
-│            │             └───────────────────────┘    throw   │              │
-│  Pending   │                                                  │              │
-│            │             ┌── catch(onRejected) ──┐            │              │
-│            │             │                       │─ fulfill ─▶│              │
-│            │             │                       │   return   │              │
-│            │── reject ──▶│                       │            │              │
-│            │             │                       │─  reject ─▶│              │
-└────────────┘             └───────────────────────┘   throw    └────────────-─┘
+ new Promise(executor)          then(onFulfilled)                  New Promise()
+┌──-----------─┐             ┌──-------------------──┐            ┌──────-------─┐
+│              │             │                       │─ fulfill ─▶│              │
+│              │── fulfill ─▶│                       │   return   │              │
+│              │             │                       │            │              │
+│              │             │                       │─  reject -▶│              │
+│              │             └───────────────────────┘    throw   │              │
+│  Pending     │                                                  │              │
+│              │             ┌── catch(onRejected) ──┐            │              │
+│              │             │                       │─ fulfill ─▶│              │
+│              │             │                       │   return   │              │
+│              │── reject ──▶│                       │            │              │
+│              │             │                       │─  reject ─▶│              │
+└───--─────────┘             └───────────────────────┘   throw    └────────────-─┘
 ```
 
 ## Creating Promises
