@@ -27,16 +27,18 @@ That was a bit of a tangent, but I wanted to give you an Idea about where I was 
     | 01101000 | 01100101 |           01101100          | 01101100 | 01101111 |
 
 
+---
+
 ## JavaScript and Buffers
 
 Prior to the introduction of the `TypedArray` in ES6, JavaScript did not have a way to read or manipulate streams of binary data. Remember, JavaScript was intended to be used to manipulate the DOM, so it was designed to handle unicode-encoded strings. However, Node.js _does_ need to be able to manipulate binary data when dealing with TCP streams and reading and writing to the filesystem. Initially, Node.js' solution to this problem was to use strings to represent binary data. However, this approach was not ideal, so buffers were incorporated into the language.
 
 The `Buffer` class was introduced as part of the Node.js API to allow JavaScript to interact with octet streams in the context of TCP streams and file system operations.
-* The `Buffer` class is a global within Node.jds and handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class.
-* Buffers act somewhat like arrays of integers, bu tthey are not resizeable and have methods designed specifially for handling and manipulating binary data.
-* the 'integers' in a bufer each represent a byte, which means that they are limited to values from 0 - 255.
+* The `Buffer` class is a global feature within Node.jds and handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class.
+* Buffers act somewhat like arrays of integers, but they are not resizable and have methods designed specifically for handling and manipulating binary data.
+* the 'integers' in a buffer each represent a byte, which means that they are limited to values from 0 - 255.
 * Raw data is stored in an instance of the buffer class, which is similar to an array of integers. However, buffers are actually corresponded to raw memory outside of V8. Because of this, it cannot be resized.
-* In order to save space and be more readable, the designers of Node.js chose to display hexadecimal numbers instead of binary numbers. Therefore, an 8 digit binary number is represented by a 2 digit hexadecimal number, and that is why you will see a two digit representation of a byte in the buffer.
+* In order to save space and be more readable, the designers of Node.js chose to display __hexadecimal__ numbers instead of binary numbers. Therefore, an 8 digit binary number is represented by a 2 digit hexadecimal number, and that is why you will see a two digit representation of a byte in the buffer.
 
 Many times data that Node.js developers will be using are from the filesystem or TCP streams, which are octet streams. As we've mentioned before, JavaScript is not well-suited for manipulating this form of data.
 
@@ -44,10 +46,10 @@ Many times data that Node.js developers will be using are from the filesystem or
 Buffers can be created in a few ways:
 * `const buffer = new Buffer(8);`
   * the buffer is initialized with 8 bytes
-* `const buffer = new Buffer([ 8, 6, 7, 5, 3, 0, 9 ]);`
-  * the buffer is initialized to the contents of the array - the contents are integers that represent bytes.
 * `const buffer = new Buffer('Some Example Test', 'utf-8');`
   * the buffer is initialized to the binary encoding of the first string as defined by the second argument.
+* `const buffer = new Buffer([ 8, 6, 7, 5, 3, 0, 9 ]);`
+  * the buffer is initialized to the contents of the array - the contents are integers that represent bytes.
 
 ##### Types of Character sets (encoding)
 * __ascii__ - Fast but limited to the ascii char set; Null chars will be converted into spaces
@@ -97,7 +99,6 @@ buffer.toString('utf-8', 0, 12);
 ##### Individual Octets:
 You can also set individual bits through an array-like syntax.
 
-
 ---
 
 ### Other Buffer Methods
@@ -119,8 +120,29 @@ This method is similar to Array.prototype.slice but with an important distinctio
 * Therefore, if you modify the slice, you will modify the buffer.
 
 
+## TL:DR
+1. Buffers a finite amount of data and store hexadecimal representations of said raw binary data
+2. Buffer behaves like an Array
+
+
 ## Sources
 
 [Holbrook, Josh. 'How to use Buffers in Node.js'. _docs.nodejitsu.com_. 2011.](https://docs.nodejitsu.com/articles/advanced/buffers/how-to-use-buffers/)
 
 [Node.js Docs. Buffers](https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_buffer)
+
+[Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
+
+
+#### ES6 Typed arrays
+```js
+const buffer = new ArrayBuffer(8); // stores raw binary data (64 bits) A feature of Vanilla JS
+const view = new Int32Array(buffer) // an array that allows you to work with the buffer. Will conver the buffer into the format that you need to work with.
+view[0] = 5; // converted into 32 bits
+view[1] = 15;
+view[2] = 30 // buffer does not have storage space
+console.log(view);
+
+// => Int32Array { '0': 5, '1': 15 }
+```
+View allows you to work with binary data in an easier way (through base 10 numbers)
