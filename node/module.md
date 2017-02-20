@@ -24,12 +24,12 @@ __Pseudo-code example of how a module is defined:__
 
 > In each module, the `module` free variable is a reference to the object representing the current module. For convenience,  `module.exports` is also accessible via the `exports` module-global. `module` is not actually a global, but local to each module.
 
-When `require()` is called, Node has to resolve the given string to an actual file to load. Therefore, local modules must begin with a relative or absolute path. In contrast, built-in modules or libraries installed in a `node_modules` library can be referred to by module name. For example, `const fs = require('fs')`, will give you Node's file system module. Whereas `const johnnyFive = require(./path/to/module/'my-module')` will include a local module. In either case, it is safe to omit the file extension.
+When `require()` is called, Node has to resolve the given string to an actual file to load.  Therefore, local modules must begin with a relative or absolute path. In contrast, built-in modules or libraries installed in a `node_modules` library can be referred to by module name (id). For example, `const fs = require('fs')`, will give you Node's file system module. Whereas `const localModule = require(./path/to/module/'my-module')` will include a local module. In either case, it is safe to omit the file extension.
 
 #### There are three kinds of Modules:
 1. Core Modules
 1. NPM Modules
-1. File Modules
+1. File Moduless
 
 ## Core Modules
 Core modules are built-in to Node.js and represent the public API. These modules include `fs`, `http`, and `path` and are required by their name only as the argument to `require`. The core modules are defined within Node.js' source and are located in the lib/ folder. These core modules enable the creation of programs that can quickly communicate with filesystems or networks. It is useful to know that core modules are preferentially loaded if their identifier is passed to `require()`. Meaning, `require('http')` will always return the built-in HTTP, even if there is another file by that name.

@@ -58,7 +58,7 @@ Zero-length __path__ segments are ignored. If the joined path string is a zero-l
 ## Process Module
 Each Node.js process has built-in functionality that can be accessed through the global `process` module. This `process` module does not have to be required because it is a 'wrapper' around the currently executing process, and many of the methods it exposes are actually wrappers around calls into some of Node.js' core C libraries.
 
-__There are several methods made available through the process object, which include:__
+__There are several methods made available through the process object, including:__
 
 1. exit
 2. beforeExit
@@ -71,20 +71,27 @@ __There are several methods made available through the process object, which inc
   * Second element = path to the JS file being executed
   * Any remaining elements = any additional command line arguments
 
-__For Example, assuming the following script for `process-args.js`:__
+For Example, assuming the following script for process-args.js:
   ```javascript
   // print process.argv
 
-  process.argv.forEach((val, index) => console.log(`${index}: ${val}`);
-  ``
-Would generate:
-  ```javascript
-  0: /usr/local/bin/node
-  1: /Users/mjr/work/node/process-2.js
-  2: one
-  3: two=three
-  4: four
+  process.argv.forEach(val, index) => console.log(`${index}: ${val}`);
+
   ```
+Would generate:
+  ```
+    0: /usr/local/bin/node
+    1: /Users/mjr/work/node/process-2.js
+    2: one
+    3: two=three
+    4: four
+  ```
+
+## Buffers:
+* JS deals only in strings. It doesn’t have a way to deal with bytes
+* it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
+
+
 ## File I/0
 File I/O is provided by simple wrappers around standard POSIX functions.
 * `require(‘fs’);`
@@ -100,7 +107,8 @@ fs.rename('/tmp/hello', '/tmp/world', (err) => {
 });
 ```
 
-An HTTP request is composed of the following parts.
+#### An HTTP request is composed of the following parts:
+
 1. A method (or verb)
 2. A path
 3. An HTTP version
@@ -108,9 +116,9 @@ An HTTP request is composed of the following parts.
 5. And an optional body
 
 ## Initializing a server:
-A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two args - res, req
-* The callback’s first req argument will contain the incoming HTTP request as an http.IncomngMessage object
-* the callbacks second argument will contain an empty outgoing http response as an http.ServerResponse obj
+A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two arguments: res, req
+* The callback’s first req argument will contain the incoming HTTP request as an `http.IncomngMessage` object
+* the callbacks second argument will contain an empty outgoing http response as an `http.ServerResponse` obj
 * The goal of the callback is to correctly fill in the res obj based on the information in req object
 
 ```javascript
@@ -127,15 +135,13 @@ server.listen(port, () => {
 });
 ```
 
-## Buffers:
-* JS deals only in strings. It doesn’t have a way to deal with bytes
-* it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
 
-Node.js Core Modules:
-* const fs = require('fs’); <— Allows a JS programs to access the filesystem
-* const url = require(‘url); <— parse, interpret and manipulate urls
-* const http = require('http');
-* const path = require('path’);
+
+## Node.js Core Modules:
+* `const fs = require('fs');` <— Allows a JS programs to access the filesystem`
+* `const url = require('url');` <— parse, interpret and manipulate urls
+* `const http = require('http');`
+* `const path = require('path');`
 
 ## How do you use the fs module to interact with the filesystem?
 * The fs module is the built-in Node.js API for managing a computer's filesystem.
@@ -175,6 +181,7 @@ User-Agent: HTTPie/0.9.3
 ```
 
 __An HTTP response is composed of the following parts:__
+
 1. An HTTP version
 2. A status code
 3. Key-value headers

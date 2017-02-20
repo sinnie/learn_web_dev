@@ -28,10 +28,12 @@ A __promise__ is an object used for asynchronous computations. It represents a v
 
 ### Parameters
 
-* Executor
+* __Executor__
   * A function with the arguments __resolve__ and __reject__. This function is immediately invoked by the Promise implementation, passing __resolve__ and __reject__ functions.
   * The executor starts an asynchronous operation.
 * `resolve` and `reject` are callable functions that take an argument which represents the event's details. Calling either `resolve` or `reject` will mark the promise as resolved and cause any handlers to be run.
+
+**NOTE:** A promise can be resolved with the state of another promise, and this is why the function is called `resolve()` and not `fulfill()`.
 
 ***
 
@@ -98,6 +100,25 @@ invokePromise()
 ```
 *  `return` goes to the next `.then()`, and `.throw()` goes to the next `.catch()`.
 * A good pattern is to put a `.catch()` on the end of every `.then()` chain.
+
+
+```text
+┌── new Promise(executor) ──┐                  ┌── then(onFulfilled) ──┐                    ┌────── new Promise() ──────┐
+│                           │                  │                       │────── fulfill ────▶│                           │
+│                           │───── fulfill ───▶│                       │       return       │                           │
+│                           │                  │                       │                    │                           │
+│                           │                  │                       │────── reject ─────▶│                           │
+│                           │                  └───────────────────────┘       throw        │                           │
+│          Pending          │                                                               │                           │
+│                           │                  ┌── catch(onRejected) ──┐                    │                           │
+│                           │                  │                       │────── fulfill ────▶│                           │
+│                           │                  │                       │       return       │                           │
+│                           │───── reject ────▶│                       │                    │                           │
+│                           │                  │                       │────── reject ─────▶│                           │
+└───────────────────────────┘                  └───────────────────────┘       throw        └───────────────────────────┘
+```
+
+
 
 ***
 
