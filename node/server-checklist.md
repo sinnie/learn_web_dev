@@ -1,4 +1,4 @@
-| ## What  | ## Why | ## How |
+| __What__  |  __Why__ |  __How__ |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Initialize a package.json file | It holds the dependencies as well as general project information | `$ npm init -y` |
 | gitignore | Specify which files are ignored in a git repository |  ```echo '.DS_Store' >> .gitignore echo 'node_modules' >> .gitignore echo 'npm-debug.log' >> .gitignore ``` |
@@ -7,8 +7,35 @@
 | Create a server.js file | For starting the server | $ touch server.js |
 | Create a database | Saving important data | $ createdb DATABASE_NAME |
 | Add Knex.js to NPM scripts | Convenient way to run knex in the terminal locally | In package.json...“scripts”: {,“knex”: “knex”}... |
-| Create a knexfile.js | So that we can connect to the right database | $ atom knexfile.jshttps://github.com/gSchool/galvanize-bookshelf-solution/blob/validations/knexfile.js |
-| Create a knex.js | Initializes a knex module to use for querying in your server | $ atom knex.js  https://github.com/gSchool/galvanize-bookshelf-solution/blob/validations/knex.js |
+| Create a knexfile.js | So that we can connect to the right database | $ atom knexfile.js'use strict';
+```js
+module.exports = {
+  development: {
+    client: 'pg',
+    connection: 'postgres://localhost/bookshelf_dev'
+  },
+
+  test: {
+    client: 'pg',
+    connection: 'postgres://localhost/bookshelf_test'
+  },
+
+  production: {
+    client: 'pg',
+    connection: process.env.DATABASE_URL
+  }
+};
+```
+|
+| Create a knex.js | Initializes a knex module to use for querying in your server | $ atom knex.js  'use strict';
+```js
+const environment = process.env.NODE_ENV || 'development';
+const knexConfig = require('./knexfile')[environment];
+const knex = require('knex')(knexConfig);
+
+module.exports = knex;
+```
+|
 | Create migration files | To create tables for database | $ npm run knex migrate:make NAME |
 | Create Seed Files | To have test data for tables | $ npm run knex seed:make 1_NAME |
 | Require “express” in server.js | Need to Run the Server | const express = require('express'); |
@@ -25,12 +52,10 @@
 | Add default error handler | Handles non 404 Errors | ```jsapp.use((err, _req, res, _next) => {         if (err.output && err.output.statusCode) {              return res                         .status(err.output.statusCode)                         .set('Content-Type', 'text/plain')                         .send(err.message);         }         if(err.status) {               return res                         .status(err.status)                         .set('Content-Type', 'text/plain')                         .send(err.errors[0].messages[0])         }          // eslint-disable-next-line no-console          console.error(err.stack);          res.sendStatus(500); }); ``` |
 | Initialize Public Directory with Static Files | Allows the browser to access those files on the Server | ```js const path = require('path'); app.use(express.static('path.join('public))); ``` |
 | Disable x-powered-by | Disables the x-powered-by header in the response | `app.disable(‘x-powered-by’);` |
-| Set Up Routes | Allow the Server to Access different paths |  `$touch routes/ROUTE````js const ROUTE = require('./routes/ROUTE; app.use(ROUTE); ``` |
+| Set Up Routes | Allow the Server to Access different paths |  `$touch routes/ROUTE````js const ROUTE = require('./routes/ROUTE'; app.use(ROUTE); ``` |
 | Handle CSRF (Cross-Site Request Forgery)   * type of attack that occurs when a malicious website/program causes a web browser to perform an unwanted action on a trusted site for which the user is currently authenticated. | Security Reasons | ```js app.use((req, res, next => {      }); ``` |
 | IF AUTHENTICATION Initialize dotenv | Reads .env file for JWT_SECRET_KEY which does NOT get included in git | ``` $ touch .env $ echo '.env' >> .gitignore $ npm install --save dotenv ``` ```js if (process.env.NODE_ENV !== 'production') {     require('dotenv').config(); } ``` |
 | For Routes |  |  |
 | Require the Dependencies | You need them | ```js const boom = require('boom'); const express = require('express') ;const knex = require('../knex'); const { camelizeKeys, decamelizeKeys } = require('humps'); const ev = require('express-validation'); const validations = require('../validations/books'); ``` |
 | Create the Router | Stores routes in a separate module, so we do not have to put them all in server.js | ```js const router  = express.Router();  // Some CRUD here  module.exports = router; |
 | Initialize routes with express-validation | Simplifies validation based on a schema definition. |  ```jsrouter.METHOD(PATH, ev(validations.METHOD), (req, res, next) => {  ..... }); ``` |
-|  |  |  |
-|  |  |  |
