@@ -101,24 +101,57 @@ invokePromise()
 *  `return` goes to the next `.then()`, and `.throw()` goes to the next `.catch()`.
 * A good pattern is to put a `.catch()` on the end of every `.then()` chain.
 
+### Diagram of Promise
 
 ```text
-┌── new Promise(executor) ──┐                  ┌── then(onFulfilled) ──┐                    ┌────── new Promise() ──────┐
-│                           │                  │                       │────── fulfill ────▶│                           │
-│                           │───── fulfill ───▶│                       │       return       │                           │
-│                           │                  │                       │                    │                           │
-│                           │                  │                       │────── reject ─────▶│                           │
-│                           │                  └───────────────────────┘       throw        │                           │
-│          Pending          │                                                               │                           │
-│                           │                  ┌── catch(onRejected) ──┐                    │                           │
-│                           │                  │                       │────── fulfill ────▶│                           │
-│                           │                  │                       │       return       │                           │
-│                           │───── reject ────▶│                       │                    │                           │
-│                           │                  │                       │────── reject ─────▶│                           │
-└───────────────────────────┘                  └───────────────────────┘       throw        └───────────────────────────┘
+
+ new Promise(executor)         then(onFulfilled)                  New Promise()
+┌──---------─┐             ┌──-------------------──┐            ┌──────-------─┐
+│            │             │                       │─ fulfill ─▶│              │
+│            │── fulfill ─▶│                       │   return   │              │
+│            │             │                       │            │              │
+│            │             │                       │─  reject -▶│              │
+│            │             └───────────────────────┘    throw   │              │
+│  Pending   │                                                  │              │
+│            │             ┌── catch(onRejected) ──┐            │              │
+│            │             │                       │─ fulfill ─▶│              │
+│            │             │                       │   return   │              │
+│            │── reject ──▶│                       │            │              │
+│            │             │                       │─  reject ─▶│              │
+└────────────┘             └───────────────────────┘   throw    └────────────-─┘
 ```
 
+## Creating Promises
 
+Promises are created through the `Promise` constructor function. The promise accepts a callback with two arguments: `resolve` and `reject`. Both are functions: `resolve` gets executed when the promise is fulfilled, `reject` gets executed when the promise is rejected. In the `then` callback, the first argument refers to `resolve`, and the second refers to `reject`.
+
+```js
+var myPromise = new Promise(function(resolve, reject) {
+  var time = 10000;
+  setTimeout(() => {
+    return time < 5000 ? resolve() : reject();
+  }, time);
+})
+.then(() => "That was quick";
+}, () => "Still Waiting"
+});
+```
+
+## Error Handling
+In native promises, developers can catch errors with the `catch` method.
+
+### Syntax
+```js
+  p.catch(onRejected);
+
+  p.catch((reason) => {
+    //rejection
+  })
+```
+
+### Parameters
+* __onRejected__ - `onRejected` is a function that is called when the promise is rejected. This function has one argument: __resason__.
+  * The promise returned by catch() is rejected if `onRejected` throws an error or returns a Promise which is itself rejected; otherwise, it is resolved.
 
 ***
 
