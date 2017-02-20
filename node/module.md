@@ -35,7 +35,7 @@ When `require()` is called, Node has to resolve the given string to an actual fi
 Core modules are built-in to Node.js and represent the public API. These modules include `fs`, `http`, and `path` and are required by their name only as the argument to `require`. The core modules are defined within Node.js' source and are located in the lib/ folder. These core modules enable the creation of programs that can quickly communicate with filesystems or networks. It is useful to know that core modules are preferentially loaded if their identifier is passed to `require()`. Meaning, `require('http')` will always return the built-in HTTP, even if there is another file by that name.
 
 ## NPM Modules
-NPM modules include code that can be found in the NPM registry. Developers can download NPM modules with the `npm install` command. These modules are required in an identical fashion as the core modules, meaning they can be referred to by id, without an extension or path.
+NPM modules include code that can be found in the NPM registry. Developers can download NPM modules with the `npm install` command. These modules are required in an identical fashion as the core modules, meaning they can be referred to by id, without an extension or path. [More information about using NPM can be found here.](#NPM)
 
 ## File Modules
 File modules are modules that a developer has created as a part of his/her own program. If the exact filename of a core module is not found when imported into the program, Node.js will attempt to load the required filename with the added extensions: `.js` (JavaScript text files), `.json` (JSON text files), and `.node` (compiled add-on modules loaded with `dlopen`).
@@ -119,3 +119,43 @@ This can now be immediately invoked and `typeof` returns `'function'` because th
   * In other words, `module.exports` is the object that is actually returned as the result of `require`.
   * Initially, the `exports` variable is set to that object. Thus:
 2. Avoid re-assigning `exports` to anything other than it's default value as it will overwrite that default (`module.exports`). This happens because the reference will not point to the object that `module.exports` points.
+
+---
+
+## NPM
+
+### Initializing NPM
+
+Execute `npm init` to initialize a project with NPM. This command will provide a series of prompts that enable you to initialize a project with a name, version, etc. If you would like to skip the questions, execute `npm intit -y`. Through this process, a file named `packages.json` is created. The `package.json` file looks like this:
+
+```json
+{
+  "name": "npm-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {       
+    "react:" "^15.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.4.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
+```
+
+All packages imported through NPM will listed in this file, and by default, NPM installs packages under `node_modules`.
+
+### Installing packages
+
+Packages can be installed as development dependencies or globally. To save files locally, run `npm instal --save-dev <package>` or `npm install -S <package>`. This will save you an extra step by automatically including this package inside of the `dependencies` section of the `package.josn`. Packages can also be saved as globals by running `npm install --global <package>`.
+
+You can even save packages with the following flags: `--save-dev` and `--save-optional`, which allow you to save the package under dependencies and optional dependencies, respectively. You may want to do this when installing development only packages.
+
+### Problems with NPM
+
+Since code modules from NPM are not your own, they can change unexpectedly and cause your programs to have unintended behavior. NPM allows you to use other code in your program which can speed up production time, but you will lose control of whatever process that NPM module accomplishes.
