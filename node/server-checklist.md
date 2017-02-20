@@ -7,34 +7,9 @@
 | Create a server.js file | For starting the server | $ touch server.js |
 | Create a database | Saving important data | $ createdb DATABASE_NAME |
 | Add Knex.js to NPM scripts | Convenient way to run knex in the terminal locally | In package.json...“scripts”: {,“knex”: “knex”}... |
-| Create a knexfile.js | So that we can connect to the right database | $ atom knexfile.js'use strict';
-```js
-module.exports = {
-  development: {
-    client: 'pg',
-    connection: 'postgres://localhost/bookshelf_dev'
-  },
-
-  test: {
-    client: 'pg',
-    connection: 'postgres://localhost/bookshelf_test'
-  },
-
-  production: {
-    client: 'pg',
-    connection: process.env.DATABASE_URL
-  }
-};
-```
+| Create a knexfile.js | So that we can connect to the right database | $ atom knexfile.js ```js 'use strict'; module.exports = { development: { client: 'pg', connection: 'postgres://localhost/bookshelf_dev' }, test: { client: 'pg', connection: 'postgres://localhost/bookshelf_test' }, production: { client: 'pg', connection: process.env.DATABASE_URL } };```
 |
-| Create a knex.js | Initializes a knex module to use for querying in your server | $ atom knex.js  'use strict';
-```js
-const environment = process.env.NODE_ENV || 'development';
-const knexConfig = require('./knexfile')[environment];
-const knex = require('knex')(knexConfig);
-
-module.exports = knex;
-```
+| Create a knex.js | Initializes a knex.js module to use for querying in your server | ``$ atom knex.js` ```js 'use strict'; const environment = process.env.NODE_ENV || 'development'; const knexConfig = require('./knexfile')[environment]; const knex = require('knex')(knexConfig); module.exports = knex;```
 |
 | Create migration files | To create tables for database | $ npm run knex migrate:make NAME |
 | Create Seed Files | To have test data for tables | $ npm run knex seed:make 1_NAME |
