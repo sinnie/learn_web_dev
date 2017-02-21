@@ -1,6 +1,6 @@
 # React.js
 
-[Learn Web Dev](./README.md)
+[Back to Learn Web Development](../README.md)
 
 __[React.js](https://facebook.github.io/react/)__ is a javaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
 

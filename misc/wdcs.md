@@ -1,5 +1,9 @@
 # Web Dev Cheat Sheet
 
+[More Miscellaneous Articles](./misc)
+
+[Back to Learn Web Development](../README.md)
+
 ##Express Server Middleware:
 * __Cookie-parser__ (npm install --save cookie-parser) <— Parse Cookie header and populate req.cookies with an object keyed by the cookie names
 * __bcrypt-as-promised__ (npm install --save bcrypt-as-promised)- Hashes, salts, and compares passwords/inputs

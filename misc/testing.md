@@ -1,6 +1,8 @@
 # Automated JavaScript Testing
 
-[Learn Web Development](./README.md)
+[More Miscellaneous Articles](./misc)
+
+[Learn Web Development](../README.md)
 
 ## Resources:
 [mock-fs](https://www.npmjs.com/package/mock-fs) - module that allows Node’s built-in fs module to be backed temporarily in-memory. It's a mock file system. allows you to test against a set of mock files and directories.

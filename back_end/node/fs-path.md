@@ -4,9 +4,9 @@
 
 [Back to Modules](./module.md)
 
-[Back to Node Intro](../node.md)
+[Back to Node Intro](./node.md)
 
-[Back to Learn Web Development](../README.md)
+[Back to Learn Web Development](../../README.md)
 
 ## Intro
 In this section, we are going to explores the File System. Before we get into some examples, however, there are a few bases to cover. We will briefly discuss the File System, the Path Module, Buffers, and the global Process Module. And I'll try to describe the relevance of every section.

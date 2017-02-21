@@ -1,6 +1,8 @@
 # Promises
 
-[Learn Web Dev](./README.md)
+[More JavaScript Articles](./javaScript)
+
+[Learn Web Dev](../README.md)
 
 ---
 

@@ -1,5 +1,11 @@
 #Knex.js
 
+[More Back-End Articles](./back_end)
+
+[Back to Learn Web Development](../README.md)
+
+---
+
 [__Knex.js__](http://Knex.jsjs.org/#Installation-node) is a third party JavaScript library that builds SQL commands and sends them to a relational database like PostgreSQL. In brief, Knex.js is an object-relational mapping tool between JavaScript code and SQL commands. According to their documentation, Knex.js features traditional node-style callbacks as well as a promise interface that supplies a cleaner interface for asynchronous flow control, a stream interface, full-featured query and schema builders, transaction support (with savepoints), connection pooling, and standardized responses between different query clients and dialects [(__Knex.js__)](http://Knex.jsjs.org/#Installation-node).
 
 ---

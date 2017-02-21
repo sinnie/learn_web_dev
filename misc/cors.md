@@ -1,8 +1,10 @@
 # CORS
 
-[Learn Web Dev](../README.md)
+[More Miscellaneous Articles](./misc)
 
-[Node](../node.md)
+[Back to Learn Web Development](../README.md)
+
+[Node.js Articles](../back_end/node.md)
 
 ## Definitions
 * __CORS__ - _Cross-Origin Resource Sharing_. An HTML5 feature that allows one site to access another site's resources despite having different domains (origin).
