@@ -2,13 +2,13 @@
 
 [Node Docs](https://nodejs.org/en/)
 
-[Node.js Modules](../node/module.md)
+[Node.js Modules](./module.md)
 
-[Learn Web Dev](./README.md)
+[Learn Web Dev](../README.md)
 
-[CORS](./node/cors.md)
+[CORS](../misc/cors.md)
 
-[Socket.IO](./node/socketio.md)
+[Socket.IO](./back_end/socketio.md)
 
 [A Robust List of Node.j Resources](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js)
 
@@ -399,7 +399,7 @@ Although this technique is useful for concisely controlling the logic of our pro
 
 ---
 
-[Now, let's take a look at Node.js' Module system and File System (`fs`) module. ](./node/module.md)
+[Now, let's take a look at Node.js' Module system. ](./node/module.md)
 
 ---
 

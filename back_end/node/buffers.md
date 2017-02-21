@@ -4,7 +4,7 @@
 
 [Back to Modules](./module.md)
 
-[Back to Node Intro](../node.md)
+[Back to Node Intro](./node.md)
 
 [Back to Learn Web Development](../README.md)
 
