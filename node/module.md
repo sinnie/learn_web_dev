@@ -164,3 +164,17 @@ You can even save packages with the following flags: `--save-dev` and `--save-op
 ### Problems with NPM
 
 Since code modules from NPM are not your own, they can change unexpectedly and cause your programs to have unintended behavior. NPM allows you to use other code in your program which can speed up production time, but you will lose control of whatever process that NPM module accomplishes.
+
+### TL;DR
+1. Node allows for modular code.
+2. There are three kinds of modules:
+  - Core Modules
+  - NPM Modules
+  - File Modules
+3. Import modules with the `require()` function
+4. `require()` returns an object that references the value of module.exports
+5. Export modules as a function, Object, or prototype
+
+---
+
+[In the next section, we will explore the File System module.](./fs-path.md)
