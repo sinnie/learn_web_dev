@@ -399,7 +399,7 @@ Although this technique is useful for concisely controlling the logic of our pro
 
 ---
 
-[Now, let's take a look at Node.js' Module system. ](./node/module.md)
+[Now, let's take a look at Node.js' Module system. ](./module.md)
 
 ---
 
