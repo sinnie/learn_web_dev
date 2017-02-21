@@ -5,37 +5,37 @@
 ## Table of Contents
 
 ### JavaScript
-[Promises](./promise.md)
+[Promises](./javascript/promise.md)
 
-[Iterators, Generators, async / await](./iterators_generators_asyncawait.md)
+[Iterators, Generators, async / await](./javascript/iterators_generators_asyncawait.md)
 
 ### Server-Side
-[Node](./node.md)
+[Node](./back_end/node/node.md)
 
-[CORS](./node/cors.md)
+[CORS](./misc/cors.md)
 
 Express
 
 PostgreSQL
 
-[Knex.js](./node/knex.md)
+[Knex.js](./back_end/knex.md)
 
-[Socket.io](./node/socketio.md)
+[Socket.io](./back_end/socketio.md)
 
 ### Client Side Frameworks
-[Angular 1.5](angular.md)
+[Angular 1.5](./front_end/angular.md)
 
-[React.js](./react.md)
+[React.js](./front_end/react.md)
 
 ### Computer Science
 
-[Pillars of OOP](./oop.md)
+[Pillars of OOP](./cs/oop.md)
 
 
 ### Miscellaneous
-[Web Development Cheat Sheet](./wdcs.md)
+[Web Development Cheat Sheet](./misc/wdcs.md)
 
-[Technical Interview Preparation](./interview-qs.md)
+[Technical Interview Preparation](./misc/interview-qs.md)
 
 [Testing](./testing.md)
 
