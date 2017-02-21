@@ -1,7 +1,15 @@
 # File System and Path Modules
 
+[Node.js fs Docs](https://nodejs.org/api/fs.html)
+
+[Back to Modules](./module.md)
+
+[Back to Node Intro](../node.md)
+
+[Back to Learn Web Development](../README.md)
+
 ## Intro
-In this section, we are going to explores the File System. Before we get into some examples, however, there are a few bases to cover. We'll briefly discuss the File System, the Path Module, Buffers, and the global Process Module. And I'll try to describe the relevance of every section.
+In this section, we are going to explores the File System. Before we get into some examples, however, there are a few bases to cover. We will briefly discuss the File System, the Path Module, Buffers, and the global Process Module. And I'll try to describe the relevance of every section.
 
 ## File System
 File I/O is provided by wrappers around standard POSIX (Portable Operating System Interface - a standards specified by IEEE for maintaining compatibility between OSs) functions. All methods have asynchronous and synchronous forms. The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.

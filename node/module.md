@@ -1,4 +1,4 @@
-# Modules and the File System
+# Node.js Module System and NPM
 
 [Node.js Module Docs](https://nodejs.org/api/modules.html)
 
