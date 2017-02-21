@@ -1,7 +1,10 @@
 # Modules and the File System
 
-[Modules Docs](https://nodejs.org/api/modules.html)
+[Node.js Module Docs](https://nodejs.org/api/modules.html)
 
+[Node Intro](../node.md)
+
+[Learn Web Development](../README.md)
 
 ## Node.js Module
 Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows developers to load built-in modules, dowloaded libraries, or files that are a part of one's program. Node.js supports modular code in the form of _Core modules_, _File modules_, and _NPM modules_. This allows for more maintainable code and a robust ecosystem of open source software that developers can import via NPM. To reiterate, a __module__ is simply a file that encapsulates related JavaScript code. This code can then be reused in different parts of a program.
