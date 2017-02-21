@@ -9,6 +9,8 @@
 
 [Iterators, Generators, async / await](./javascript/iterators_generators_asyncawait.md)
 
+[Closures and Callbacks](./javascript/callbacks.md)
+
 ### Server-Side
 [Node](./back_end/node/node.md)
 
