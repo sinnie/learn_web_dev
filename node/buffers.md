@@ -1,5 +1,14 @@
 # Buffers
 
+[Node.js Bufffer Docs](https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_buffer)
+
+[Back to Modules](./module.md)
+
+[Back to Node Intro](../node.md)
+
+[Back to Learn Web Development](../README.md)
+
+
 __Buffers__ are not, as I was told at Galvanize, a "big, string-like thing that will make no sense to you."
 
 __Let's do better.__
@@ -115,15 +124,18 @@ Will return the length of the buffer and represents the amount of memory that is
 
 #### buffer.slice(start, end=buffer.length)
 This method is similar to Array.prototype.slice but with an important distinction:
-* the slice is __not__ a new buffer. It is a reference to a subset fo the memory space.
+* the slice is __not__ a new buffer. It is a reference to a subset of the memory space.
 * Therefore, if you modify the slice, you will modify the buffer.
 
 
 ## TL:DR
 1. Buffers are a finite amount of data that store hexadecimal representations of raw binary data
-2. Buffer behaves rather like an Array
+2. A Buffer behaves rather like an Array
+3. You'll probably never use the Buffer yourself, but hey, now you know.
 
-[In the next section, let's discuss](./)
+---
+
+[In the next section, let's discuss HTTP and Being a Web Server](./http-server.md)
 
 ---
 
