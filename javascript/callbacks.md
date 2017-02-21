@@ -1,7 +1,5 @@
 # Closures and Callbacks
 
-[More JavaScript Articles](./javaScript)
-
 [Back to Learn Web Development](../README.md)
 
 ---
@@ -40,7 +38,7 @@ function saySomething() {
     }, 3000);
 }
 
-sayHiLater();
+saySomething();
 ```
 
 This uses function expressions and closures and callbacks. You are passing a function as a parameter. Since you are creating the function inside of the argument, you are taking advantage of a function expression.
