@@ -378,7 +378,7 @@ Although this technique is useful for concisely controlling the logic of our pro
 
 ---
 
-##### Remember:
+##### TL;DR:
 * There is at most one event handler running at any given time.
 * Any event handler will run to completion without being interrupted.
 * JavaScript is a single-threaded, non-blocking, asynchronous language.
@@ -390,10 +390,11 @@ Although this technique is useful for concisely controlling the logic of our pro
 * Event Loop:
   1. callback queue
   2. Other APIs and stuff
+* EventEmitter's are objects that fake events.
 
 ---
 
-[Now, let's take a look at Node.js' Module system and File System (`fs`) module. ](./node/module-fs.md)
+[Now, let's take a look at Node.js' Module system and File System (`fs`) module. ](./node/module.md)
 
 ---
 

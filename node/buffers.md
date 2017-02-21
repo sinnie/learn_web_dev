@@ -1,8 +1,10 @@
 # Buffers
 
-__Buffers__ are not, as I was told at Galvanize, a "big, string-like thing that will make no sense to you." Let's do better.
+__Buffers__ are not, as I was told at Galvanize, a "big, string-like thing that will make no sense to you."
 
-Simply put, a buffer is a temporary holding place for data that is being moved form one place to another. Buffers are intentionally limited in size because we want to move data quickly.
+Let's do better.
+
+A simple definition of a buffer is a temporary holding place for data that is being moved form one place to another. Buffers are intentionally limited in size because we want to move data quickly.
 
 A quick aside to put this into perspective. A __stream__ is a sequence of data made available over time. In other words, streams are pieces of data that eventually combine into a whole. Just like water flowing through a stream, data flows through a streams as it is being passed from one process to another or from one computer to another. Streams, when combined with buffers, allow us to process data "as we go".
 
@@ -34,6 +36,7 @@ That was a bit of a tangent, but I wanted to give you an Idea about where I was 
 Prior to the introduction of the `TypedArray` in ES6, JavaScript did not have a way to read or manipulate streams of binary data. Remember, JavaScript was intended to be used to manipulate the DOM, so it was designed to handle unicode-encoded strings. However, Node.js _does_ need to be able to manipulate binary data when dealing with TCP streams and reading and writing to the filesystem. Initially, Node.js' solution to this problem was to use strings to represent binary data. However, this approach was not ideal, so buffers were incorporated into the language.
 
 The `Buffer` class was introduced as part of the Node.js API to allow JavaScript to interact with octet streams in the context of TCP streams and file system operations.
+* Buffers are allocated outside of V8, which means that they are not managed by V8. This allows Node.js to work with memory more directly for better performance.
 * The `Buffer` class is a global feature within Node.jds and handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class.
 * Buffers act somewhat like arrays of integers, but they are not resizable and have methods designed specifically for handling and manipulating binary data.
 * the 'integers' in a buffer each represent a byte, which means that they are limited to values from 0 - 255.
@@ -44,11 +47,11 @@ Many times data that Node.js developers will be using are from the filesystem or
 
 ### Creating Buffers:
 Buffers can be created in a few ways:
-* `const buffer = new Buffer(8);`
+* `const buffer = Buffer.alloc(8);`
   * the buffer is initialized with 8 bytes
-* `const buffer = new Buffer('Some Example Test', 'utf-8');`
+* `const buffer = Buffer.from('Some Example Test', 'utf-8');`
   * the buffer is initialized to the binary encoding of the first string as defined by the second argument.
-* `const buffer = new Buffer([ 8, 6, 7, 5, 3, 0, 9 ]);`
+* `const buffer = Buffer.from([ 8, 6, 7, 5, 3, 0, 9 ]);`
   * the buffer is initialized to the contents of the array - the contents are integers that represent bytes.
 
 ##### Types of Character sets (encoding)
@@ -60,24 +63,20 @@ Buffers can be created in a few ways:
 
 ### Writing to Buffers
 
-If we have a buffer created, we can start writing strings to it:
-```js
-const buffer = new Buffer(20);
+* `Buffer.from(array)`
+  - returns a new Buffer containing a copy of the provided octets.
+* `Buffer.from(arrayBuffer[, byteOffset [, length]])`
+  - returns a new Buffer that shares the same allocated memory as the given ArrayBuffer.
+* `Buffer.from(buffer)`
+  - returns a new Buffer containing a copy of the contents of the given Buffer.
+`* Buffer.from(string[, encoding])`
+  - returns a new Buffer containing a copy of the provided string.
+* `Buffer.alloc(size[, fill[, encoding]])`
+  - returns a "filled" Buffer instance of the specified size. This method can be significantly slower than `Buffer.allocUnsafe(size)` but ensures that newly created Buffer instances never contain old and potentially sensitive data.
+* `Buffer.allocUnsafe(size)` and `Buffer.allocUnsafeSlow(size)`
+  - each return a new Buffer of the specified size whose content must be initialized using either `buf.fill(0)` or written to completely.
 
-buffer.write('Hello', 'utf-8')
-
-// => 5
-```
-__buffer.write__
-
-##### Arguments:
-1. String to write to the Buffer
-2. String encoding (defaults to utf-8)
-
-`buffer.write` can optionally take 3 arguments. In the case of 3 arguments:
-1. String to write to the Buffer
-2. Indicates an offset, or the index of the buffer to start writing
-3. String encoding (defaults to utf-8)
+Buffer instances returned by `Buffer.allocUnsafe()` may be allocated off a shared internal memory pool if size is less than or equal to half Buffer.poolSize. Instances returned by `Buffer.allocUnsafeSlow()` never use the shared internal memory pool.
 
 ### Reading from Buffers
 
@@ -125,6 +124,7 @@ This method is similar to Array.prototype.slice but with an important distinctio
 2. Buffer behaves like an Array
 
 
+
 ## Sources
 
 [Holbrook, Josh. 'How to use Buffers in Node.js'. _docs.nodejitsu.com_. 2011.](https://docs.nodejitsu.com/articles/advanced/buffers/how-to-use-buffers/)
@@ -133,10 +133,23 @@ This method is similar to Array.prototype.slice but with an important distinctio
 
 [Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
 
+[Mixu's Node book](http://book.mixu.net/node/ch9.html)
 
-#### ES6 Typed arrays
+---
+
+## Bonus Section:
+
+### ES6 Typed Arrays Are Now a Thing
+Typed arrays allow developers to provide structured access to binary data using array-like semantics. The "Type" in the name refers tot a "view" layered on type of the buffer of bits, which is essentially mapping of whether the bits should be viewed as an array of 8-bit signed integers, and so on.
+
 ```js
 const buffer = new ArrayBuffer(8); // stores raw binary data (64 bits) A feature of Vanilla JS
+// buffer is a binary buffer that is 8-bytes long and initialized as 0s
+buffer.byteLength;
+// 32
+// This is the extent to which you can interact with the buffer
+
+// However, you can then layer a "view", which is a kind of typed array
 const view = new Int32Array(buffer) // an array that allows you to work with the buffer. Will conver the buffer into the format that you need to work with.
 view[0] = 5; // converted into 32 bits
 view[1] = 15;
@@ -146,3 +159,5 @@ console.log(view);
 // => Int32Array { '0': 5, '1': 15 }
 ```
 View allows you to work with binary data in an easier way (through base 10 numbers)
+
+If you want to learn more, I encourage you to check out [You Don't Know JS](https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20%26%20beyond/ch5.md)
