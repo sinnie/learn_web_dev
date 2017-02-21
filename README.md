@@ -1,6 +1,6 @@
 # Learn Web Development
 
-#### The Section on Node.js is by far the most comprehensive section because I am focused on improving my knowledge of this area. Second to that, I will be focusing on React.js because it is awesome.
+#### The section on Node.js is by far the most comprehensive because I am focused on improving my knowledge in this area. Second to that, I will be focusing on React.js because it is awesome.
 
 ## Table of Contents
 
