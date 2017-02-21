@@ -2,13 +2,15 @@
 
 [Node Docs](https://nodejs.org/en/)
 
-[A Robust List of Node.j Resources](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js)
+[Node.js Modules](../node/module.md)
 
 [Learn Web Dev](./README.md)
 
 [CORS](./node/cors.md)
 
 [Socket.IO](./node/socketio.md)
+
+[A Robust List of Node.j Resources](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js)
 
 ## Introduction to Node
 Node.js was created in 2009 by Ryan Dahl as an open-source, cross-platform JavaScript runtime environment for developing server tools and applications. Node uses Chrome's V8 engine to create an _event-driven_, _single-threaded_, _non-blocking_ I/O model that makes it lightweight and efficient. Node.js excels in real-time applications that run across distributed devices, and is useful for I/O based programs that need to be fast and/or handle lots of connections. Another benefit of Node.js is that it allows developers to use JavaScript, a language most web developers already know, to write programs (servers) that run directly on operating systems. Although Node.js has some powerful features, it should be avoided when working with CPU intensive applications.
@@ -390,7 +392,7 @@ Although this technique is useful for concisely controlling the logic of our pro
 * Event Loop:
   1. callback queue
   2. Other APIs and stuff
-* EventEmitter's are objects that fake events.
+* EventEmitters are objects that fake events.
 
 ---
 

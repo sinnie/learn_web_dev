@@ -1,5 +1,7 @@
 # Learn Web Development
 
+#### The Section on Node.js is by far the most comprehensive section because I am focused on improving my knowledge of this area. Second to that, I will be focusing on React.js because it is awesome.
+
 ## Table of Contents
 
 ### JavaScript
