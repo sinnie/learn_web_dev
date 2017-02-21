@@ -2,17 +2,17 @@
 
 __Buffers__ are not, as I was told at Galvanize, a "big, string-like thing that will make no sense to you."
 
-Let's do better.
+__Let's do better.__
 
-A simple definition of a buffer is a temporary holding place for data that is being moved form one place to another. Buffers are intentionally limited in size because we want to move data quickly.
+A simple definition of a buffer is a temporary holding place for data that is being moved form one place to another. And it is important to note that buffers are intentionally limited in size because we want to move data quickly.
 
-A quick aside to put this into perspective. A __stream__ is a sequence of data made available over time. In other words, streams are pieces of data that eventually combine into a whole. Just like water flowing through a stream, data flows through a streams as it is being passed from one process to another or from one computer to another. Streams, when combined with buffers, allow us to process data "as we go".
+Before we begin, I need a quick aside to put this into perspective. A __stream__ is a sequence of data made available over time. In other words, streams are pieces of data that eventually combine into a whole. Just like water flowing through a stream, data flows through a stream as it is being passed from one process to another or from one computer to another. Streams, when combined with buffers, allow us to process data "as we go".
 
-For example, let's say you would like to watch a movie over the internet. If you attempted to download the movie it would be time consuming. However, when you stream a movie, you download chunks of a movie that you are watching. You're still downloading the movie, but you're now able to download, process, and watch at both at the same time with the use of a stream and a buffer.
+The example that most of us can reason with is streaming video content. GoT anyone? Let's say you would like to watch a video/movie over the internet. If you attempted to download the movie it would be time consuming. However, when you stream a movie, you're download chunks of a movie and watching it at the same time. You're still downloading the movie, but you're now able to download, process, and watch at the same time by using streams and buffers.
 
-As you can see, a buffer collects data in a limited allocation of memory to allow you to process data as it continues to stream from one process to another or from one computer to another.
+As I hopefully have demonstrated, a buffer collects data in a limited allocation of memory to allow you to process that data as it continues to stream from one process to another or from one computer to another.
 
-That was a bit of a tangent, but I wanted to give you an Idea about where I was heading. Buffers, you can see, are areas in memory, that will temporarily store that data and allow us to subsequently process it in chunks.
+That was a bit of a tangent, but I wanted to give you an Idea about where I was heading. Again, Buffers are areas in memory that will temporarily store data and allow us to subsequently process said data in chunks.
 
 ## Terms
 * __Data Buffer__ - A data buffer is a region of physical memory storage that is used to _temporarily_ store data while it is being moved from one place to another. The buffer stores data as it is retrieved from an input device or immediately before it is sent to an output device. It can also be used when data is to be moved between processes within a computer.
@@ -33,17 +33,17 @@ That was a bit of a tangent, but I wanted to give you an Idea about where I was 
 
 ## JavaScript and Buffers
 
-Prior to the introduction of the `TypedArray` in ES6, JavaScript did not have a way to read or manipulate streams of binary data. Remember, JavaScript was intended to be used to manipulate the DOM, so it was designed to handle unicode-encoded strings. However, Node.js _does_ need to be able to manipulate binary data when dealing with TCP streams and reading and writing to the filesystem. Initially, Node.js' solution to this problem was to use strings to represent binary data. However, this approach was not ideal, so buffers were incorporated into the language.
+Prior to the introduction of the `TypedArray` in ES6, JavaScript did not have a way to read or manipulate streams of binary data. If you recall, JavaScript was intended to be used to manipulate the DOM, so it was designed to handle unicode-encoded strings, and it excels at that. However, Node.js _does_ need to be able to manipulate binary data when dealing with TCP streams and reading and writing to the filesystem. Initially, Node.js' solution to this problem was to use strings to represent binary data. However, this approach was not ideal, so buffers were incorporated into the language.
 
 The `Buffer` class was introduced as part of the Node.js API to allow JavaScript to interact with octet streams in the context of TCP streams and file system operations.
 * Buffers are allocated outside of V8, which means that they are not managed by V8. This allows Node.js to work with memory more directly for better performance.
-* The `Buffer` class is a global feature within Node.jds and handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class.
+* The `Buffer` class is a global feature within Node.js and handles binary-handling tasks with a binary buffer implementation, which is exposed as a JavaScript API under the buffer pseudo-class.
 * Buffers act somewhat like arrays of integers, but they are not resizable and have methods designed specifically for handling and manipulating binary data.
-* the 'integers' in a buffer each represent a byte, which means that they are limited to values from 0 - 255.
+* the "integers" in a buffer each represent a byte, which means that they are limited to values from 0 - 255.
 * Raw data is stored in an instance of the buffer class, which is similar to an array of integers. However, buffers are actually corresponded to raw memory outside of V8. Because of this, it cannot be resized.
-* In order to save space and be more readable, the designers of Node.js chose to display __hexadecimal__ numbers instead of binary numbers. Therefore, an 8 digit binary number is represented by a 2 digit hexadecimal number, and that is why you will see a two digit representation of a byte in the buffer.
+* In order to save space and be more readable, the architects of Node.js chose to display __hexadecimal__ numbers instead of binary numbers. Therefore, an 8 digit binary number is represented by a 2 digit hexadecimal number, and that is why you will see a two digit representation of a byte in the buffer.
 
-Many times data that Node.js developers will be using are from the filesystem or TCP streams, which are octet streams. As we've mentioned before, JavaScript is not well-suited for manipulating this form of data.
+> Many times data that Node.js developers will be using are from the filesystem or TCP streams, which are octet streams. As we've mentioned before, JavaScript is not well-suited for manipulating this form of data.
 
 ### Creating Buffers:
 Buffers can be created in a few ways:
@@ -120,10 +120,12 @@ This method is similar to Array.prototype.slice but with an important distinctio
 
 
 ## TL:DR
-1. Buffers a finite amount of data and store hexadecimal representations of said raw binary data
-2. Buffer behaves like an Array
+1. Buffers are a finite amount of data that store hexadecimal representations of raw binary data
+2. Buffer behaves rather like an Array
 
+[In the next section, let's discuss](./)
 
+---
 
 ## Sources
 
@@ -136,6 +138,7 @@ This method is similar to Array.prototype.slice but with an important distinctio
 [Mixu's Node book](http://book.mixu.net/node/ch9.html)
 
 ---
+
 
 ## Bonus Section:
 
