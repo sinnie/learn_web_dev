@@ -4,11 +4,11 @@
 
 [Node.js Modules](./module.md)
 
-[Learn Web Dev](../README.md)
+[Back to Learn Web Development](../../README.md)
 
-[CORS](../misc/cors.md)
+[CORS](../../misc/cors.md)
 
-[Socket.IO](./back_end/socketio.md)
+[Socket.IO](../socketio.md)
 
 [A Robust List of Node.j Resources](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js)
 
