@@ -39,7 +39,7 @@ PostgreSQL
 
 [Technical Interview Preparation](./misc/interview-qs.md)
 
-[Testing](./testing.md)
+[Testing](./misc/testing.md)
 
 ---
 
