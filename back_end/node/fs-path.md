@@ -21,7 +21,7 @@ Let's take a look at how to use the synchronous method to read a file:
 ```js
 const fs = require('fs');
 
-const greet = fs.readFileSync(___dirname + '/greet.txt', 'utf8')
+const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8'); // path (same directory) + filename + encoding
 
 ```
 ---
@@ -31,16 +31,22 @@ const greet = fs.readFileSync(___dirname + '/greet.txt', 'utf8')
 `fs.readFileSync(file[, options]);`
 
 #### Parameters:
-* `file` String | Buffer | Integer
+* `file`: String | Buffer | Integer
   - filename or file descriptor
-* `options` Object | String
-  - `encoding` String | Null (the default = 'utf8')
-  - `flag` String default = `'r'`
+* `options`: Object | String
+  - `encoding`: String | Null (the default = 'utf8')
+  - `flag`: String | default = `'r'`
 
 #### Return Value:
 If the encoding option is specified, the return value is a __string.__ Otherwise, the return value will be a __buffer.__
 
 ---
+
+> Note: Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load some configuration file.
+
+It bears repeating that in most cases, you will not want to use the synchronous version of the `readfile` method. It is useful, however, to see that the synchronous operation is a blocking operation.
+
+Let's take a look at the synchronous form. 
 
 The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
