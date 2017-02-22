@@ -9,7 +9,9 @@
 [Back to Learn Web Development](../../README.md)
 
 ## Node.js Module
-Node.js puts little functionality in the global scope because it is organized into __modules__. Modules are a collection of functions that can be imported into a file using the `require()` function, which allows developers to load built-in modules, dowloaded libraries, or files that are a part of one's program. Node.js supports modular code in the form of _Core modules_, _File modules_, and _NPM modules_. This allows for more maintainable code and a robust ecosystem of open source software that developers can import via NPM. To reiterate, a __module__ is simply a file that encapsulates related JavaScript code. This code can then be reused in different parts of a program.
+Node-style modules are derived from CommonJS, a set of standards for JavaScript environments that attempts to make JavaScript engine implementations more compatible. Because of this __module__ pattern, Node.js puts little functionality in the global scope. Essentially, modules are a collection of functions that can be imported into a file using the `require()` function, which allows developers to load built-in modules, dowloaded libraries, or files that are a part of one's program.
+
+Node.js supports modular code in the form of _Core modules_, _File modules_, and _NPM modules_. This allows for more maintainable code and a robust ecosystem of open source software that developers can import via NPM. To reiterate, a __module__ is simply a file that encapsulates related JavaScript code. This code can then be reused in different parts of a program.
 
 In Node.js, the `module`  __is a global variable with an `exports` property that references an empty object by default.__ You can export objects or functions using the `module.export` object and require them into another section of you code with the `require()` function, which accepts a module id as an argument. When invoking `require()`, assign the required object to a variable to access its properties. `require()` returns a reference to the value of `module.exports`.
 
@@ -178,3 +180,9 @@ Since code modules from NPM are not your own, they can change unexpectedly and c
 ---
 
 [In the next section, we will explore the File System module.](./fs-path.md)
+
+---
+
+### References
+
+[Elliot, Eric. "Programming JavaScript applications"](https://www.amazon.com/Programming-JavaScript-Applications-Architecture-Libraries-ebook/dp/B00LAHNPUE/ref=sr_1_1?s=books&ie=UTF8&qid=1487718330&sr=1-1&keywords=programming+javascript+applications)
