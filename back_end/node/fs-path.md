@@ -24,20 +24,21 @@ const fs = require('fs');
 const greet = fs.readFileSync(___dirname + '/greet.txt', 'utf8')
 
 ```
-> ### Syntax:
+---
 
->`fs.readFileSync(file[, options]);`
+### Syntax:
 
-> ### Parameters:
+`fs.readFileSync(file[, options]);`
 
-> * `file` <String> | <Buffer> | <Integer>
+### Parameters:
+* `file` <String> | <Buffer> | <Integer>
   - filename or file descriptor
-> * `options` <Object> | <String>
+* `options` <Object> | <String>
   - `encoding` <String> | <Null> (the default = 'utf8')
   - `flag` <String> default = `'r'`
 
-> ### Return Value:
-> * If the encoding option is specified, the return value is a string. Otherwise, the return value will be a buffer.
+### Return Value:
+* If the encoding option is specified, the return value is a string. Otherwise, the return value will be a buffer.
 
 ---
 
