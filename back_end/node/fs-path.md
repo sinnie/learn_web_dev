@@ -16,12 +16,15 @@ File I/O is provided by wrappers around standard POSIX (Portable Operating Syste
 
 To use the file system module, import the fs smodule into your file with the following function: `const fs = require('fs');` As we've seen before, this will return the fs object that has many useful methods that allow us to work with the lower-level operating system. One such method is `fs.readFileSync()`.
 
+### __Asynchronous File System Method:__
+
 Let's take a look at how to use the synchronous method to read a file:
 
 ```js
 const fs = require('fs');
 
-const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8'); // path (same directory) + filename + encoding
+// arguments: path (same directory) + filename + encoding
+const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8');
 
 ```
 ---
@@ -44,26 +47,23 @@ If the encoding option is specified, the return value is a __string.__ Otherwise
 
 > Note: Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load some configuration file.
 
+>## Regarding Buffers:
+* JS deals only in strings. It doesn’t have a way to deal with bytes
+* it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
+* [More information about buffers can be found here](./buffers.md)
+
+---
+
 It bears repeating that in most cases, you will not want to use the synchronous version of the `readfile` method. It is useful, however, to see that the synchronous operation is a blocking operation.
 
-Let's take a look at the synchronous form. 
+Let's take a look at the synchronous form.
 
 The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
 If you are using the synchronous form, any exceptions will immediately be thrown. Use try/catch to handle exceptions or allow them to bubble up.
 
-__Asynchronous FS Method:__
-```javascript
-const fs = require('fs');
 
-fs.unlink('/tmp/hello', (err) => {
-  if (err) throw err;
-
-  console.log('successfully deleted /tmp/hello');
-});
-```
-
-__Synchronous FS Method:__
+__Synchronous File System Method:__
 ```javascript
 const fs = require('fs');
 
