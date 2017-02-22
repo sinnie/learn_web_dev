@@ -4,13 +4,9 @@
 
 In the words of Facebook, __[React.js](https://facebook.github.io/react/)__ is a declarative, efficient, and flexible JavaScript library for building user interfaces. Your components tell React what you want to render - then react efficiently updates and renders just the right components when your data changes. In other words, React is a JavaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
 
-The core themes behind React.js are component hierarchies and one-way data binding. Using component hierarchies and one-way data binding, developers can create unique HTML elements that have customized functionality. If you're familiar with Angular, you can think of them as being close to Angular directives that you can nest.
+The core themes behind React.js are component hierarchies and one-way data binding. React.js provides a hierarchy of components that encapsulate presentation, state, and behavior, and data in react is bound one-way, which means that React doesn't have a mechanism to allow the view to change the document. The view can only raise events that the component responds to. In other words, only changes to state are immediately propagated to the presentation through component hierarchies and one-way data binding. Using these tools, developers can create unique HTML elements that have customized functionality. If you're familiar with Angular, you can think of them as being close to Angular directives that you can nest.
 
 React.js provides a template language called JSX and some function hooks to essentially render HTML. React components allow you to create HTML tags that can contain custom functionality. Reusing components is a key idea behind React.js. Furthermore, each instantiated component receives its own scope, which allows you to reuse your components as many times as you would like without worrying about variable collisions and other typical scope-sharing conflicts
-
-* Although React.js is powerful, you cannot build a fully functional dynamic application with React.js alone
-* React.js provides a hierarchy of components that encapsulate presentation, state, and behavior.
-* One-way data binding where only changes to state are immediately propagated to the presentation.
 
 ---
 
@@ -491,7 +487,7 @@ What is Material UI?
 * has `.get`, `.post`, `.put`, `.delete`
 * Again, from the `componentDidMount`:
 
-```javascript
+```
 import axios from 'axios';
 import React from 'React.js';
 import ErrorLogger from './ErrorLogger';
@@ -529,6 +525,7 @@ axios.get(`http://www.omdbapi.com/?s=bob`)
 }
 
 export default Foo;
+
 ```
 
 * The Axios config object has some 20 properties available to configure difficult requests
@@ -539,20 +536,26 @@ export default Foo;
         * The spread operator, under the hood, does the same thing as the spread operator
             * the callback makes available the results of each of the requests you made in the scope of a single function.
 
-```javascript
-function getUserAccount() {
-  return axios.get('/user/12345');
-}
-
-function getUserPermissions() {
-  return axios.get('/user/12345/permissions');
-}
-
-axios.all([getUserAccount(), getUserPermissions()])
-  .then(axios.spread(function (acct, perms) {
-    // All requests have resolved
-  })
-  .catch((error) => {
-    // One or more requests have rejected
-  });
 ```
+
+  function getUserAccount() {
+    return axios.get('/user/12345');
+  }
+
+  function getUserPermissions() {
+    return axios.get('/user/12345/permissions');
+  }
+
+  axios.all([getUserAccount(), getUserPermissions()])
+    .then(axios.spread(function (acct, perms) {
+      // All requests have resolved
+    })
+    .catch((error) => {
+      // One or more requests have rejected
+    });
+
+```
+
+
+## Resources
+[McGiginnis, Tyler. "React Tutorial Pt 1: A Comporehensive Guide to Building Apps with React.js" 12 jan. 2015.](https://tylermcginnis.com/reactjs-tutorial-a-comprehensive-guide-to-building-apps-with-react/)
