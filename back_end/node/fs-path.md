@@ -30,17 +30,17 @@ const greet = fs.readFileSync(___dirname + '/greet.txt', 'utf8')
 
 > ### Parameters:
 
->* `file` <String> | <Buffer> | <Integer>
+> * `file` <String> | <Buffer> | <Integer>
   - filename or file descriptor
->* `options` <Object> | <String>
+> * `options` <Object> | <String>
   - `encoding` <String> | <Null> (the default = 'utf8')
   - `flag` <String> default = `'r'`
 
->### Return Value:
+> ### Return Value:
 > * If the encoding option is specified, the return value is a string. Otherwise, the return value will be a buffer.
 
 ---
- 
+
 The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
 If you are using the synchronous form, any exceptions will immediately be thrown. Use try/catch to handle exceptions or allow them to bubble up.
