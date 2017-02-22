@@ -16,7 +16,7 @@ File I/O is provided by wrappers around standard POSIX (Portable Operating Syste
 
 To use the file system module, import the fs module into your file with the following function: `const fs = require('fs');` As we've seen before, this will return the fs object that has many useful methods that allow us to work with the lower-level operating system. One such method is `fs.readFileSync()`.
 
-### __Asynchronous File System Method:__
+### Asynchronous File System Method:
 
 Let's take a look at how to use the synchronous method to read a file:
 
@@ -27,8 +27,8 @@ const fs = require('fs');
 const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8');
 ```
 
-> Note:
-  > __dirname refers to the directory where the file being executed resides.
+>Note:
+  `__dirname` refers to the directory where the file being executed resides.
 
 ---
 
@@ -42,6 +42,13 @@ const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8');
 * `options`: Object | String
   - `encoding`: String | Null (the default = 'utf8')
   - `flag`: String | default = `'r'`
+  >  * 'r' - Open file for reading. An exception occurs if the file does not exist.
+    * 'r+' - Open file for reading and writing. An exception occurs if the file does not exist.
+    * 'w' - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).
+    * 'w+' - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).
+    * 'a' - Open file for appending. The file is created if it does not exist.
+    * 'a+' - Open file for reading and appending. The file is created if it does not exist.
+
 
 #### Return Value:
 If the encoding option is specified, the return value is a __string.__ Otherwise, the return value will be a __buffer.__
@@ -62,20 +69,31 @@ It bears repeating that in most cases, you will not want to use the synchronous 
 
 Let's take a look at the synchronous form.
 
+### Synchronous File System Method:
+
 The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
 If you are using the synchronous form, any exceptions will immediately be thrown. Use `try/catch` to handle exceptions or allow them to bubble up.
 
 
-__Synchronous File System Method:__
-```javascript
+> There is no guaranteed ordering with asynchronous methods. Therefore, when completion order matters, chain callbacks. In addition, it is important to use asynchronous methods so that your program will not block.  
+
+```js
+'use strict';
+
+//produces an object in the end. can set it to any variable if the names are terrible.
 const fs = require('fs');
 
-fs.unlink('/tmp/hello');
-console.log('successfully deleted /tmp/hello');
-```
+// readfile is a method on one of the fs obj (what we imported)
+fs.readFile('/etc/paths', 'utf8', (err, data) => {
+  if (err) { // error first callbacks are a standard in Node.js
+    throw err;
+  }
 
-> There is no guaranteed ordering with asynchronous methods. Therefore, when completion order matters, chain callbacks. In addition, it is important to use asynchronous methods so that your program will not block.  
+  console.log(data);
+});
+```
+---
 
 ## Path Module:
 A collection of utilities that allow developers to work with file and directory paths. The path module does not perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid. This module contains several helper functions to make path manipulations easier.
@@ -140,16 +158,6 @@ Would generate:
 File I/O is provided by simple wrappers around standard POSIX functions.
 * `require(‘fs’);`
 * Async form takes a completion callback as last arg. The arguments passed to the callback depend on the method, but the first argument is always reserved for an exception. If the operation was completed successfully, then the first argument will be null or undefined.
-
-```javascript
-fs.rename('/tmp/hello', '/tmp/world', (err) => {
-  if (err) throw err;
-  fs.stat('/tmp/world', (err, stats) => {
-    if (err) throw err;
-    console.log(`stats: ${JSON.stringify(stats)}`);
-  });
-});
-```
 
 ## Resources
 
