@@ -45,9 +45,10 @@ If the encoding option is specified, the return value is a __string.__ Otherwise
 
 ---
 
-> Note: Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load some configuration file.
+> ### Note: 
+Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load some configuration file.
 
->## Regarding Buffers:
+>### Regarding Buffers:
 * JS deals only in strings. It doesn’t have a way to deal with bytes
 * it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
 * [More information about buffers can be found here](./buffers.md)

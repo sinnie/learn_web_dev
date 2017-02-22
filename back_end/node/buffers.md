@@ -17,9 +17,9 @@ A simple definition of a buffer is a temporary holding place for data that is be
 
 Before we begin, I need a quick aside to put this into perspective. A __stream__ is a sequence of data made available over time. In other words, streams are pieces of data that eventually combine into a whole. Just like water flowing through a stream, data flows through a stream as it is being passed from one process to another or from one computer to another. Streams, when combined with buffers, allow us to process data "as we go".
 
-The example that most of us can reason with is streaming video content. GoT anyone? Let's say you would like to watch a video/movie over the internet. If you attempted to download the movie it would be time consuming. However, when you stream a movie, you're download chunks of a movie and watching it at the same time. You're still downloading the movie, but you're now able to download, process, and watch at the same time by using streams and buffers.
+The example that most of us can reason with is streaming video content. Let's say you would like to watch a video/movie over the internet. If you attempted to download the movie it would be time consuming. However, when you stream a movie, you're download chunks of a movie and watching it at the same time. You're still downloading the movie, but you're now able to download, process, and watch at the same time by using streams and buffers.
 
-As I hopefully have demonstrated, a buffer collects data in a limited allocation of memory to allow you to process that data as it continues to stream from one process to another or from one computer to another.
+A buffer collects data in a limited allocation of memory to allow you to process that data as it continues to stream from one process to another or from one computer to another.
 
 That was a bit of a tangent, but I wanted to give you an Idea about where I was heading. Again, Buffers are areas in memory that will temporarily store data and allow us to subsequently process said data in chunks.
 
