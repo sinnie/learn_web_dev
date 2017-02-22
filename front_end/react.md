@@ -4,9 +4,9 @@
 
 In the words of Facebook, __[React.js](https://facebook.github.io/react/)__ is a declarative, efficient, and flexible JavaScript library for building user interfaces. Your components tell React what you want to render - then react efficiently updates and renders just the right components when your data changes. In other words, React is a JavaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
 
-Core themes of React.js are component hierarchies and one-way data binding. Using component hierarchies and one-way data binding, developers can create unique HTML elements that have customized functionality. If you're familiar with Angular, you can think of them as being close to Angular directives that you can nest.
+The core themes behind React.js are component hierarchies and one-way data binding. Using component hierarchies and one-way data binding, developers can create unique HTML elements that have customized functionality. If you're familiar with Angular, you can think of them as being close to Angular directives that you can nest.
 
-React.js provides a template language and some function hooks to essentially render HTML. React components allow you to create HTML tags that can contain custom functionality. Reusing components is a key idea behind React.js, so each instantiated component receives its own scope, which allows you to reuse your components as many times as you would like without worrying about variable collisions and other typical scope-sharing conflicts
+React.js provides a template language called JSX and some function hooks to essentially render HTML. React components allow you to create HTML tags that can contain custom functionality. Reusing components is a key idea behind React.js. Furthermore, each instantiated component receives its own scope, which allows you to reuse your components as many times as you would like without worrying about variable collisions and other typical scope-sharing conflicts
 
 * Although React.js is powerful, you cannot build a fully functional dynamic application with React.js alone
 * React.js provides a hierarchy of components that encapsulate presentation, state, and behavior.
@@ -16,7 +16,7 @@ React.js provides a template language and some function hooks to essentially ren
 
 ## Terms
 * __Component__ - encapsulated code that handles presentation, state, and behavior. Components produce HTML. It knows how it should look and act given its current underlying information.
-    * Developer creates React Elements. Usually larger parts of the user interface which contain both the structure and functionality and you can nest these components to create the presentation layer of the application. 
+    * Developer creates React Elements. Usually larger parts of the user interface which contain both the structure and functionality and you can nest these components to create the presentation layer of the application.
     * responsible for translating raw data into rich HTML
         * the props and the state together constitute the raw data that the HTML output derives from.
 * __React Elements__ - JS objects that represent HTML elements. they do not exist in the browser. Instead, they represent browser elements such as an h1, div, or section.
@@ -250,7 +250,7 @@ __Props__ - data that is passed to a component when it is created.
     * Data that you give a component when it is created. Kinda like an HTML attribute. You cannot change this data once the component is Mounted, so it’s not a good idea to include information that you want to be dynamic.
 
 ### What is the state object?
-__State__ - Data that’s initialized (with a default value) and changed from within a component. (mostly changed from user events)
+__State__ - Data that’s initialized (with a default value) and changed from within a component. (mostly changed from user events). Basically, state is an object (pojo) that is used to record and react to user events.
 * It is initialized by a component’s `getInitialState()` method, which is automatically invoked once before a component is mounted.
 * It is available anywhere within a component class via the this.state object
 * This state is mutable data that represents the internal state of a component.
