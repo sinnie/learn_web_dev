@@ -9,10 +9,37 @@
 [Back to Learn Web Development](../../README.md)
 
 ## Intro
-In this section, we are going to explores the File System. Before we get into some examples, however, there are a few bases to cover. We will briefly discuss the File System, the Path Module, Buffers, and the global Process Module. And I'll try to describe the relevance of every section.
+In this section, we are going to explores the __File System__. While working with the filesystem, we will use some of the concepts that we've seen before, including asynchronous JavaScript, libuv, buffers and callbacks. Before we get into some examples, however, there are a few bases to cover. We will briefly discuss the Path Module, Buffers, and the global Process Module. And I'll try to describe the relevance of every section.
 
 ## File System
-File I/O is provided by wrappers around standard POSIX (Portable Operating System Interface - a standards specified by IEEE for maintaining compatibility between OSs) functions. All methods have asynchronous and synchronous forms. The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
+File I/O is provided by wrappers around standard POSIX (Portable Operating System Interface - a standards specified by IEEE for maintaining compatibility between operation systems) functions. All Node.js file system methods have asynchronous and synchronous forms. The difference between these two methods is delimited with the addition of the word "sync" in the method name for, as you might guess, the synchronous versions. Any method with the name "sync" in the name will return the value directly and prevent Node.js from executing any other code. It will block.
+
+To use the file system module, import the fs smodule into your file with the following function: `const fs = require('fs');` As we've seen before, this will return the fs object that has many useful methods that allow us to work with the lower-level operating system. One such method is `fs.readFileSync()`.
+
+Let's take a look at how to use the synchronous method to read a file:
+
+```js
+const fs = require('fs');
+
+const greet = fs.readFileSync(___dirname + '/greet.txt', 'utf8')
+
+```
+> ### Syntax:
+
+>`fs.readFileSync(file[, options]);`
+
+> ### Parameters:
+
+>* `file` <String> | <Buffer> | <Integer>
+  - filename or file descriptor
+>* `options` <Object> | <String>
+  - `encoding` <String> | <Null> (the default = 'utf8')
+  - `flag` <String> default = `'r'`
+
+> ### Return Value:
+> * If the encoding option is specified, the return value is a string. Otherwise, the return value will be a buffer.
+
+The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
 If you are using the synchronous form, any exceptions will immediately be thrown. Use try/catch to handle exceptions or allow them to bubble up.
 
@@ -296,3 +323,7 @@ A Node.js HTTP server is created with one callback.
 ## Resources
 
 [Node Docs: Path](https://nodejs.org/api/path.html)
+
+[Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
+
+[Mixu's Node book](http://book.mixu.net/node/ch11.html)

@@ -44,7 +44,7 @@ PostgreSQL
 ---
 
 ### Contributing
-To contribute, please fork and send pull requests, and I will incorporate any non-plagiarized and well documented material. Include links to references.
+Are you interested in contributing? Please fork and send me a pull request. I will incorporate any non-plagiarized and well documented material. Please include links to references.
 
 ### Contact
 Follow me [@rsstdd](https://twitter.com/rosstdd) or email me at rssmtdd@mgmail.com.
