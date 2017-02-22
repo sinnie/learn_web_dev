@@ -110,10 +110,11 @@ Therefore, when you do something like this,
   }
   ```
 
-You are adding two functions, 'a' and 'b', to the object that module.exports points to. Here, you have an `object : { a: [Function], b: [Function] }`. And you will get the same result if you use `module.exports` instead of simply `exports`. Here, the `module.exports` acts like a container of exported values. But
+You are adding two functions, 'a' and 'b', to the object that module.exports points to. Here, you have an `object : { a: [Function], b: [Function] }`. And you will get the same result if you use `module.exports` instead of simply `exports`. Here, the `module.exports` acts like a container of exported values.
 
-__what if you were trying to export a constructor function?__
-    ```javascript
+__But what if you were trying to export a constructor function?__
+
+    ```js
     module.exports = Something() => {
         console.log('I do something.');
     }
