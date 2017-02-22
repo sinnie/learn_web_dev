@@ -14,7 +14,7 @@ In this section, we are going to explores the __File System__. While working wit
 ## File System
 File I/O is provided by wrappers around standard POSIX (Portable Operating System Interface - a standards specified by IEEE for maintaining compatibility between operation systems) functions. All Node.js file system methods have asynchronous and synchronous forms. The difference between these two methods is delimited with the addition of the word "sync" in the method name for, as you might guess, the synchronous versions. Any method with the name "sync" in the name will return the value directly and prevent Node.js from executing any other code. It will block.
 
-To use the file system module, import the fs smodule into your file with the following function: `const fs = require('fs');` As we've seen before, this will return the fs object that has many useful methods that allow us to work with the lower-level operating system. One such method is `fs.readFileSync()`.
+To use the file system module, import the fs module into your file with the following function: `const fs = require('fs');` As we've seen before, this will return the fs object that has many useful methods that allow us to work with the lower-level operating system. One such method is `fs.readFileSync()`.
 
 ### __Asynchronous File System Method:__
 
@@ -25,8 +25,11 @@ const fs = require('fs');
 
 // arguments: path (same directory) + filename + encoding
 const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8');
-
 ```
+
+> Note:
+  > __dirname refers to the directory where the file being executed resides.
+
 ---
 
 ### Syntax:
@@ -45,12 +48,12 @@ If the encoding option is specified, the return value is a __string.__ Otherwise
 
 ---
 
-> ### Note: 
+> ### Note:
 Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load some configuration file.
 
 >### Regarding Buffers:
-* JS deals only in strings. It doesn’t have a way to deal with bytes
-* it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
+* Before 2015, JavaScript did not have the ability to deal with bytes, which if you are attempting to work with the file system, you will need to do.
+* Instead, it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
 * [More information about buffers can be found here](./buffers.md)
 
 ---
@@ -61,7 +64,7 @@ Let's take a look at the synchronous form.
 
 The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
-If you are using the synchronous form, any exceptions will immediately be thrown. Use try/catch to handle exceptions or allow them to bubble up.
+If you are using the synchronous form, any exceptions will immediately be thrown. Use `try/catch` to handle exceptions or allow them to bubble up.
 
 
 __Synchronous File System Method:__
@@ -82,11 +85,11 @@ A collection of utilities that allow developers to work with file and directory 
 This function takes a variable number of arguments, joins them together, and normalizes the path.
 
 __Arguments:__
-* `...paths` `<String>` <-- A sequence of Path Segments
+* `...paths` String <-- A sequence of Path Segments
   * If any of the path segments are not a string, a  `TypeError` is thrown.
 
 __Return Value:__
-* `<String>`
+* `String`
 
 The `path.join()` method joins all given `path` segments using the platform specific separator as a delimiter before normalizing the resulting path. A common use of `join` is to manipulate paths when serving urls.
 
@@ -100,6 +103,7 @@ Zero-length __path__ segments are ignored. If the joined path string is a zero-l
 
    // => a/b/c
   ```
+
 ## Process Module
 Each Node.js process has built-in functionality that can be accessed through the global `process` module. This `process` module does not have to be required because it is a 'wrapper' around the currently executing process, and many of the methods it exposes are actually wrappers around calls into some of Node.js' core C libraries.
 
@@ -117,7 +121,7 @@ __There are several methods made available through the process object, including
   * Any remaining elements = any additional command line arguments
 
 For Example, assuming the following script for process-args.js:
-  ```javascript
+  ```js
   // print process.argv
 
   process.argv.forEach(val, index) => console.log(`${index}: ${val}`);
@@ -132,11 +136,6 @@ Would generate:
     4: four
   ```
 
-## Buffers:
-* JS deals only in strings. It doesn’t have a way to deal with bytes
-* it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
-
-
 ## File I/0
 File I/O is provided by simple wrappers around standard POSIX functions.
 * `require(‘fs’);`
@@ -150,184 +149,6 @@ fs.rename('/tmp/hello', '/tmp/world', (err) => {
     console.log(`stats: ${JSON.stringify(stats)}`);
   });
 });
-```
-
-#### An HTTP request is composed of the following parts:
-
-1. A method (or verb)
-2. A path
-3. An HTTP version
-4. Key-value headers
-5. And an optional body
-
-## Initializing a server:
-A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two arguments: res, req
-* The callback’s first req argument will contain the incoming HTTP request as an `http.IncomngMessage` object
-* the callbacks second argument will contain an empty outgoing http response as an `http.ServerResponse` obj
-* The goal of the callback is to correctly fill in the res obj based on the information in req object
-
-```javascript
-const http = require('http');
-const port = process.env.PORT || 8000;
-
-const server = http.createServer((req, res) => { //<— on every request/response interaction with the server will so something
-  res.setHeader('Content-Type', 'text/plain'); // <— defines how we are sending data to the client
-  res.end('Hello world'); // <— end fn ends the implements the stream; grab the buffer data and send data
-});
-
-server.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
-```
-
-
-
-## Node.js Core Modules:
-* `const fs = require('fs');` <— Allows a JS programs to access the filesystem`
-* `const url = require('url');` <— parse, interpret and manipulate urls
-* `const http = require('http');`
-* `const path = require('path');`
-
-## How do you use the fs module to interact with the filesystem?
-* The fs module is the built-in Node.js API for managing a computer's filesystem.
-* Each operation has both an asynchronous and synchronous method (e.g.readFile and readFileSync).
-
-Node Programs have access to the following functions:
-
-```javascript
-fs.readFile() //<— open the file that is on the path the server receives.
-
-'use strict';
-
-const fs = require('fs');
-
-fs.readFile('/etc/paths', 'utf8', (err, data) => { // <— callback (error, file contents)
-      if (err) throw err; // <— if the file doesn’t exist
-      console.log(data);
-});
-
-console.log(1 + 2);
-```
-* `fs.writeFile()`
-* `path.join()`
-* `http.createServer()`
-* `server.listen()`
-
-
-
-### Here's an example of what an HTTP request looks like.
-```
-GET / HTTP/1.1
-Accept: */*
-Accept-Encoding: gzip, deflate
-Connection: keep-alive
-Host: localhost:8000
-User-Agent: HTTPie/0.9.3
-```
-
-__An HTTP response is composed of the following parts:__
-
-1. An HTTP version
-2. A status code
-3. Key-value headers
-4. And an optional body
-
-### Here's an example of what an HTTP response looks like.
-```
-HTTP/1.1 200 OK
-Connection: keep-alive
-Content-Length: 11
-Content-Type: text/plain
-Date: Mon, 13 Jun 2016 04:28:36 GMT
-Hello world
-```
-__How do you create a Node.js HTTP server with the http module?__
-    ```javascript
-    'use strict';
-
-    const http = require('http');
-    const port = process.env.PORT || 8000;
-
-    const server = http.createServer((req, res) => {
-    const guests = ['Mary', 'Don'];
-    const guestsJSON = JSON.stringify(guests);
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(guestsJSON);
-    });
-
-    server.listen(port, () => {
-      console.log(`Listening on port ${port}`);
-    });
-    ```
-A Node.js HTTP server is created with one callback.
-* For each HTTP request that arrives, the callback is invoked with two arguments —- request and response.
-    * The callback's first req argument will contain the incoming HTTP request as an `http.IncomingMessage` object.
-    *  The callback's second response argument will contain an empty outgoing HTTP response as an http.ServerResponse object. The goal of the callback is to correctly fill in the res object based on the information in req object.
-
-```javascript
-    'use strict';
-
-    const fs = require('fs');
-    const path = require('path');
-    const guestsPath = path.join(__dirname, 'guests.json');
-
-    const http = require('http');
-    const port = process.env.PORT || 8000;
-
-    const server = http.createServer((req, res) => {
-      if (req.method === 'GET' && req.url === '/guests') {
-        fs.readFile(guestsPath, 'utf8', (err, guestsJSON) => {
-          if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            return res.end('Internal Server Error');
-          }
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(guestsJSON);
-        });
-      } else if (req.method === 'GET' && req.url === '/guests/0') {
-        fs.readFile(guestsPath, 'utf8', (err, guestsJSON) => {
-          if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            return res.end('Internal Server Error');
-          }
-
-          const guests = JSON.parse(guestsJSON);
-          const guestJSON = JSON.stringify(guests[0]);
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(guestJSON);
-        });
-      } else if (req.method === 'GET' && req.url === '/guests/1') {
-        fs.readFile(guestsPath, 'utf8', (err, guestsJSON) => {
-          if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            return res.end('Internal Server Error');
-          }
-
-          const guests = JSON.parse(guestsJSON);
-          const guestJSON = JSON.stringify(guests[1]);
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(guestJSON);
-        });
-      } else {
-        res.statusCode = 404;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('Not found');
-      }
-    });
-
-    server.listen(port, () => {
-      console.log(`Listening on port ${port}`);
-    });
 ```
 
 ## Resources
