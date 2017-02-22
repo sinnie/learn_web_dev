@@ -4,7 +4,7 @@
 
 In the words of Facebook, __[React.js](https://facebook.github.io/react/)__ is a declarative, efficient, and flexible JavaScript library for building user interfaces. Your components tell React what you want to render - then react efficiently updates and renders just the right components when your data changes. In other words, React is a JavaScript library for building sophisticated user interfaces for large, dynamic web applications. It works by building a hierarchy of components and then inserts them into the DOM. Whenever a component’s state changes, React will re-build the component hierarchy and update the DOM. Conceptually, it’s like refreshing the page.
 
-A core theme of React.js is component hierarchies and one-way data binding. The idea is that you can create your own HTML elements that have customized functionality. You can think of them as being close to Angular directives that you can nest.
+Core themes of React.js are component hierarchies and one-way data binding. Using component hierarchies and one-way data binding, developers can create unique HTML elements that have customized functionality. If you're familiar with Angular, you can think of them as being close to Angular directives that you can nest.
 
 React.js provides a template language and some function hooks to essentially render HTML. React components allow you to create HTML tags that can contain custom functionality. Reusing components is a key idea behind React.js, so each instantiated component receives its own scope, which allows you to reuse your components as many times as you would like without worrying about variable collisions and other typical scope-sharing conflicts
 
@@ -15,8 +15,8 @@ React.js provides a template language and some function hooks to essentially ren
 ---
 
 ## Terms
-* __Component__ - encapsulated code that handles presentation, state, and behavior. It knows how it should look and act given its current underlying information.
-    * Developer creates React Elements. Usually larger parts of the user interface which contain both the structure and functionality.
+* __Component__ - encapsulated code that handles presentation, state, and behavior. Components produce HTML. It knows how it should look and act given its current underlying information.
+    * Developer creates React Elements. Usually larger parts of the user interface which contain both the structure and functionality and you can nest these components to create the presentation layer of the application. 
     * responsible for translating raw data into rich HTML
         * the props and the state together constitute the raw data that the HTML output derives from.
 * __React Elements__ - JS objects that represent HTML elements. they do not exist in the browser. Instead, they represent browser elements such as an h1, div, or section.
