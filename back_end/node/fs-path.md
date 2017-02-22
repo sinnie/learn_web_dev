@@ -30,15 +30,15 @@ const greet = fs.readFileSync(___dirname + '/greet.txt', 'utf8')
 
 `fs.readFileSync(file[, options]);`
 
-### Parameters:
-* `file` <String> | <Buffer> | <Integer>
+#### Parameters:
+* `file` String | Buffer | Integer
   - filename or file descriptor
-* `options` <Object> | <String>
-  - `encoding` <String> | <Null> (the default = 'utf8')
-  - `flag` <String> default = `'r'`
+* `options` Object | String
+  - `encoding` String | Null (the default = 'utf8')
+  - `flag` String default = `'r'`
 
-### Return Value:
-* If the encoding option is specified, the return value is a string. Otherwise, the return value will be a buffer.
+#### Return Value:
+If the encoding option is specified, the return value is a __string.__ Otherwise, the return value will be a __buffer.__
 
 ---
 
