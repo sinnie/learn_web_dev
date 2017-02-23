@@ -123,73 +123,19 @@ Encoding is an optional parameter that specifies the type of encoding to read th
 ## Asynchronous File System API
 
 | Read & write a file (fully buffered)                      |       
-|:---------------------------------------------------------:|
+|-----------------------------------------------------------|
 |fs.readFile(filename, [encoding], [callback])              |
 |fs.writeFile(filename, data, encoding='utf8', [callback])  |
 
 
 | Read & write a file (in parts)                             |
-|:----------------------------------------------------------:|
+|------------------------------------------------------------|
 |fs.open(path, flags, [model, callback])|
 |fs.read(fd, buffer, offset, length, position, [callback])|
 |fs.write(fd, buffer, offset, length, position, [callback])|
 |fs.fsync(fd, callback)|
 |fs.truncate(fd, len, callback)|
 |fs.close(fd, [callback])|
-
-
-|          Directories: read, create & delete               |
-|:---------------------------------------------------------:|
-|fs.readdir(path, [callback])|
-|fs.mkdir(path, mode, [callback])|
-|fs.rmdir(path, [callback])|
-
-
-|   Files: info       |
-|:---------------------------------------------------------:|
-|fs.stat(path, [callbakc])|
-|fs.lstat(path, [callbakc])|
-|fs.fstat(path, [callbakc])|
-|fs.realpath(path, [callbakc])|
-
-
-|          Readable Streams               |
-|:---------------------------------------------------------:|
-|fs.ReadStream Event: 'open' |
-|fs.createReadStream(path, [options])
-
-
-|          Writeable Streams               |
-|:---------------------------------------------------------:|
-|fs.WriteStream Event: 'open'
-|fs.bytesWritten
-|fs.createWriteStream(path, [options])
-
-
-| Files: rename, watch changes & change Timestamps Streams  |
-|:---------------------------------------------------------:|
-|fs.rename(path1, path2, [callback])|
-|fs.watchFile(filename, [options], listener)|
-|fs.unwatchFile(filename)|
-| fs.watch(filename)|
-|fs.watch(filename, [options], listener)|
-|fs.utimes(path, atime, mtime, callback)|
-|fs.futimes(path, atime, mtime, callback)|
-
-| Files: Owner and Permissions  |
-|:---------------------------------------------------------:|
-|fs.chown(path, uid, gid, [callback])|
-|fs.fchown(path, uid, gid, [callback])|
-|fs.lchown(path, uid, gid, [callback])|
-|fs.fchmod(fd, mode [callback])|
-|fs.lchmod(fd, mode [callback])|
-
-| Files: Symlinks  |
-|:---------------------------------------------------------:|
-|fs.link(srcpath, dstpath, [callback]) |
-|fs.symlink(linkdata, path, [callback])|
-|fs.readlink(path, [callback])|
-|fs.unlink(path, [callback])|
 
 ---
 ## Path Module:
