@@ -52,46 +52,71 @@ const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8');
 #### Return Value:
 If the encoding option is specified, the return value is a __string.__ Otherwise, the return value will be a __buffer.__
 
+If you are using the synchronous form, any exceptions will immediately be thrown. Use `try/catch` to handle exceptions or allow them to bubble up.
+
 ---
 
 > ### Note:
-Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load some configuration file.
+Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load a configuration file.
 
 >### Regarding Buffers:
-* Before 2015, JavaScript did not have the ability to deal with bytes, which if you are attempting to work with the file system, you will need to do.
-* Instead, it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JS API under the buffer pseudo-class
+* Before 2015, JavaScript did not have the ability to deal with bytes, which is necessary to be able to work with the file system.
+* Instead, it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JavaScript API under the buffer pseudo-class.
 * [More information about buffers can be found here](./buffers.md)
 
 ---
 
 It bears repeating that in most cases, you will not want to use the synchronous version of the `readfile` method. It is useful, however, to see that the synchronous operation is a blocking operation.
 
-Let's take a look at the synchronous form.
+Let's take a look at the asynchronous form.
 
-### Synchronous File System Method:
+### Asynchronous File System Method:
 
-The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
+The asynchronous form takes a completion callback as its last argument. The arguments passed to the completion callbacks depend on the particular method used. The first argument to any method is always reserved for an exception, which is a standard pattern in Node.js. If the operation was completed successfully, then the first argument will be `null` or `undefined`.
 
-If you are using the synchronous form, any exceptions will immediately be thrown. Use `try/catch` to handle exceptions or allow them to bubble up.
-
-
-> There is no guaranteed ordering with asynchronous methods. Therefore, when completion order matters, chain callbacks. In addition, it is important to use asynchronous methods so that your program will not block.  
+> There is no guaranteed ordering with asynchronous methods. Therefore, when completion order matters, chain callbacks.
 
 ```js
 'use strict';
 
-//produces an object in the end. can set it to any variable if the names are terrible.
 const fs = require('fs');
 
-// readfile is a method on one of the fs obj (what we imported)
 fs.readFile('/etc/paths', 'utf8', (err, data) => {
-  if (err) { // error first callbacks are a standard in Node.js
-    throw err;
-  }
+  if (err) throw err;
 
   console.log(data);
 });
 ```
+
+### Syntax:
+
+`fs.readFile(file[, options], callback);`
+
+#### Parameters:
+* `file`: String | Buffer | Integer (filename or descriptor)
+  - filename or file descriptor
+* `options`: Object | String
+  - `encoding`: String | Null (the default = 'utf8')
+  - `flag`: String | default = `'r'`
+    * 'r' - Open file for reading. An exception occurs if the file does not exist.
+    * 'r+' - Open file for reading and writing. An exception occurs if the file does not exist.
+    * 'w' - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).
+    * 'w+' - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).
+    * 'a' - Open file for appending. The file is created if it does not exist.
+    * 'a+' - Open file for reading and appending. The file is created if it does not exist.
+*  `callback`: Function
+  -  The callback function is called when the file has been read and the contents are ready.
+  - Arguments: `(err, data)`
+    * `data` is the contents of the file
+
+#### Return Value:
+If the encoding option is specified, the return value is an encoded __string.__ Otherwise, the return value will be a __buffer.__ And any specified file descriptor has to support reading.
+
+---
+
+### Encoding
+Encoding is an optional parameter that specifies the type of encoding to read the file. Supported encodings include `ascii`, `utf8`, and `base64`. If no encoding is specified, the default encoding is `utf8`.
+
 ---
 
 ## Path Module:
