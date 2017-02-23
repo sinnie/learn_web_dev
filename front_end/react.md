@@ -559,3 +559,5 @@ export default Foo;
 
 ## Resources
 [McGiginnis, Tyler. "React Tutorial Pt 1: A Comporehensive Guide to Building Apps with React.js" 12 jan. 2015.](https://tylermcginnis.com/reactjs-tutorial-a-comprehensive-guide-to-building-apps-with-react/)
+
+Know the 7 base react components.

@@ -25,6 +25,8 @@ const fs = require('fs');
 
 // arguments: path (same directory) + filename + encoding
 const myFile = fs.readFileSync(___dirname + '/myfile.txt', 'utf8');
+
+console.log(myFile);
 ```
 
 >Note:
@@ -118,7 +120,78 @@ If the encoding option is specified, the return value is an encoded __string.__ 
 Encoding is an optional parameter that specifies the type of encoding to read the file. Supported encodings include `ascii`, `utf8`, and `base64`. If no encoding is specified, the default encoding is `utf8`.
 
 ---
+## Asynchronous File System API
 
+| Read & write a file (fully buffered)                      |       
+|:---------------------------------------------------------:|
+|fs.readFile(filename, [encoding], [callback])              |
+|fs.writeFile(filename, data, encoding='utf8', [callback])  |
+
+
+| Read & write a file (in parts)                             |
+|:----------------------------------------------------------:|
+|fs.open(path, flags, [model, callback])|
+|fs.read(fd, buffer, offset, length, position, [callback])|
+|fs.write(fd, buffer, offset, length, position, [callback])|
+|fs.fsync(fd, callback)|
+|fs.truncate(fd, len, callback)|
+|fs.close(fd, [callback])|
+
+
+|          Directories: read, create & delete               |
+|:---------------------------------------------------------:|
+|fs.readdir(path, [callback])|
+|fs.mkdir(path, mode, [callback])|
+|fs.rmdir(path, [callback])|
+
+
+|   Files: info       |
+|:---------------------------------------------------------:|
+|fs.stat(path, [callbakc])|
+|fs.lstat(path, [callbakc])|
+|fs.fstat(path, [callbakc])|
+|fs.realpath(path, [callbakc])|
+
+
+|          Readable Streams               |
+|:---------------------------------------------------------:|
+|fs.ReadStream Event: 'open' |
+|fs.createReadStream(path, [options])
+
+
+|          Writeable Streams               |
+|:---------------------------------------------------------:|
+|fs.WriteStream Event: 'open'
+|fs.bytesWritten
+|fs.createWriteStream(path, [options])
+
+
+| Files: rename, watch changes & change Timestamps Streams  |
+|:---------------------------------------------------------:|
+|fs.rename(path1, path2, [callback])|
+|fs.watchFile(filename, [options], listener)|
+|fs.unwatchFile(filename)|
+| fs.watch(filename)|
+|fs.watch(filename, [options], listener)|
+|fs.utimes(path, atime, mtime, callback)|
+|fs.futimes(path, atime, mtime, callback)|
+
+| Files: Owner and Permissions  |
+|:---------------------------------------------------------:|
+|fs.chown(path, uid, gid, [callback])|
+|fs.fchown(path, uid, gid, [callback])|
+|fs.lchown(path, uid, gid, [callback])|
+|fs.fchmod(fd, mode [callback])|
+|fs.lchmod(fd, mode [callback])|
+
+| Files: Symlinks  |
+|:---------------------------------------------------------:|
+|fs.link(srcpath, dstpath, [callback]) |
+|fs.symlink(linkdata, path, [callback])|
+|fs.readlink(path, [callback])|
+|fs.unlink(path, [callback])|
+
+---
 ## Path Module:
 A collection of utilities that allow developers to work with file and directory paths. The path module does not perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid. This module contains several helper functions to make path manipulations easier.
 * The default operation of the path module varies based on the operating system on which a Node.js application is running. In other words, when Node.js is on a Windows machine, the `path` module assumes that Windows-style paths are being used. This is indispensable when building cross-platform applications.
