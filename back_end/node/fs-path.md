@@ -57,10 +57,10 @@ If you are using the synchronous form, any exceptions will immediately be thrown
 ---
 
 > ### Note:
-Here we see the Buffer when the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer is being filled and it returns the contents before moving on. This could be useful if you were trying to load a configuration file.
+ When the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer fills and returns the content before moving on. This synchronous method could be useful if you were trying to load a configuration file.
 
 >### Regarding Buffers:
-* Before 2015, JavaScript did not have the ability to deal with bytes, which is necessary to be able to work with the file system.
+* Before ES6, JavaScript did not have the ability to deal with bytes, which is necessary to work with the file system.
 * Instead, it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JavaScript API under the buffer pseudo-class.
 * [More information about buffers can be found here](./buffers.md)
 
@@ -104,7 +104,7 @@ fs.readFile('/etc/paths', 'utf8', (err, data) => {
     * 'w+' - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).
     * 'a' - Open file for appending. The file is created if it does not exist.
     * 'a+' - Open file for reading and appending. The file is created if it does not exist.
-*  `callback`: Function
+* `callback`: Function
   -  The callback function is called when the file has been read and the contents are ready.
   - Arguments: `(err, data)`
     * `data` is the contents of the file
@@ -177,11 +177,6 @@ Would generate:
     3: two=three
     4: four
   ```
-
-## File I/0
-File I/O is provided by simple wrappers around standard POSIX functions.
-* `require(‘fs’);`
-* Async form takes a completion callback as last arg. The arguments passed to the callback depend on the method, but the first argument is always reserved for an exception. If the operation was completed successfully, then the first argument will be null or undefined.
 
 ## Resources
 
