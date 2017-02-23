@@ -64,7 +64,7 @@ If you are using the synchronous form, any exceptions will immediately be thrown
 >### Regarding Buffers:
 * Before ES6, JavaScript did not have the ability to deal with bytes, which is necessary to work with the file system.
 * Instead, it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JavaScript API under the buffer pseudo-class.
-* [More information about buffers can be found here](./buffers.md)
+* [More information about buffers can be found here. I might be biased, but I think it's worth a read.](./buffers.md)
 
 ---
 
@@ -200,6 +200,8 @@ Would generate:
 ## Resources
 
 [Node Docs: Path](https://nodejs.org/api/path.html)
+
+[Node Docs: File System](https://nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback)
 
 [Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
 
