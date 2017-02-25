@@ -6,12 +6,12 @@
 
 
 ## Problem:
-* HTTP and real-time apps do not go well together because HTTP protocol is stateless and based off a request-response cycle - an HTTP server only reacts upon requests from the client but doesn’t have a stateful, continuous connection to the client
-    * stateless - the server does not have to retain session information or status about each communications partner for the duration of multiple requests. HTTP is stateless because the connection between the browser and the server is lost once the transaction ends.
+
+Real-time applications are difficult to achieve with HTTP because the protocol is stateless and modeled after a request-response cycle. An HTTP server only reacts upon requests from the client but does not have a "stateful", continuous connection to the client. It is stateless, which means that the server does not have to retain session information or status about each communications partner for the duration of multiple requests, and in the case of HTTP, the connection between the browser and the server is lost once the transaction ends.
 * JS and HTML can talk from client events to the server, but communicating a change on the server to the client is only possible when the client asks the server for the current state.
 
 ## Early Solutions
-* using the traditional req, res cycle, the browser of each client would poll the server at regular intervals (think set interval) for changes, which gave the impression of ‘real time’ interaction.
+Some early solutions to address the latency of th Using the traditional req/res cycle, the browser of each client would poll the server at regular intervals (think set interval) for changes, which gave the impression of ‘real time’ interaction.
 * this was expensive on the server and the client in terms of computation
 * enter long polling - a client sends a request to the server only once, and then the server keeps this connection open, sending new data whenever it’s available.
     * HTTP not designed for this, so implementations remained hacky:

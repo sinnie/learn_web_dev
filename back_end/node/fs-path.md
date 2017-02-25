@@ -9,10 +9,10 @@
 [Back to Learn Web Development](../../README.md)
 
 ## Intro
-In this section, we are going to explores the __File System__. While working with the filesystem, we will use some of the concepts that we've seen before, including asynchronous JavaScript, libuv, buffers and callbacks. Before we get into some examples, however, there are a few bases to cover. We will briefly discuss the Path Module, Buffers, and the global Process Module. And I'll try to describe the relevance of every section.
+In this section, we are going to explores the __File System__. While working with the filesystem, we will encounter some of the concepts that we've seen before, including asynchronous JavaScript, libuv, buffers and callbacks.
 
 ## File System
-File I/O is provided by wrappers around standard POSIX (Portable Operating System Interface - a standards specified by IEEE for maintaining compatibility between operation systems) functions. All Node.js file system methods have asynchronous and synchronous forms. The difference between these two methods is delimited with the addition of the word "sync" in the method name for, as you might guess, the synchronous versions. Any method with the name "sync" in the name will return the value directly and prevent Node.js from executing any other code. It will block.
+File I/O is provided by wrappers around standard POSIX (Portable Operating System Interface - a standards specified by IEEE for maintaining compatibility between operation systems) functions. All Node.js file system methods have asynchronous and synchronous forms. The difference between these two methods is delimited with the addition of the word "sync" in the method name for, as you might guess, the synchronous versions. Any method with the name "sync" in the name will return the value directly and prevent Node.js from executing any other code. In other words, it will block.
 
 To use the file system module, import the fs module into your file with the following function: `const fs = require('fs');` As we've seen before, this will return the fs object that has many useful methods that allow us to work with the lower-level operating system. One such method is `fs.readFileSync()`.
 
@@ -112,7 +112,7 @@ fs.readFile('/etc/paths', 'utf8', (err, data) => {
     * `data` is the contents of the file
 
 #### Return Value:
-If the encoding option is specified, the return value is an encoded __string.__ Otherwise, the return value will be a __buffer.__ And any specified file descriptor has to support reading.
+If the encoding option is specified, the return value is an encoded __string.__ Otherwise, the return value will be a __buffer.__ And any specified file descriptor has to support reading [(Alicia)](#references).
 
 ---
 
@@ -122,20 +122,19 @@ Encoding is an optional parameter that specifies the type of encoding to read th
 ---
 ## Asynchronous File System API
 
-| Read & write a file (fully buffered)                      |       
-|-----------------------------------------------------------|
-|fs.readFile(filename, [encoding], [callback])              |
-|fs.writeFile(filename, data, encoding='utf8', [callback])  |
+| Read & write a file (fully buffered)                      |  Read & write a file (in parts)                             |     
+|-----------------------------------------------------------|------------------------------------------------------------|
+|fs.readFile(filename, [encoding], [callback])              | fs.open(path, flags, [model, callback])|
+|fs.writeFile(filename, data, encoding='utf8', [callback])  | fs.read(fd, buffer, offset, length, position, [callback])|
+||fs.read(fd, buffer, offset, length, position, [callback])|
+||fs.write(fd, buffer, offset, length, position, [callback])|
+||fs.fsync(fd, callback)|
+||fs.truncate(fd, len, callback)|
+||fs.close(fd, [callback])|
 
 
-| Read & write a file (in parts)                             |
-|------------------------------------------------------------|
-|fs.open(path, flags, [model, callback])|
-|fs.read(fd, buffer, offset, length, position, [callback])|
-|fs.write(fd, buffer, offset, length, position, [callback])|
-|fs.fsync(fd, callback)|
-|fs.truncate(fd, len, callback)|
-|fs.close(fd, [callback])|
+
+
 
 ---
 ## Path Module:
@@ -197,7 +196,7 @@ Would generate:
     4: four
   ```
 
-## Resources
+## References
 
 [Node Docs: Path](https://nodejs.org/api/path.html)
 
