@@ -74,11 +74,11 @@ Hello world
 ---
 
 ## Initializing a server:
-A Node server is created with one callback. The server object has am emit method that takes two arguments, request and response.
+A Node server is created with one callback. The server object has an emit method that takes two arguments, request and response.
 * For each HTTP request that arrives, the callback is invoked with two arguments —- request and response.
-  * The callback’s first req argument will contain the incoming HTTP request as an `http.IncomngMessage` object
-  * the callbacks second argument will contain an empty outgoing http response as an `http.ServerResponse` obj.
-* The goal of the callback is to correctly fill in the res obj based on the information in req object
+  * The callback's first (request) argument will contain the incoming HTTP request as an `http.IncomngMessage` object
+  * The callback's second (response) argument will contain an empty outgoing HTTP response as an `http.ServerResponse` object.
+* The goal of the callback is to correctly fill in the response object based on the information in request object
 
 ```javascript
 const http = require('http');
