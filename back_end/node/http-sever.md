@@ -1,3 +1,37 @@
+## HTTP Webserver
+
+### TCP / IP
+
+#### Terms:
+
+* __protocol__ - standards for communication. Both the client and the server are programmed to understand and use that particular set of rules. It's similar to two people from different countries agreeing on a standard language.
+* __TCP__ - Protocol that defines how to sent that information. Transmission Control Protocol. Whatever format it is in, TCP splits information in packets through the socket from computer to computer. The information that it is sending may be in a protocol, but TCP is only concerned with sending that information in packets.
+  * Similar to a stream. Thus, node treats these packets as a stream.
+* __IP__ - Internet Protocol - agreed upon sequence of numbers that identifies computers that communicate with each other.
+* __HTTP__ - Hypertext transfer protocol.
+* __Socket__ -
+* __Port__: Once a computer receives a packet, how it knows what program to send it to. When a program is setup on the OS to receive packets from a particular port, it is said that the program is listening to that port.
+
+
+
+
+### Request Response Cycle: Client Server Model
+```bash
++-------------------+       Standard Format           +-------------------+
+|     IP            |   +-------------------------->  |     IP            |
+| 209.85.128.0      |           Request               | 74.125.224.72     |
+|                   |                                 |                   |
+|     Browser       |  <-- Socket --|http, ftp...|--->|  Server/Node.js   |
+|     Ask for       |                                 |     perform       |
+|     services      |                                 |     services      |
+|                   |       Standard Format           |                   |
+|                   |   <-------------------------+   |  Node.js: port:80 | <-- port number/socket
++-------------------+          Response               +-------------------+
+
+```
+
+### Addresses and Ports
+
 
 #### An HTTP request is composed of the following parts:
 
