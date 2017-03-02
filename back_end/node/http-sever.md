@@ -1,8 +1,6 @@
 ## HTTP Webserver
 
-### TCP / IP
-
-#### Terms:
+### Terms:
 
 * __protocol__ - standards for communication. Both the client and the server are programmed to understand and use that particular set of rules. It's similar to two people from different countries agreeing on a standard language.
 * __TCP__ - Protocol that defines how to sent that information. Transmission Control Protocol. Whatever format it is in, TCP splits information in packets through the socket from computer to computer. The information that it is sending may be in a protocol, but TCP is only concerned with sending that information in packets.
@@ -13,7 +11,7 @@
 * __Port__: Once a computer receives a packet, how it knows what program to send it to. When a program is setup on the OS to receive packets from a particular port, it is said that the program is listening to that port.
 * __MIME type__ - Multi purpose internet mail extensions. It is a standard for specifying the type of Data being sent. (application/json, text/html, img/jpeg, etc.)
 
-### Request Response Cycle: Client Server Model
+## Request Response Cycle (Client Server Model)
 ```bash
 +-------------------+       Standard Format           +-------------------+
 |     IP            |+------------------------------> |     IP            |
@@ -28,7 +26,7 @@
 
 ```
 
-## An HTTP request is composed of the following parts:
+### An HTTP request is composed of the following parts:
 
 1. A method (or verb)
 2. A path
@@ -36,7 +34,7 @@
 4. Key-value headers
 5. And an optional body
 
-### An example of what an HTTP request:
+#### An example of what an HTTP request:
 ```
 GET / HTTP/1.1
 Accept: */*
@@ -46,14 +44,14 @@ Host: localhost:8000
 User-Agent: HTTPie/0.9.3
 ```
 
-__An HTTP response is composed of the following parts:__
+### An HTTP response is composed of the following parts:
 
 1. An HTTP version
 2. A status code
 3. Key-value Headers
 4. And an optional Body
 
-### An example of what an HTTP response:
+#### An example of what an HTTP response:
 ```
 HTTP/1.1 200 OK
 Connection: keep-alive
