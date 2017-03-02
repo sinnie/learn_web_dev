@@ -8,38 +8,60 @@
 * __TCP__ - Protocol that defines how to sent that information. Transmission Control Protocol. Whatever format it is in, TCP splits information in packets through the socket from computer to computer. The information that it is sending may be in a protocol, but TCP is only concerned with sending that information in packets.
   * Similar to a stream. Thus, node treats these packets as a stream.
 * __IP__ - Internet Protocol - agreed upon sequence of numbers that identifies computers that communicate with each other.
-* __HTTP__ - Hypertext transfer protocol.
+* __HTTP__ - Hypertext transfer protocol. Format for data being transferred via TCP/IP. core of sending information on the web.
 * __Socket__ -
 * __Port__: Once a computer receives a packet, how it knows what program to send it to. When a program is setup on the OS to receive packets from a particular port, it is said that the program is listening to that port.
-
-
-
+* __MIME type__ - Multi purpose internet mail extensions. It is a standard for specifying the type of Data being sent. (application/json, text/html, img/jpeg, etc.)
 
 ### Request Response Cycle: Client Server Model
 ```bash
 +-------------------+       Standard Format           +-------------------+
-|     IP            |   +-------------------------->  |     IP            |
+|     IP            |+------------------------------> |     IP            |
 | 209.85.128.0      |           Request               | 74.125.224.72     |
 |                   |                                 |                   |
 |     Browser       |  <-- Socket --|http, ftp...|--->|  Server/Node.js   |
 |     Ask for       |                                 |     perform       |
 |     services      |                                 |     services      |
 |                   |       Standard Format           |                   |
-|                   |   <-------------------------+   |  Node.js: port:80 | <-- port number/socket
+|                   |<------------------------------+ |  Node.js: port:80 | <-- port number/socket
 +-------------------+          Response               +-------------------+
 
 ```
 
-### Addresses and Ports
-
-
-#### An HTTP request is composed of the following parts:
+## An HTTP request is composed of the following parts:
 
 1. A method (or verb)
 2. A path
 3. An HTTP version
 4. Key-value headers
 5. And an optional body
+
+### An example of what an HTTP request:
+```
+GET / HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Host: localhost:8000
+User-Agent: HTTPie/0.9.3
+```
+
+__An HTTP response is composed of the following parts:__
+
+1. An HTTP version
+2. A status code
+3. Key-value Headers
+4. And an optional Body
+
+### An example of what an HTTP response:
+```
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 11
+Content-Type: text/plain
+Date: Mon, 13 Jun 2016 04:28:36 GMT
+Hello world
+```
 
 ## Initializing a server:
 A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two arguments: res, req
@@ -74,34 +96,6 @@ fs.readFile('/etc/paths', 'utf8', (err, data) => { // <— callback (error, file
 });
 
 console.log(1 + 2);
-```
-
-
-### Here's an example of what an HTTP request looks like.
-```
-GET / HTTP/1.1
-Accept: */*
-Accept-Encoding: gzip, deflate
-Connection: keep-alive
-Host: localhost:8000
-User-Agent: HTTPie/0.9.3
-```
-
-__An HTTP response is composed of the following parts:__
-
-1. An HTTP version
-2. A status code
-3. Key-value headers
-4. And an optional body
-
-### Here's an example of what an HTTP response looks like.
-```
-HTTP/1.1 200 OK
-Connection: keep-alive
-Content-Length: 11
-Content-Type: text/plain
-Date: Mon, 13 Jun 2016 04:28:36 GMT
-Hello world
 ```
 
 __How do you create a Node.js HTTP server with the http module?__
