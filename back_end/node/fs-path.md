@@ -131,9 +131,125 @@ Encoding is an optional parameter that specifies the type of encoding to read th
 | |fs.truncate(fd, len, callback)|
 | |fs.close(fd, [callback])|
 
+---
 
+## Streams
+
+# How does node deal with Streams:
+
+## Terms:
+* __Stream__ - Streams come from unix and have are a dependable way of composing large system out of small components. Streams are a sequence of chunks of data that can help seperate concerns because they restrict the implementation surface area into a conistent interface that can be reused.
+* __Chunk__ - a piece of data being sent through a stream.
+
+It's a good idea to use streams in your Node.js projects because it is faster than using memory buffers for every request that comes in. The user experience suffers because they will have to wait for the whole file to be buffered into memory on the server before the user can receive the content.
+
+> Note: The (req, res) arguments are streams, which means we can write this in a much better way using fs.createReadStream() instead of fs.readFile():
+
+Stream.js is the core module that defines stream behavior. Streams are event emitters. Any streams that are created have access to 'on' or 'commit.' There is an old stream code and new stream code. There are readable streams, writable streams (send data but can't read), Duplex (read and write) transform (change the data as it moves through), and Passthrough streams. You have types of streams and they all do something a little different. Each type of Streams are an abstract class (type of constructor you never work directly with but inherit from). In other words, Streams will be always custom objects.
+
+## Stream Prototype Chain
+Event Emitter --> Stream --> Readable, writeable, etc. Stream --> Custom Streams
+
+## Clarification on Readable/Writable Streams
+```bash
++-------------------+           Readable              +-------------------+
+|                   |   +-------------------------->  |                   |
+|                   |           Request               |                   |
+|                   |                                 |                   |
+|      Browser      |                                 |  Server/Node.js   |
+|                   |                                 |                   |
+|                   |                                 |                   |
+|                   |         Writeable               |                   |
+|                   |   <-------------------------+   |                   |
++-------------------+         Response                +-------------------+
+
+```
+Node can only write or read from a stream.
+
+## Example
+
+```js
+fs.createReadStream = function(path, options) {
+  return new Readstream(path, options);
+};
+```
+
+`fs.createReadStream` is a specialized type of read only stream. It implements getting and working with data. The stream that it inherits from supplies the rest.
+
+```js
+const fs = require('fs');
+
+const writeable = fs.createReadStream(__dirname + 'greet.txt', { encoding: 'utf8', highWaterMark: 32 * 1024 }); // options: encoding
+const writable = fs.createWriteStream(__dirname + 'greetCopy.txt', { encoding: 'utf8', highWaterMark: 32 * 1024 });
+
+readable.on('data', (chunk) => {
+  console.log(chunk);
+  writeable.write(chunk)
+})
+
+```
+
+stream will fill a buffer with the contents. If the contents are the same size or smaller than the buffer, you will get pieces of the data at a time. Specifically, you'll get the size of the buffer. When it emits an event and runs the listener, it will pass the data.
+
+Listening to the Data event (remember, a stream is an event emitter), starts the stream. Read from the readable and write to the writeable.
+
+* __highWaterMark__ - Lets you determine the size of the buffer.
+
+The `writeable.write(chunk)` is so common there is a built-in way of doing it.
+
+## Pipes
+
+__pipe__ a way of connecting two streams by writing to one stream what is being read from another. In node.js you pipe from a readable stream to a writeable. Pipes can be chained as long as streams are writeable and readable. Additonally, using `pipe()` has other benefits. It handles backpressure automatically, preventing Node.js from buffering chunks into memory needlessly when the client is on a slow/high-latency connection [(Halliday)](#references).
+
+Node.js implemented a method called pipe on readable streams (`_stream_readable.js`). It takes a chunk and a destination for that chunk. Essentially, this is the same thing. It looks for the data event on the readable, and then writes that chunk to the destination. In addition, `pipe()` returns a value, the destination of the writeable stream/where the data has been sent.
+
+
+```js
+const fs = require('fs');
+
+const readable = fs.createReadStream(__dirname + 'greet.txt');
+const writable = fs.createWriteStream(__dirname + 'greetCopy.txt');
+
+readable.pipe(writeable); // will return writeable
+
+```
+This is the same code as before except we are using the pipe to redirect the stream. The pipe is more concise way of using streams.
+
+This gets better when you can chain the stream while working with a duplex or transform stream.  
+
+```js
+const fs = require('fs');
+const zlib = require('zlib'); // allows you to implement a compressed file. gzip file
+
+const readable = fs.createReadStream(__dirname + '/greet.txt');
+const writable = fs.createWriteStream(__dirname + '/greetCopy.txt');
+const compressed = fs.createWriteStream(__dirname + '/greet.txt.gz')
+
+const gzip = zlib.createGzip(); // readable and writeable. Compressed file from a stream.
+
+readable.pipe(writeable); // will return writeable. Only writeable
+readable.pipe(gzip).pipe(compressed); //
+```
+Read from greet.txt
+on every chunk pipe to writeable
+on every chunk pipe from writeable to compressed.
+
+This is called __method chaining__ - when methods return methods, which allow you to keep adding/invoking methods. If the method returns the parent object, this would be called 'cascading.'
+
+Streams can send data anywhere, including databases, or over an internet connection. This is a better way to handle data because it saves on memory by minimizing the amount of buffers that we have to work with. As developers, we should tend toward asynchronous method and streams. If you stray from this, have a good reason for it.
 
 ---
+### There are 5 kinds of streams:
+1. __readable__ - produce data that can be fed into writeable, transform, or duplex stream through `.pipe()`.
+2. __writeable__ - a stream that you can `.pipe()` to but not from.
+3. __transform__ - A certain type of duplex stream (readable and writeable); however, the output is calculated from the input. Also called through streams, which are simple readable/writeable filters that transform input and produce output.
+4. __duplex__ - readable/writeable and both ends of the stream engage in a two-way interaction
+5. __classic__ - Olden streams that appeared in Node.js 0.4.
+
+### [I Highly Recommend Reading James Halliday's Stream-Handbook as it is a thorough reference. ](https://github.com/substack/stream-handbook/blob/master/readme.markdown)
+
+---
+
 ## Path Module:
 A collection of utilities that allow developers to work with file and directory paths. The path module does not perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid. This module contains several helper functions to make path manipulations easier.
 * The default operation of the path module varies based on the operating system on which a Node.js application is running. In other words, when Node.js is on a Windows machine, the `path` module assumes that Windows-style paths are being used. This is indispensable when building cross-platform applications.
@@ -193,6 +309,8 @@ Would generate:
     4: four
   ```
 
+---
+
 ## Resources
 
 [Node Docs: Path](https://nodejs.org/api/path.html)
@@ -203,104 +321,6 @@ Would generate:
 
 [Mixu's Node book](http://book.mixu.net/node/ch11.html)
 
+[James Halliday's Stream Handbook](https://github.com/substack/stream-handbook/blob/master/readme.markdown)
 
-## Streams
-
-# How does node deal with Streams:
-
-## Terms:
-* __Stream__ - a sequence of chunks of data
-* __Chunk__ - a piece of data being sent through a stream.
-
-Stream.js is hte core module that defines stream behavior. Streams are event emitters. Any streams that are created have access to 'on' or 'commit.' There is an old stream code and new stream code. There are readable streams, writable streams (send data but can't read), Duplex (read and write) transform (change the data as it moves through), and Passthrough streams. You have types of streams and they all do something a little different. Each type of Streams are an abstract class (type of constructor you never work directly with but inherit from). In other words, Streams will be always custom objects.
-
-## Stream Prototype Chain
-Event Emitter --> Stream --> Readable, writeable, etc. Stream --> Custom Streams
-
-## Clarification on Readable/Writable Streams
-```bash
-+-------------------+           Readable              +-------------------+
-|                   |   +-------------------------->  |                   |
-|                   |           Request               |                   |
-|                   |                                 |                   |
-|      Browser      |                                 |  Server/Node.js   |
-|                   |                                 |                   |
-|                   |                                 |                   |
-|                   |         Writeable               |                   |
-|                   |   <-------------------------+   |                   |
-+-------------------+         Response                +-------------------+
-
-```
-Node can only write or read from a stream.
-
-## Example
-
-```js
-fs.createReadStream = function(path, options) {
-  return new Readstream(path, options);
-};
-```
-
-`fs.createReadStream` is a specialized type of read only stream. It implements getting and working with data. The stream that it inherits from supplies the rest.
-
-```js
-const fs = require('fs');
-
-const writeable = fs.createReadStream(__dirname + 'greet.txt', { encoding: 'utf8', highWaterMark: 32 * 1024 }); // options: encoding
-const writable = fs.createWriteStream(__dirname + 'greetCopy.txt', { encoding: 'utf8', highWaterMark: 32 * 1024 });
-
-readable.on('data', (chunk) => {
-  console.log(chunk);
-  writeable.write(chunk)
-})
-
-```
-
-stream will fill a buffer with the contents. If the contents are the same size or smaller than the buffer, you will get pieces of the data at a time. Specifically, you'll get the size of the buffer. When it emits an event and runs the listener, it will pass the data.
-
-Listening to the Data event (remember, a stream is an event emitter), starts the stream. Read from the readable and write to the writeable.
-
-* __highWaterMark__ - Lets you determine the size of the buffer.
-
-The `writeable.write(chunk)` is so common there is a built-in way of doing it.
-
-## Pipes
-
-__pipe__ a way of connecting two streams by writing to one stream what is being read from another. In node.js you pipe from a readable stream to a writeable. Pipes can be chained as long as streams are writeable and readable.
-
-Node.js implemented a method called pipe on readable streams (`_stream_readable.js`). It takes a chunk and a destination for that chunk. Essentially, this sis the same thing. It looks for the data event on the readable, and then writes that chunk to the destination. In additon, the pipe function returns a value, the destination of the writeable stream, where the data has been sent.
-
-
-```js
-const fs = require('fs');
-
-const readable = fs.createReadStream(__dirname + 'greet.txt');
-const writable = fs.createWriteStream(__dirname + 'greetCopy.txt');
-
-readable.pipe(writeable); // will return writeable
-
-```
-This is the same code as before except we are using the pipe to redirect the stream. The pipe is more concise way of using streams.
-
-This gets better when you can chain the stream while working with a duplex or transform stream.  
-
-```js
-const fs = require('fs');
-const zlib = require('zlib'); // allows you to implement a compressed file. gzip file
-
-const readable = fs.createReadStream(__dirname + '/greet.txt');
-const writable = fs.createWriteStream(__dirname + '/greetCopy.txt');
-const compressed = fs.createWriteStream(__dirname + '/greet.txt.gz')
-
-const gzip = zlib.createGzip(); // readable and writeable. Compressed file from a stream.
-
-readable.pipe(writeable); // will return writeable. Only writeable
-readable.pipe(gzip).pipe(compressed); //
-```
-Read from greet.txt
-on every chunk pipe to writeable
-on every chunk pipe from writeable to compressed.
-
-This is called __method chaining__ - when methods return methods, which allow you to keep adding/invoking methods. If the method returns the parent object, this would be called 'cascading.'
-
-Streams can send data anywhere, including databases, or over an internet connection. This is a better way to handle data because it saves on memory by minimizing the amount of buffers that we have to work with. Tend toward asynchronous method and streams. If you stray from this, have a good reason for it.
+---

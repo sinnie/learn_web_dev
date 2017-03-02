@@ -80,7 +80,7 @@ const http = require('http');
 
 const server = http.createServer((req, res) => { // On every request/response interaction, the server will do something
   res.writeHead(200, 'Content-Type', 'text/plain'); // Defines how we are sending data to the client
-  res.end('Hello world\n'); // End fn ends the implements the stream; grab the buffer data and send data
+  res.end('Hello world'); // End fn ends the implements the stream; grab the buffer data and send data
 });
 
 const port = process.env.PORT || 8000; // Map to a port. Default 8000 in this case
@@ -96,3 +96,14 @@ A Node.js server is created with one callback. The server object has an emit met
 * The goal of the callback is to correctly fill in the response object based on the information in request object
 
 ---
+
+
+## Resources
+
+[Node Docs: http.IncomingMessage](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_incomingmessage)
+
+[Node Docs: http.ServerResponse System](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_serverresponse)
+
+[Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
+
+[Mixu's Node book](http://book.mixu.net/node/ch11.html)
