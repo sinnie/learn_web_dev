@@ -313,7 +313,7 @@ Would generate:
 
 ---
 
-## [Continue to Building an HTTP Server]('http-server.md')
+## [Continue to Building an HTTP Server](./http-server.md)
 
 ## Resources
 
