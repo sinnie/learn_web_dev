@@ -126,11 +126,10 @@ Encoding is an optional parameter that specifies the type of encoding to read th
 |-----------------------------------------------------------|--------------------------------------|
 |fs.readFile(filename, [encoding], [callback])              |fs.open(path, flags, [model, callback])|
 |fs.writeFile(filename, data, encoding='utf8', [callback])  |fs.read(fd, buffer, offset, length, position, [callback])|
-|x|
-|x|fs.write(fd, buffer, offset, length, position, [callback])|
-|x|fs.fsync(fd, callback)|
-|x|fs.truncate(fd, len, callback)|
-|x|fs.close(fd, [callback])|
+| |fs.write(fd, buffer, offset, length, position, [callback])|
+| |fs.fsync(fd, callback)|
+| |fs.truncate(fd, len, callback)|
+| |fs.close(fd, [callback])|
 
 
 
