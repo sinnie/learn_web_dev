@@ -59,12 +59,12 @@ If you are using the synchronous form, any exceptions will immediately be thrown
 ---
 
 > ### Note:
- When the fs.readSync method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer fills and returns the content before moving on. This synchronous method could be useful if you were trying to load a configuration file.
+ When the `fs.readSync` method is called, it accepts a buffer as an argument. It loads the contents of the file into the buffer because the buffer can manage binary data. Because this is the synchronous version of the method, the program will wait while the buffer fills and returns the content before moving on. This synchronous method could be useful if you were trying to load a configuration file.
 
 >### Regarding Buffers:
 * Before ES6, JavaScript did not have the ability to deal with bytes, which is necessary to work with the file system.
 * Instead, it handles binary-handling tasks with a binary buffer implementation, which is exposed as a JavaScript API under the buffer pseudo-class.
-* [More information about buffers can be found here. I might be biased, but I think it's worth a read.](./buffers.md)
+* [More information about buffers can be found here.](./buffers.md)
 
 ---
 
@@ -122,21 +122,21 @@ Encoding is an optional parameter that specifies the type of encoding to read th
 ---
 ## Asynchronous File System API
 
-| Read & write a file (fully buffered)                      |       
-|-----------------------------------------------------------|
-|fs.readFile(filename, [encoding], [callback])              |
-|fs.writeFile(filename, data, encoding='utf8', [callback])  |
-
-
-| Read & write a file (in parts)                             |
-|------------------------------------------------------------|
-|fs.open(path, flags, [model, callback])|
+| Read & write a file (fully buffered)                      |  Read & write a file (in parts)                             |
+|-----------------------------------------------------------|------------------------------------------------------------|
+|fs.readFile(filename, [encoding], [callback])              |fs.open(path, flags, [model, callback])|
 |fs.read(fd, buffer, offset, length, position, [callback])|
 |fs.write(fd, buffer, offset, length, position, [callback])|
 |fs.fsync(fd, callback)|
 |fs.truncate(fd, len, callback)|
 |fs.close(fd, [callback])|
 
+|fs.writeFile(filename, data, encoding='utf8', [callback])  |
+|
+|
+|
+|
+|
 ---
 ## Path Module:
 A collection of utilities that allow developers to work with file and directory paths. The path module does not perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid. This module contains several helper functions to make path manipulations easier.
