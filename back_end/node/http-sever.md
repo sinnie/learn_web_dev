@@ -8,7 +8,7 @@
 * [__HTTP__](https://www.wikiwand.com/en/Hypertext_Transfer_Protocols) - The Hypertext Transfer Protocol is an application protocol for distributed, collaborative, and hypermedia information systems. It is the format for data being transferred via TCP/IP and is the core of sending information on the web. HTTP functions as a request-response protocol in the client-server computing model.
 * [__Network Socket__](https://www.wikiwand.com/en/Network_socket) - A network socket is an internal endpoint for sending or receiving data at a single node in a computer network. It is a representation of this endpoint in the networking software (protocol stack), such as an entry in a table (listing communication protocol, destination, status, etc.), and is a form of system resource.
 * [__Port__](https://www.wikiwand.com/en/Port_(computer_networking)) - In the internet protocol suite, a port is an endpoint of communication in an operating system. It is a logical construct that identifies a specific process or a type of network service. A port is always associated with an IP address of a host and the protocol type of the communication. Thus, it completes the destination or origination network address of a communication session.
-* [__MIME type__](https://www.wikiwand.com/en/Media_type) - Multipurpose Internet Mail Extensions is a two-part identifier for file formats and format contents transmitted on the internet and is a standard for specifying the type of Data being sent. Some examples include :application/json, text/html, img/jpeg, etc..
+* [__MIME type__](https://www.wikiwand.com/en/Media_type) - Multipurpose Internet Mail Extensions is a two-part identifier for file formats and format contents transmitted on the internet and is a standard for specifying the type of Data being sent. Some examples include: application/json, text/html, img/jpeg, etc..
 
 ## Request Response Cycle (Client Server Model)
 ```bash
@@ -20,10 +20,20 @@
 |     Ask for       |                                 |     perform       |
 |     services      |                                 |     services      |
 |                   |       Standard Format           |                   |
-|                   |<------------------------------+ |  Node.js: port:80 | <-- port number/socket
+|                   |<------------------------------+ |  Node.js: port:80 | <-- port number
 +-------------------+          Response               +-------------------+
 
 ```
+---
+
+## HTTP_PARSER
+The http-parser code that is part of Node.js core, can be found at [joyent/http-parser](https://github.com/nodejs/http-parser). It is a C program that takes html, and parses both request and responses. From the Node.js README:
+
+>The parser is designed to be used in performance HTTP applications. It does not make any syscalls nor allocations, it does not buffer data, it can be interrupted at anytime. Depending on your architecture, it only requires about 40 bytes of data per message stream (in a web server that is per connection).
+
+This, along with the [http_server.js](https://github.com/nodejs/node/blob/master/lib/_http_server.js), allows us to write Node.js web servers.
+
+---
 
 ## Request
 ### An HTTP request is composed of the following parts:
@@ -64,127 +74,22 @@ Hello world
 ---
 
 ## Initializing a server:
-A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two arguments: res, req
-* The callback’s first req argument will contain the incoming HTTP request as an `http.IncomngMessage` object
-* the callbacks second argument will contain an empty outgoing http response as an `http.ServerResponse` obj
+A Node server is created with one callback. The server object has am emit method that takes two arguments, request and response.
+* For each HTTP request that arrives, the callback is invoked with two arguments —- request and response.
+  * The callback’s first req argument will contain the incoming HTTP request as an `http.IncomngMessage` object
+  * the callbacks second argument will contain an empty outgoing http response as an `http.ServerResponse` obj.
 * The goal of the callback is to correctly fill in the res obj based on the information in req object
 
 ```javascript
 const http = require('http');
-const port = process.env.PORT || 8000;
 
 const server = http.createServer((req, res) => { //<— on every request/response interaction with the server will so something
-  res.setHeader('Content-Type', 'text/plain'); // <— defines how we are sending data to the client
-  res.end('Hello world'); // <— end fn ends the implements the stream; grab the buffer data and send data
+  res.writeHead(200, 'Content-Type', 'text/plain'); // <— defines how we are sending data to the client
+  res.end('Hello world\n'); // <— end fn ends the implements the stream; grab the buffer data and send data
 });
 
+const port = process.env.PORT || 8000; // Map to a port. Default 8000 in this case
 server.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
-```
-
-```js
-fs.readFile() //<— open the file that is on the path the server receives.
-
-'use strict';
-
-const fs = require('fs');
-
-fs.readFile('/etc/paths', 'utf8', (err, data) => { // <— callback (error, file contents)
-      if (err) throw err; // <— if the file doesn’t exist
-      console.log(data);
-});
-
-console.log(1 + 2);
-```
-
-__How do you create a Node.js HTTP server with the http module?__
-
-  ```js
-    'use strict';
-
-    const http = require('http');
-    const port = process.env.PORT || 8000;
-
-    const server = http.createServer((req, res) => {
-    const guests = ['Mary', 'Don'];
-    const guestsJSON = JSON.stringify(guests);
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(guestsJSON);
-    });
-
-    server.listen(port, () => {
-      console.log(`Listening on port ${port}`);
-    });
-  ```
-
-A Node.js HTTP server is created with one callback.
-* For each HTTP request that arrives, the callback is invoked with two arguments —- request and response.
-    * The callback's first req argument will contain the incoming HTTP request as an `http.IncomingMessage` object.
-    *  The callback's second response argument will contain an empty outgoing HTTP response as an http.ServerResponse object. The goal of the callback is to correctly fill in the res object based on the information in req object.
-
-```js
-    'use strict';
-
-    const fs = require('fs');
-    const path = require('path');
-    const guestsPath = path.join(__dirname, 'guests.json');
-
-    const http = require('http');
-    const port = process.env.PORT || 8000;
-
-    const server = http.createServer((req, res) => {
-      if (req.method === 'GET' && req.url === '/guests') {
-        fs.readFile(guestsPath, 'utf8', (err, guestsJSON) => {
-          if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            return res.end('Internal Server Error');
-          }
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(guestsJSON);
-        });
-      } else if (req.method === 'GET' && req.url === '/guests/0') {
-        fs.readFile(guestsPath, 'utf8', (err, guestsJSON) => {
-          if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            return res.end('Internal Server Error');
-          }
-
-          const guests = JSON.parse(guestsJSON);
-          const guestJSON = JSON.stringify(guests[0]);
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(guestJSON);
-        });
-      } else if (req.method === 'GET' && req.url === '/guests/1') {
-        fs.readFile(guestsPath, 'utf8', (err, guestsJSON) => {
-          if (err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader('Content-Type', 'text/plain');
-            return res.end('Internal Server Error');
-          }
-
-          const guests = JSON.parse(guestsJSON);
-          const guestJSON = JSON.stringify(guests[1]);
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(guestJSON);
-        });
-      } else {
-        res.statusCode = 404;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('Not found');
-      }
-    });
-
-    server.listen(port, () => {
-      console.log(`Listening on port ${port}`);
-    });
 ```
