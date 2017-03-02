@@ -83,9 +83,9 @@ A Node server is created with one callback. The server object has am emit method
 ```javascript
 const http = require('http');
 
-const server = http.createServer((req, res) => { //<— on every request/response interaction with the server will so something
-  res.writeHead(200, 'Content-Type', 'text/plain'); // <— defines how we are sending data to the client
-  res.end('Hello world\n'); // <— end fn ends the implements the stream; grab the buffer data and send data
+const server = http.createServer((req, res) => { // On every request/response interaction, the server will do something
+  res.writeHead(200, 'Content-Type', 'text/plain'); // Defines how we are sending data to the client
+  res.end('Hello world\n'); // End fn ends the implements the stream; grab the buffer data and send data
 });
 
 const port = process.env.PORT || 8000; // Map to a port. Default 8000 in this case
