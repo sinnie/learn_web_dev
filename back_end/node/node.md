@@ -458,4 +458,6 @@ Although this technique is useful for concisely controlling the logic of our pro
 
 [simen talk](https://www.slideshare.net/simenli/nodejs-event-loop-eventemitter)
 
+[Burgess, Andrew. "Using Node's Event Module." _envatotuts+_.](https://code.tutsplus.com/tutorials/using-nodes-event-module--net-35941)
+
 ---
