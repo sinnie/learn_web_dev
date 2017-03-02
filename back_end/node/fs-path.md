@@ -6,6 +6,8 @@
 
 [Back to Node Intro](./node.md)
 
+[Back to All Node Articles](https://github.com/rsstdd/learn_web_dev/tree/master/back_end/node)
+
 [Back to Learn Web Development](../../README.md)
 
 ## Intro
@@ -310,6 +312,8 @@ Would generate:
   ```
 
 ---
+
+## [Continue to Building an HTTP Server]('./http-server.md')
 
 ## Resources
 
