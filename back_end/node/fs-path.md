@@ -218,7 +218,7 @@ Stream.js is hte core module that defines stream behavior. Streams are event emi
 Event Emitter --> Stream --> Readable, writeable, etc. Stream --> Custom Streams
 
 ## Clarification on Readable/Writable Streams
-
+```bash
 +-------------------+           Readable              +-------------------+
 |                   |   +-------------------------->  |                   |
 |                   |           Request               |                   |
@@ -230,7 +230,7 @@ Event Emitter --> Stream --> Readable, writeable, etc. Stream --> Custom Streams
 |                   |   <-------------------------+   |                   |
 +-------------------+         Response                +-------------------+
 
-
+```
 Node can only write or read from a stream.
 
 ## Example
