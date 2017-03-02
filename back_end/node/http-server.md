@@ -112,7 +112,7 @@ A Node.js server is created with one callback. The server object has an emit met
 
 [Node Docs: http.IncomingMessage](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_incomingmessage)
 
-[Node Docs: http.ServerResponse System](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_serverresponse)
+[Node Docs: http.ServerResponse](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_class_http_serverresponse)
 
 [Alicea, Anthony. "Learn and Understand NodeJS." _Udemy_. 2017.](https://www.udemy.com/understand-nodejs/learn/v4/overview)
 
