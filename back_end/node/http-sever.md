@@ -26,8 +26,8 @@
 
 ```
 
+## Request:
 ### An HTTP request is composed of the following parts:
-
 1. A method (or verb)
 2. A path
 3. An HTTP version
@@ -43,15 +43,16 @@ Connection: keep-alive
 Host: localhost:8000
 User-Agent: HTTPie/0.9.3
 ```
+---
 
+## Response:
 ### An HTTP response is composed of the following parts:
-
 1. An HTTP version
 2. A status code
 3. Key-value Headers
 4. And an optional Body
 
-#### An example of what an HTTP response:
+### An example of what an HTTP response:
 ```
 HTTP/1.1 200 OK
 Connection: keep-alive
@@ -60,6 +61,8 @@ Content-Type: text/plain
 Date: Mon, 13 Jun 2016 04:28:36 GMT
 Hello world
 ```
+
+---
 
 ## Initializing a server:
 A Node server is created with one callback. For each HTTP request that arrives, the callback is invoked with two arguments: res, req
