@@ -123,20 +123,17 @@ Encoding is an optional parameter that specifies the type of encoding to read th
 ## Asynchronous File System API
 
 | Read & write a file (fully buffered)                      |  Read & write a file (in parts)                             |
-|-----------------------------------------------------------|------------------------------------------------------------|
+|-----------------------------------------------------------|--------------------------------------|
 |fs.readFile(filename, [encoding], [callback])              |fs.open(path, flags, [model, callback])|
-|fs.read(fd, buffer, offset, length, position, [callback])|
+|fs.writeFile(filename, data, encoding='utf8', [callback])  |fs.read(fd, buffer, offset, length, position, [callback])|
+| |
 |fs.write(fd, buffer, offset, length, position, [callback])|
 |fs.fsync(fd, callback)|
 |fs.truncate(fd, len, callback)|
 |fs.close(fd, [callback])|
 
-|fs.writeFile(filename, data, encoding='utf8', [callback])  |
-|
-|
-|
-|
-|
+
+
 ---
 ## Path Module:
 A collection of utilities that allow developers to work with file and directory paths. The path module does not perform any I/O operations. i.e. it doesn’t consult the filesystem to see whether or not the path is valid. This module contains several helper functions to make path manipulations easier.
