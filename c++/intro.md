@@ -28,7 +28,7 @@ The compiler and the linker are programs. Because C++ programs are parsed ahead 
 C++ adds a step to the compilation process. It adds a _preprocessor_, which applies some modifications to the source code before feeding it to tthe compiler.
 
 ```
-Source Files --Preprocessor--> Processed Code --Compilefr--> Object Files --Linker--> Executable ---OS--> Program in Memory
+Source Files --Preprocessor--> Processed Code --Compiler--> Object Files --Linker--> Executable ---OS--> Program in Memory
 
 ```
 
@@ -113,10 +113,10 @@ Every C++ program has a main function, which is called by the OS when the progra
 * In a typical C++ program, most function calls are of the form `object.function_name(argument1, argument2)`
 * `<<` can also behave as functions, as illustrated by the use of `cout` above. This capability is called operator overloading which will be discussed later on.
 
-#### { }
+#### Brackets:  { }
 A block of code is defined with { }.
 
-#### ;
+#### Semicolon:  ;
 _Statements_ must be terminated with a semicolon.
 
 #### return 0
