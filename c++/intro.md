@@ -60,22 +60,20 @@ int main ()
 ```
 ### Breaking it Down:
 
-> `return 0` is not necessary; however, a `return 0` informs the OS that everything is swell. By default, C++ programs will return 0 if there is no return at the end of main. That being said, it's a good idea to be explicit.
+> `return 0` is not necessary; however, a `return 0` informs the OS that everything is swell. By default, C++ programs will return `0` if there is no return at the end of main. That being said, it's a good idea to be explicit.
 
-#### Tokens
-
-__Tokens__: the smallest meaningful symbol in the language.
+#### Tokens: the smallest meaningful symbol in the language.
 
 | Token type             | Description/Purpose                                   | Examples                         |
 |------------------------|-------------------------------------------------------|----------------------------------|
-| Keywords               | Words that convey meaning to the compiler             | `int`, `double`,  `for`,  `auto` |
-| Identifiers            | Names of things that are not built into the language  | cout, std, x, myFunction         |
-| Literals               | Basic Constant Values. Values specified directly.     | "Hello, world!", 24.3, 0, 'c'    |
-| Operators              | Mathematical or logical operations                    | =, -, &&, %, <<                  |
-| Punctuation/Separators | Punctuation that defines program structure            | { }  ( )  ,   ;                  |
+| Keywords               | Words that convey meaning to the compiler             | `int`,  `double`,   `for`,  `auto` |
+| Identifiers            | Names of things that are not built into the language  | cout,   std,   x, myFunction         |
+| Literals               | Basic Constant Values. Values specified directly.     | "Hello, world!",   24.3,   0, 'c'    |
+| Operators              | Mathematical or logical operations                    | =,   -,   &&,   %, <<                  |
+| Punctuation/Separators | Punctuation that defines program structure            | { }    ( )    ,   ;                  |
 | Whitespace             | Spaces; Ignored by the compiler                       |                                  |
 
-#### //
+#### Comments: //
 
 * Single-line comment: `// ...`
 * Multi-line comment: `/* ... */`
@@ -95,9 +93,9 @@ A __namespace__ is a set of symbols that are used to organize objects of various
 
 The `using` command informs the compiler to allow all names in the "std" (standard) namespace to be available without their prefix. The iostream file defines three names used in this program: `cout`, `cin`, and `endl`. All of these names are defined in the std namespace.
 
-Avoid using `using namespace std`. It's a good idea to be explicit in your code. Also, these namespaces are meant prevent collisions and is better for humans reading code as well as compilers. So, use the prefix like so: `std::cout`, `std::cin`, `std::endl`
+Avoid using `using namespace std`. It's a good idea to be explicit in your code. Also, these namespaces are meant prevent collisions. In addition, being explicit makes it easier for humans as well as compilers to understand your code. So, use the prefix like so: `std::cout`, `std::cin`, `std::endl`
 
-> `::` is called the _scope resolution operator_. :rainbow:
+> `::` is called the _scope resolution operator_. :rainbow: #The more you know.
 
 #### int main() { ... }
 Every C++ program has a main function, which is called by the OS when the program is executed by the computer. The curly braces represent a block.
