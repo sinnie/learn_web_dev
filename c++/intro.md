@@ -178,6 +178,10 @@ When declaring a variable, you must inform the compiler what type x will be in o
 
 When initializing a variable, simply use the assignment operator ( `=` ) like so: `x = 4 + 4`
 
+
+## [Next Lesson: Control Flow](./flow-control.md)
+
+
 ## Resources
 
 [C++/Introduction. Wikiversity](https://en.wikiversity.org/wiki/C%2B%2B/Introduction)
