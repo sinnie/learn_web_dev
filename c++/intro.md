@@ -162,8 +162,8 @@ Different types take different amounts of memory to store.
 | double     | "Doubly" precice floating point number                                           | 8 bytes | +/- 1.7e +/- 308 ( 15 digits)                                |
 
 * A __signed__ integer is one that can represent a negative number. __Unsigned__ will never be interpreted as negative, so it can represent a wider range of positive numbers. __Most compilers assume signed if unspecified__.
-* There are 3 types of integers: short, int, long (non-decreasing number of size).
-* There are three floating point types: float, double, long double (non-decreasing order of precision)
+* There are __3 types of integers:__ short, int, long (increasing number of size).
+* There are __3 floating point types:__ float, double, long double (increasing order of precision)
 * The sizes/ranges for each type are not fully standardized; those shown above are the
 ones used on most 32-bit computers
 * An operator also normally produces a value of the same type as its operands; thus, 1 / 4
@@ -176,7 +176,7 @@ The name of a variable is an identifier token. Identifiers may contain numbers, 
 
 When declaring a variable, you must inform the compiler what type x will be in order that the memory space may be computed and operations that may be performed are specified.
 
-When initializing a variable, simply use the assignment operator, `=`, like so: `x = 4 + 4`
+When initializing a variable, simply use the assignment operator ( `=` ) like so: `x = 4 + 4`
 
 ## Resources
 
