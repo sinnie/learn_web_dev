@@ -174,7 +174,7 @@ get 0.25, you’d need to write something like 1 / 4.0.
 * A text string, for reasons we will learn in Lecture 5, has the type `char *`.
 
 ### Variables
-The name of a variable is an identifier token. identifiers may contain numbers, letters, and underscores. They may not begin with a number.
+The name of a variable is an identifier token. Identifiers may contain numbers, letters, and underscores. They may not begin with a number.
 
 When declaring a variable, you must inform the compiler what type x will be in order that the memory space may be computed and operations that may be performed are specified.
 
