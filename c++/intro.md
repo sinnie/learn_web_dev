@@ -178,6 +178,30 @@ When declaring a variable, you must inform the compiler what type x will be in o
 
 When initializing a variable, simply use the assignment operator ( `=` ) like so: `x = 4 + 4`
 
+### Constants
+A constant is an expression with a fixed value.
+* __literals__ - used to express particular values within the source code (integers, floating points, chars, strings, booleans)
+* __Defined constants__ (`#define`): User-defined named constants that do not require memory consuming variables.
+When the preprocessor sees the `#define`, it will replace every subsequent occurrence of the identifier in the source code.
+* __Declared constants  (const)__ - user defined constants with const prefix with a specific type that are declared the same way as variables. The Value of a const variable cannot be modified.
+
+### L-values, R-values
+__lvalue__, or "left hand side value" (of an assignment).
+* ex: `int var` <-- var is lvalue because we can assign it with some value. `float x`
+__rvalue__, or "right hand side value," because rvalues can appear on the right hand side of an assignment. Anything with a well-defined value can be an rvalue, including an assignment, i.e. (`x = 5`) can be used as an rvalue whose value is 5. e.g.`y = (x = 5)`.
+
+### Type Conversions
+Also called __casts__. Type conversions are implicit when changing from smaller data type pto larger data type or data type of same size (float to double or int to float). When you are changing from bigger to smaller or when there could be a loss of accuracy, you must be explicit.
+
+```c+
+int x = (int)5.0; // float should be explicitly "cast" to int
+short s = 3;
+long l = s; // does not need explicit cast, but
+            // long l = (long)s is also valid
+float y = s + 3.4; // compiler implicitly converts s to float for addition
+```
+
+
 
 ## [Next Lesson: Control Flow](./flow-control.md)
 
